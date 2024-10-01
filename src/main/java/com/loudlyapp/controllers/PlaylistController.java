@@ -2,33 +2,30 @@ package com.loudlyapp.controllers;
 
 import com.loudlyapp.entities.Playlist;
 import com.loudlyapp.services.PlayListService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/playlists")
+@AllArgsConstructor
 public class PlaylistController {
 
-    @Autowired
-    private PlayListService playlistService;
+    private final PlayListService playlistService;
 
-    @GetMapping("/users/{userId}/playlists")
-    public ResponseEntity<List<Playlist>> getPlaylists(@PathVariable Long userId) {
-        List<Playlist> playlists = playlistService.findPlaylistsByUserId(userId);
-        return ResponseEntity.ok(playlists);
+    @GetMapping("/users/{userId}")
+    public List<Playlist> getPlaylists(@PathVariable Long userId) {
+        return playlistService.findPlaylistsByUserId(userId);
     }
+
     @PostMapping("/{playlistId}/songs/{songId}")
-    public ResponseEntity<Playlist> addSongToPlaylist(@PathVariable Long playlistId, @PathVariable Long songId) {
-        Playlist updatedPlaylist = playlistService.addSongToPlaylist(playlistId, songId);
-        return ResponseEntity.ok(updatedPlaylist);
+    public Playlist addSongToPlaylist(@PathVariable Long playlistId, @PathVariable Long songId) {
+        return playlistService.addSongToPlaylist(playlistId, songId);
     }
 
     @DeleteMapping("/{playlistId}")
-    public ResponseEntity<Void> deletePlaylist(@PathVariable Long playlistId) {
+    public void deletePlaylist(@PathVariable Long playlistId) {
         playlistService.deletePlaylist(playlistId);
-        return ResponseEntity.noContent().build();
     }
 }
