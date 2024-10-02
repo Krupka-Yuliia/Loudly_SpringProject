@@ -1,17 +1,69 @@
+#--------USERS---------------------
+
 ### GET All users
 
 GET http://localhost:8080/users
 
+### GET user by id
+
+GET http://localhost:8080/users/1
+
+
+
+#-----------PLAYLISTS-------------------------
+
+### GET all playlists
+
+GET http://localhost:8080/playlists
+
+### POST playlist by userId
+
+POST http://localhost:8080/playlists/users/1
+Content-Type: application/json
+
+{
+  "name": "friends"
+}
+
+### DELETE playlist by id
+DELETE http://localhost:8080/playlists/4
 
 ### GET ALL playlists by user
 
 GET http://localhost:8080/playlists/users/1
 
 
+### POST add a song to a playlist
+POST http://localhost:8080/playlists/1/songs/1
+
+
+
+
+#---------SONGS------------------------
 ### GET ALL SONGS
 
 GET http://localhost:8080/songs
 
-### GET ALL ARTISTS
+### POST add a song
+
+POST http://localhost:8080/songs
+Content-Type: application/json
+
+{
+  "artistId": "1",
+  "file": null,
+  "format": "MP3",
+  "genre": "pop",
+  "title": "Taste",
+  "year": "2024"
+}
+
+
+
+### GET ARTISTS
+
+GET http://localhost:8080/artists
+
+### GET Artist by Id
 
 GET http://localhost:8080/artists/1
