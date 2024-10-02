@@ -21,7 +21,7 @@ public class Song {
     private String format;
     private String artistId;
     private String genre;
-    private Date year;
+    private int year;
     @ManyToMany(mappedBy = "songs")
     private List<Playlist> playlists = new ArrayList<>();
 
