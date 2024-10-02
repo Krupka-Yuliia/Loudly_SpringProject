@@ -1,10 +1,7 @@
-package com.loudlyapp.services;
+package com.loudlyapp.playlist;
 
-import com.loudlyapp.entities.Playlist;
-import com.loudlyapp.entities.Song;
-import com.loudlyapp.entities.User;
-import com.loudlyapp.repositories.PlaylistRepository;
-import com.loudlyapp.repositories.SongRepository;
+import com.loudlyapp.song.Song;
+import com.loudlyapp.song.SongRepository;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

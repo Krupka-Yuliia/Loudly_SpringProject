@@ -6,3 +6,12 @@ GET http://localhost:8080/users
 ### GET ALL playlists by user
 
 GET http://localhost:8080/playlists/users/1
+
+
+### GET ALL SONGS
+
+GET http://localhost:8080/songs
+
+### GET ALL ARTISTS
+
+GET http://localhost:8080/artists/1

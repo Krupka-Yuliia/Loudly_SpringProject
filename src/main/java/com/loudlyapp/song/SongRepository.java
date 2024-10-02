@@ -1,6 +1,5 @@
-package com.loudlyapp.repositories;
+package com.loudlyapp.song;
 
-import com.loudlyapp.entities.Song;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

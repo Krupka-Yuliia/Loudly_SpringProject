@@ -1,7 +1,5 @@
-package com.loudlyapp.controllers;
+package com.loudlyapp.artist;
 
-import com.loudlyapp.entities.User;
-import com.loudlyapp.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,15 +8,16 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/artists")
 @AllArgsConstructor
-public class UserController {
+public class ArtistController {
 
-    private final UserService userService;
+private final ArtistService artistService;
 
     @GetMapping()
-    public List<User> getUsers() {
-        return userService.getAllUsers();
+    public List<Artist> getArtists() {
+        return artistService.getAllArtists();
     }
 
 }
+

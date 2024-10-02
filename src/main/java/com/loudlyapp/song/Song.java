@@ -1,5 +1,6 @@
-package com.loudlyapp.entities;
+package com.loudlyapp.song;
 
+import com.loudlyapp.playlist.Playlist;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,7 +1,5 @@
-package com.loudlyapp.services;
+package com.loudlyapp.user;
 
-import com.loudlyapp.entities.User;
-import com.loudlyapp.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

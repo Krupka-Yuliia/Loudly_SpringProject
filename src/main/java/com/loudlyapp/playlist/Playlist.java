@@ -1,5 +1,6 @@
-package com.loudlyapp.entities;
+package com.loudlyapp.playlist;
 
+import com.loudlyapp.song.Song;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -40,9 +41,6 @@ public class Playlist {
         return songs != null && songs.contains(song);
     }
 
-    public Collection<Song> getSongs() {
-        return songs;
-    }
 
     public void removeSong(Song song) {
         if (songs != null) {

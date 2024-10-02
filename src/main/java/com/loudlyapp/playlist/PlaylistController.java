@@ -1,7 +1,5 @@
-package com.loudlyapp.controllers;
+package com.loudlyapp.playlist;
 
-import com.loudlyapp.entities.Playlist;
-import com.loudlyapp.services.PlayListService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +8,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/playlists")
 @AllArgsConstructor
-public class PlaylistController {
+public class PlaylistController{
 
     private final PlayListService playlistService;
 
@@ -18,6 +16,7 @@ public class PlaylistController {
     public List<Playlist> getPlaylists(@PathVariable Long userId) {
         return playlistService.findPlaylistsByUserId(userId);
     }
+
 
     @PostMapping("/{playlistId}/songs/{songId}")
     public Playlist addSongToPlaylist(@PathVariable Long playlistId, @PathVariable Long songId) {
