@@ -45,6 +45,10 @@ public class PlayListService {
         playlistRepository.deleteById(playlist);
     }
 
+    public void deleteAll() {
+        playlistRepository.deleteAll();
+    }
+
     public List<Playlist> findPlaylistsByUserId(long userId) {
         List<Playlist> playlists = playlistRepository.findByUserId(userId);
         return playlists;

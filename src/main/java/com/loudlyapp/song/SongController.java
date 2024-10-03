@@ -25,4 +25,37 @@ public class SongController {
         return songService.save(song);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Song>> searchSongsByTitle(@RequestParam String title) {
+        List<Song> songs = songService.findByTitle(title);
+        if (songs.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(songs);
+    }
+
+    @GetMapping("/searchByGenre")
+    public ResponseEntity<List<Song>> searchSongsByGenre(@RequestParam String genre) {
+        List<Song> songs = songService.findByGenre(genre);
+        if (songs.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(songs);
+    }
+
+    @GetMapping("/searchByArtistId")
+    public ResponseEntity<List<Song>> searchSongsByArtistId(@RequestParam String artistId) {
+        List<Song> songs = songService.findByArtistId(artistId);
+        if (songs.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(songs);
+    }
+
+    @PutMapping("/{songId}")
+    public ResponseEntity<Song> updateSong(@PathVariable Long songId, @RequestBody Song song) {
+        Song updatedSong = songService.updateSong(songId, song);
+        return ResponseEntity.ok(updatedSong);
+    }
+
 }

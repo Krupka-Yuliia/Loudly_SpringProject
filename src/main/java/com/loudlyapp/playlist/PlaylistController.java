@@ -34,6 +34,11 @@ public class PlaylistController {
 
     }
 
+    @DeleteMapping
+    public void deleteAllPlaylists() {
+        playlistService.deleteAll();
+    }
+
     @DeleteMapping("/{playlistId}")
     public void deletePlaylist(@PathVariable Long playlistId) {
         playlistService.deletePlaylist(playlistId);

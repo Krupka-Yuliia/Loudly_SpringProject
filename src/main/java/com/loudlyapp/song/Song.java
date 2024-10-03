@@ -1,5 +1,6 @@
 package com.loudlyapp.song;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.loudlyapp.playlist.Playlist;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,7 +23,7 @@ public class Song {
     private String artistId;
     private String genre;
     private int year;
-    @ManyToMany(mappedBy = "songs")
-    private List<Playlist> playlists = new ArrayList<>();
+//    @ManyToMany(mappedBy = "songs")
+//    private List<Playlist> playlists = new ArrayList<>();
 
 }

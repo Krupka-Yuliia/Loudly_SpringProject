@@ -1,5 +1,6 @@
 package com.loudlyapp.playlist;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.loudlyapp.song.Song;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,7 @@ public class Playlist {
             joinColumns = @JoinColumn(name = "playlist_id"),
             inverseJoinColumns = @JoinColumn(name = "song_id")
     )
+
     private List<Song> songs = new ArrayList<>();
 
     public void addSong(Song song) {
