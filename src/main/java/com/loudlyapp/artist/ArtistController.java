@@ -1,6 +1,8 @@
 package com.loudlyapp.artist;
 
+import com.loudlyapp.song.Song;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,7 +14,8 @@ import java.util.Optional;
 public class ArtistController {
 
 
-private final ArtistService artistService;
+    private final ArtistService artistService;
+
 
     @GetMapping()
     public List<Artist> getArtists() {
@@ -27,6 +30,17 @@ private final ArtistService artistService;
     @PostMapping()
     public Artist createArtist(@RequestBody Artist artist) {
         return artistService.save(artist);
+    }
+
+    @DeleteMapping
+    public void deleteAll() {
+        artistService.deleteAll();
+    }
+
+    @PutMapping("/{artistId}")
+    public ResponseEntity<Artist> updateArtist(@PathVariable Long artistId, @RequestBody Artist artist) {
+        Artist updatedArtist = artistService.updateArtist(artistId, artist);
+        return ResponseEntity.ok(updatedArtist);
     }
 }
 

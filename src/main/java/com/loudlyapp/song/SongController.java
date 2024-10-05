@@ -58,4 +58,9 @@ public class SongController {
         return ResponseEntity.ok(updatedSong);
     }
 
+    @DeleteMapping
+    public void deleteAllSongs() {
+        songService.deleteAll();
+    }
+
 }

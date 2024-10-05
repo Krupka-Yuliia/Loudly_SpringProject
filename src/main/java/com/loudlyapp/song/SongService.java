@@ -20,6 +20,10 @@ public class SongService {
         return songRepository.findAll();
     }
 
+    public void deleteAll(){
+        songRepository.deleteAll();
+    }
+
     public Optional<Song> findById(Long id) {
         return songRepository.findById(id);
     }

@@ -1,10 +1,7 @@
 package com.loudlyapp.user;
 
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +21,16 @@ public class UserController {
     @GetMapping("/{userId}")
     public Optional<User> getUser(@PathVariable Long userId) {
         return userService.findById(userId);
+    }
+
+    @DeleteMapping()
+    public void deleteAllUsers() {
+        userService.deleteAll();
+    }
+
+    @PostMapping
+    public User createUser(@RequestBody User user) {
+        return userService.save(user);
     }
 
 }
