@@ -1,0 +1,402 @@
+openapi: 3.0.3
+info:
+  title: Loudly API
+  version: 1.0.0
+  description: API for managing users, playlists, songs, and artists
+
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /users:
+    get:
+      summary: Get all users
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Create a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInput'
+      responses:
+        '200':
+          description: User created successfully
+    delete:
+      summary: Delete all users
+      responses:
+        '200':
+          description: All users deleted successfully
+
+  /users/{userId}:
+    get:
+      summary: Get user by ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /playlists:
+    get:
+      summary: Get all playlists
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Playlist'
+    delete:
+      summary: Delete all playlists
+      responses:
+        '200':
+          description: All playlists deleted successfully
+
+  /playlists/users/{userId}:
+    post:
+      summary: Create a playlist for a user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaylistInput'
+      responses:
+        '200':
+          description: Playlist created successfully
+    get:
+      summary: Get all playlists for a user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Playlist'
+
+  /playlists/{playlistId}:
+    delete:
+      summary: Delete playlist by ID
+      parameters:
+        - name: playlistId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Playlist deleted successfully
+
+  /playlists/{playlistId}/songs/{songId}:
+    post:
+      summary: Add a song to a playlist
+      parameters:
+        - name: playlistId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: songId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Song added to playlist successfully
+
+  /songs:
+    get:
+      summary: Get all songs
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Song'
+    post:
+      summary: Add a song
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SongInput'
+      responses:
+        '200':
+          description: Song added successfully
+    delete:
+      summary: Delete all songs
+      responses:
+        '200':
+          description: All songs deleted successfully
+
+  /songs/search:
+    get:
+      summary: Search songs by title
+      parameters:
+        - name: title
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Song'
+
+  /songs/searchByGenre:
+    get:
+      summary: Search songs by genre
+      parameters:
+        - name: genre
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Song'
+
+  /songs/searchByArtistId:
+    get:
+      summary: Search songs by artist ID
+      parameters:
+        - name: artistId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Song'
+
+  /songs/{songId}:
+    put:
+      summary: Update a song
+      parameters:
+        - name: songId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SongInput'
+      responses:
+        '200':
+          description: Song updated successfully
+
+  /artists:
+    get:
+      summary: Get all artists
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Artist'
+    post:
+      summary: Add an artist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArtistInput'
+      responses:
+        '200':
+          description: Artist added successfully
+    delete:
+      summary: Delete all artists
+      responses:
+        '200':
+          description: All artists deleted successfully
+
+  /artists/{artistId}:
+    get:
+      summary: Get artist by ID
+      parameters:
+        - name: artistId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artist'
+    put:
+      summary: Update an artist
+      parameters:
+        - name: artistId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArtistInput'
+      responses:
+        '200':
+          description: Artist updated successfully
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: "yuliia_kr"
+        email:
+          type: string
+          example: "user@gmail.com"
+        role:
+          type: string
+          example: "user"
+
+    UserInput:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+
+    Playlist:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        userId:
+          type: integer
+
+    PlaylistInput:
+      type: object
+      properties:
+        name:
+          type: string
+
+    Song:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        year:
+          type: string
+        genre:
+          type: string
+        format:
+          type: string
+        artistId:
+          type: integer
+
+    SongInput:
+      type: object
+      properties:
+        title:
+          type: string
+        year:
+          type: string
+        genre:
+          type: string
+        format:
+          type: string
+        artistId:
+          type: integer
+
+    Artist:
+      type: object
+      properties:
+        id:
+          type: integer
+        nickname:
+          type: string
+        biography:
+          type: string
+
+    ArtistInput:
+      type: object
+      properties:
+        nickname:
+          type: string
+        biography:
+          type: string
