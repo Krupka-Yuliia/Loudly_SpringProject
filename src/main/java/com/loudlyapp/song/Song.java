@@ -20,7 +20,7 @@ public class Song {
     private String title;
     private byte[] file;
     private String format;
-    private String artistId;
+    private int artistId;
     private String genre;
     private int year;
 //    @ManyToMany(mappedBy = "songs")

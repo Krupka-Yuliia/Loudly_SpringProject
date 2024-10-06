@@ -44,7 +44,7 @@ public class SongController {
     }
 
     @GetMapping("/searchByArtistId")
-    public ResponseEntity<List<Song>> searchSongsByArtistId(@RequestParam String artistId) {
+    public ResponseEntity<List<Song>> searchSongsByArtistId(@RequestParam int artistId) {
         List<Song> songs = songService.findByArtistId(artistId);
         if (songs.isEmpty()) {
             return ResponseEntity.notFound().build();

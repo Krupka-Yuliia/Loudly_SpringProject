@@ -44,7 +44,7 @@ public class SongService {
         return songRepository.findByGenre(genre);
     }
 
-    public List<Song> findByArtistId(String artistId) {
+    public List<Song> findByArtistId(int artistId) {
         return songRepository.findByArtistId(artistId);
     }
 

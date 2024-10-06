@@ -41,5 +41,9 @@ public class ArtistService {
                 })
                 .orElseThrow(() -> new EntityNotFoundException("Artist with id " + id + " not found"));
     }
+
+    public void deleteArtistById(long id) {
+        artistRepository.deleteById(id);
+    }
 }
 

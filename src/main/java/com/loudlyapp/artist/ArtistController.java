@@ -42,5 +42,10 @@ public class ArtistController {
         Artist updatedArtist = artistService.updateArtist(artistId, artist);
         return ResponseEntity.ok(updatedArtist);
     }
+
+    @DeleteMapping("/{artistId}")
+    public void deleteArtist(@PathVariable Long artistId) {
+        artistService.deleteArtistById(artistId);
+    }
 }
 

@@ -24,6 +24,23 @@ Content-Type: application/json
 
 DELETE http://localhost:8080/users
 
+### PUT update a user
+
+PUT http://localhost:8080/users/48
+Content-Type:application/json
+
+{
+  "username": "userNew_23",
+  "role": "user",
+  "password": "123",
+  "email": "user@gmail.com"
+}
+
+### DELETE user by id
+
+DELETE http://localhost:8080/users/48
+
+
 
 
 
@@ -73,7 +90,7 @@ POST http://localhost:8080/songs
 Content-Type: application/json
 
 {
-  "artistId": "5",
+  "artistId": "41",
   "file": null,
   "format": "MP3",
   "genre": "rap",
@@ -111,7 +128,7 @@ Content-Type: application/json
 
 ### GET search songs by artist id
 
-GET http://localhost:8080/songs/searchByArtistId?artistId=2
+GET http://localhost:8080/songs/searchByArtistId?artistId=41
 
 ### DELETE all songs
 
@@ -156,4 +173,10 @@ Content-Type: application/json
   "nickname": "Lana Del Ray",
   "biography": "Another pop diva"
 }
+
+### DELETE artist by id
+
+DELETE http://localhost:8080/artists/39
+
+
 
