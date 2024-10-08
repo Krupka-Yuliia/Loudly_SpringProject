@@ -67,8 +67,8 @@ public class UserServiceTest {
         user.setEmail("test@test.com");
         user.setPassword("password");
         user.setRole("user");
-        userRepository.save(user);
-        Collection<User> users = userRepository.findAll();
+        userService.save(user);
+        Collection<User> users = userService.getAllUsers();
         assertNotNull(users);
         assertEquals(users.size(), 1);
     }
@@ -128,9 +128,9 @@ public class UserServiceTest {
         updatedUser.setPassword(user.getPassword());
         updatedUser.setRole(user.getRole());
 
-        userService.updateUser(savedUser.getId(), updatedUser);
+        userService.updateUser((long) savedUser.getId(), updatedUser);
 
-        Optional<User> getUpdatedUser = userService.findById(Long.valueOf(savedUser.getId()));
+        Optional<User> getUpdatedUser = userService.findById(savedUser.getId());
         assertNotNull(getUpdatedUser, "Updated user not found");
         assertEquals(getUpdatedUser.get().getEmail(), updatedUser.getEmail());
         assertEquals(getUpdatedUser.get().getPassword(), updatedUser.getPassword());

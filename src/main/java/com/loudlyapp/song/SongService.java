@@ -24,7 +24,7 @@ public class SongService {
         songRepository.deleteAll();
     }
 
-    public Optional<Song> findById(Long id) {
+    public Optional<Song> findById(long id) {
         return songRepository.findById(id);
     }
 

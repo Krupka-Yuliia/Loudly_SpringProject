@@ -34,7 +34,7 @@ public class UserService {
         userRepository.deleteById(id);
     }
     
-    public User updateUser(long userId, User user) {
+    public User updateUser(Long userId, User user) {
         return userRepository.findById(userId)
                 .map(existingUser -> {
                     existingUser.setUsername(user.getUsername());

@@ -53,7 +53,7 @@ GET http://localhost:8080/playlists
 
 ### POST playlist by userId
 
-POST http://localhost:8080/playlists/users/4
+POST http://localhost:8080/playlists/users/81
 Content-Type: application/json
 
 {
@@ -70,7 +70,7 @@ GET http://localhost:8080/playlists/users/4
 
 
 ### POST add a song to a playlist
-POST http://localhost:8080/playlists/13/songs/6
+POST http://localhost:8080/playlists/29/songs/32
 
 
 ### DELETE all playlists
@@ -90,7 +90,7 @@ POST http://localhost:8080/songs
 Content-Type: application/json
 
 {
-  "artistId": "41",
+  "artistId": "79",
   "file": null,
   "format": "MP3",
   "genre": "rap",
