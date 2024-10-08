@@ -1,10 +1,7 @@
 package com.loudlyapp.artist;
 
-import com.loudlyapp.song.Song;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.List;
 
 @Entity
 @Data //getters,setters,hashcode,equals
