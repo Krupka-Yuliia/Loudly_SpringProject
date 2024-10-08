@@ -30,7 +30,7 @@ public class PlaylistController {
     @PostMapping("/users/{userId}")
     public Playlist createPlaylist(@PathVariable int userId, @RequestBody Playlist playlist) {
         playlist.setUserId(userId);
-        return playlistService.createPlaylist(playlist);
+        return playlistService.save(playlist);
 
     }
 
@@ -41,6 +41,6 @@ public class PlaylistController {
 
     @DeleteMapping("/{playlistId}")
     public void deletePlaylist(@PathVariable Long playlistId) {
-        playlistService.deletePlaylist(playlistId);
+        playlistService.delete(playlistId);
     }
 }

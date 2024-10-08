@@ -13,13 +13,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class PlaylistsServiceTest {
+
+    private static final String DEFAULT_EMAIL = "test@test.com";
+    private static final String DEFAULT_PASSWORD = "password";
+    private static final String DEFAULT_ROLE = "user";
 
     @Autowired
     PlayListService playListService;
@@ -35,16 +38,12 @@ public class PlaylistsServiceTest {
 
     @AfterEach
     void tearDown() {
-        this.playListService.deleteAll();
+        playListService.deleteAll();
     }
 
     @Test
     public void createPlaylist() {
-        User user = new User();
-        user.setUsername("test");
-        user.setPassword("test");
-        user.setEmail("test@test.com");
-        user.setRole("user");
+        User user = createUser("test");
         User savedUser = userService.save(user);
 
         assertNotNull(savedUser, "User was not created");
@@ -52,29 +51,20 @@ public class PlaylistsServiceTest {
         Playlist playlist = new Playlist();
         playlist.setName("test");
         playlist.setUserId(savedUser.getId());
-        Playlist savedPlaylist = playListService.createPlaylist(playlist);
+
+        Playlist savedPlaylist = playListService.save(playlist);
 
         assertNotNull(savedPlaylist, "Playlist was not created");
-        assertEquals(user.getId(), savedPlaylist.getUserId());
+        assertEquals(savedUser.getId(), savedPlaylist.getUserId());
     }
 
     @Test
     public void findAllPlaylists() {
-        User user = new User();
-        user.setUsername("testUsername");
-        user.setEmail("test@test.com");
-        user.setPassword("password");
-        user.setRole("user");
+        User user = createUser("testUsername");
         User savedUser = userService.save(user);
 
-        Playlist playlist = new Playlist();
-        playlist.setName("Test Playlist");
-        playlist.setUserId(savedUser.getId());
-        playListService.createPlaylist(playlist);
-        Playlist playlist2 = new Playlist();
-        playlist2.setName("Test Playlist");
-        playlist2.setUserId(savedUser.getId());
-        playListService.createPlaylist(playlist2);
+        createAndSavePlaylist(savedUser.getId());
+        createAndSavePlaylist(savedUser.getId());
 
         Collection<Playlist> playlists = playListService.findAll();
 
@@ -84,59 +74,36 @@ public class PlaylistsServiceTest {
 
     @Test
     public void findPlaylistByUserId() {
-        User user = new User();
-        user.setUsername("testUsername");
-        user.setEmail("test@test.com");
-        user.setPassword("password");
-        user.setRole("user");
+        User user = createUser("testUsername");
         User savedUser = userService.save(user);
 
-        Playlist playlist = new Playlist();
-        playlist.setName("Test Playlist");
-        playlist.setUserId(savedUser.getId());
-        playListService.createPlaylist(playlist);
+        createAndSavePlaylist(savedUser.getId());
 
         Collection<Playlist> playlistsByUser = playListService.findPlaylistsByUserId(savedUser.getId());
+
         assertNotNull(playlistsByUser, "Playlists collection should not be null");
     }
 
     @Test
     public void findPlaylistById() {
-        User user = new User();
-        user.setUsername("testUsername");
-        user.setEmail("test@test.com");
-        user.setPassword("password");
-        user.setRole("user");
+        User user = createUser("testUsername");
         User savedUser = userService.save(user);
 
-        Playlist playlist = new Playlist();
-        playlist.setName("Test Playlist");
-        playlist.setUserId(savedUser.getId());
-        Playlist savedPlaylist = playListService.createPlaylist(playlist);
-        assertNotNull(savedPlaylist, "Playlist was not created");
+        Playlist playlist = createAndSavePlaylist(savedUser.getId());
+        playListService.delete(playlist.getId());
 
-        playListService.deletePlaylist(savedPlaylist.getId());
-        Optional<Playlist> foundPlaylist = playListService.findById((long) savedPlaylist.getId());
+        Optional<Playlist> foundPlaylist = playListService.findById(playlist.getId());
+
         assertFalse(foundPlaylist.isPresent());
     }
 
     @Test
-    public void deleteAllPlaylists() {
-        User user = new User();
-        user.setUsername("testUsername");
-        user.setEmail("test@test.com");
-        user.setPassword("password");
-        user.setRole("user");
+    public void testDeleteAllPlaylists() {
+        User user = createUser("testUsername");
         User savedUser = userService.save(user);
 
-        Playlist playlist = new Playlist();
-        playlist.setName("Test Playlist");
-        playlist.setUserId(savedUser.getId());
-        playListService.createPlaylist(playlist);
-        Playlist playlist2 = new Playlist();
-        playlist2.setName("Test Playlist");
-        playlist2.setUserId(savedUser.getId());
-        playListService.createPlaylist(playlist2);
+        createAndSavePlaylist(savedUser.getId());
+        createAndSavePlaylist(savedUser.getId());
 
         playListService.deleteAll();
 
@@ -144,44 +111,69 @@ public class PlaylistsServiceTest {
         assertEquals(0, playlists.size());
     }
 
+    @Test
+    public void addSongToPlaylistTest() {
+        User user = createUser("test");
+        User savedUser = userService.save(user);
 
-//    @Test
-//    public void addSongToPlaylistTest() {
-//        User user = new User();
-//        user.setUsername("test");
-//        user.setPassword("test");
-//        user.setEmail("test@test.com");
-//        user.setRole("user");
-//        User savedUser = userService.save(user);
-//
-//        assertNotNull(savedUser, "User was not created");
-//
-//        Playlist playlist = new Playlist();
-//        playlist.setName("test");
-//        playlist.setUserId(savedUser.getId());
-//        Playlist savedPlaylist = playListService.createPlaylist(playlist);
-//
-//        assertNotNull(savedPlaylist, "Playlist was not created");
-//
-//        Artist artist = new Artist();
-//        artist.setNickname("test");
-//        artist.setBiography("test");
-//        Artist savedArtist = artistService.save(artist);
-//
-//        Song song = new Song();
-//        song.setArtistId(savedArtist.getId());
-//        song.setTitle("test");
-//        song.setFile(null);
-//        song.setFormat("MP3");
-//        song.setYear(2024);
-//        song.setGenre("Pop");
-//
-//        Song savedSong = songService.save(song);
-//
-//        playListService.addSongToPlaylist((long) savedPlaylist.getId(), (long) savedSong.getId());
-//        assertTrue(savedPlaylist.getSongs().contains(savedSong), "Playlist should contain the added song");
-//    }
+        assertNotNull(savedUser, "User was not created");
 
+        Playlist playlist = new Playlist();
+        playlist.setName("test");
+        playlist.setUserId(savedUser.getId());
+        Playlist savedPlaylist = playListService.save(playlist);
 
+        assertNotNull(savedPlaylist, "Playlist was not created");
 
+        Artist artist = createArtist("test", "test");
+        Artist savedArtist = artistService.save(artist);
+
+        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
+        Song savedSong = songService.save(song);
+
+        playListService.addSongToPlaylist(savedPlaylist.getId(), savedSong.getId());
+
+        Optional<Playlist> retrievedPlaylist = playListService.findById(playlist.getId());
+
+        assertTrue(retrievedPlaylist.isPresent(), "Playlist should be found by id");
+        assertEquals(1, retrievedPlaylist.get().getSongs().size(), "Playlist should contain one song");
+        assertEquals(song.getTitle(), retrievedPlaylist.get().getSongs().get(0).getTitle(), "Playlist should contain the added song");
+    }
+
+    private User createUser(String username) {
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(DEFAULT_PASSWORD);
+        user.setEmail(DEFAULT_EMAIL);
+        user.setRole(DEFAULT_ROLE);
+        return user;
+    }
+
+    private Playlist createAndSavePlaylist(int userId) {
+        return createAndSavePlaylist(UUID.randomUUID().toString(), userId);
+    }
+
+    private Playlist createAndSavePlaylist(String name, int userId) {
+        Playlist playlist = new Playlist();
+        playlist.setName(name);
+        playlist.setUserId(userId);
+        return playListService.save(playlist);
+    }
+
+    private Artist createArtist(String nickname, String biography) {
+        Artist artist = new Artist();
+        artist.setNickname(nickname);
+        artist.setBiography(biography);
+        return artist;
+    }
+
+    private Song createSong(int artistId, String title) {
+        Song song = new Song();
+        song.setArtistId(artistId);
+        song.setTitle(title);
+        song.setFormat("MP3");
+        song.setYear(2024);
+        song.setGenre("Pop");
+        return song;
+    }
 }

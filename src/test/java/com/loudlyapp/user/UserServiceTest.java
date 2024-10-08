@@ -22,19 +22,27 @@ public class UserServiceTest {
     @Autowired
     private UserService userService;
 
+    private static final String DEFAULT_EMAIL = "test@test.com";
+    private static final String DEFAULT_PASSWORD = "password";
+    private static final String DEFAULT_ROLE = "user";
+
     @AfterEach
     void tearDown() {
         this.userService.deleteAll();
     }
 
-    @Test
-    public void createUserTest() {
+    private User createUser(String username) {
         User user = new User();
-        user.setUsername("testUsername");
-        user.setEmail("test@test.com");
-        user.setPassword("password");
-        user.setRole("user");
+        user.setUsername(username);
+        user.setPassword(DEFAULT_PASSWORD);
+        user.setEmail(DEFAULT_EMAIL);
+        user.setRole(DEFAULT_ROLE);
+        return user;
+    }
 
+    @Test
+    public void createAndSaveUserTest() {
+        User user = createUser("test");
         User savedUser = userService.save(user);
 
         assertNotNull(savedUser, "User was not created");
@@ -46,13 +54,9 @@ public class UserServiceTest {
 
     @Test
     public void getUserByIdTest() {
-        User user = new User();
-        user.setUsername("testUsername");
-        user.setEmail("test@test.com");
-        user.setPassword("password");
-        user.setRole("user");
+        User user = createUser("test");
         User savedUser = userService.save(user);
-        Optional<User> foundById = userService.findById(Long.valueOf(savedUser.getId()));
+        Optional<User> foundById = userService.findById(savedUser.getId());
         assertEquals(savedUser, foundById.get());
         assertEquals(savedUser.getEmail(), foundById.get().getEmail());
         assertEquals(savedUser.getPassword(), foundById.get().getPassword());
@@ -62,11 +66,7 @@ public class UserServiceTest {
 
     @Test
     public void findAllUsersTest() {
-        User user = new User();
-        user.setUsername("testUsername");
-        user.setEmail("test@test.com");
-        user.setPassword("password");
-        user.setRole("user");
+        User user = createUser("test");
         userService.save(user);
         Collection<User> users = userService.getAllUsers();
         assertNotNull(users);
@@ -95,12 +95,8 @@ public class UserServiceTest {
 
     @Test
     public void deleteUserByIdTest() {
-        User user = new User();
-        user.setUsername("testUsername");
-        user.setEmail("test@test.com");
-        user.setPassword("password");
-        user.setRole("user");
-        User savedUser = userRepository.save(user);
+        User user = createUser("test");
+        User savedUser = userService.save(user);
         assertNotNull(savedUser, "User was not created");
 
         userService.deleteUserById(savedUser.getId());
@@ -113,12 +109,8 @@ public class UserServiceTest {
 
     @Test
     public void updateUserTest() {
-        User user = new User();
-        user.setUsername("testUsername");
-        user.setEmail("test@test.com");
-        user.setPassword("password");
-        user.setRole("user");
-        User savedUser = userRepository.save(user);
+        User user = createUser("test");
+        User savedUser = userService.save(user);
 
         assertNotNull(savedUser, "User was not created");
 

@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,19 +32,10 @@ public class SongsServiceTest {
 
     @Test
     public void testCreateSong() {
-        Artist artist = new Artist();
-        artist.setNickname("test");
-        artist.setBiography("test");
+        Artist artist = createArtist("test", "test");
         Artist savedArtist = artistService.save(artist);
 
-        Song song = new Song();
-        song.setArtistId(savedArtist.getId());
-        song.setTitle("test");
-        song.setFile(null);
-        song.setFormat("MP3");
-        song.setYear(2024);
-        song.setGenre("Pop");
-
+        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
         Song savedSong = songService.save(song);
 
         assertNotNull(savedSong, "Song was not created");
@@ -54,21 +46,13 @@ public class SongsServiceTest {
 
     @Test
     public void searchSongByTitleTest() {
-        Artist artist = new Artist();
-        artist.setNickname("test");
-        artist.setBiography("test");
+        Artist artist = createArtist("test", "test");
         Artist savedArtist = artistService.save(artist);
-        assertNotNull(savedArtist, "Artist was not created");
 
-        Song song = new Song();
-        song.setArtistId(savedArtist.getId());
-        song.setTitle("testSongTitle");
-        song.setFile(null);
-        song.setFormat("MP3");
-        song.setYear(2024);
-        song.setGenre("Pop");
-
+        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
         Song savedSong = songService.save(song);
+
+        assertNotNull(savedArtist, "Artist was not created");
         assertNotNull(savedSong, "Song was not created");
 
         List<Song> foundByTitle = songService.findByTitle(savedSong.getTitle());
@@ -81,20 +65,13 @@ public class SongsServiceTest {
 
     @Test
     public void updateSongTest() {
-        Artist artist = new Artist();
-        artist.setNickname("test");
-        artist.setBiography("test");
+        Artist artist = createArtist("test", "test");
         Artist savedArtist = artistService.save(artist);
-        assertNotNull(savedArtist, "Artist was not created");
 
-        Song song = new Song();
-        song.setArtistId(savedArtist.getId());
-        song.setTitle("testSongTitle");
-        song.setFile(null);
-        song.setFormat("MP3");
-        song.setYear(2024);
-        song.setGenre("Pop");
+        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
         Song savedSong = songService.save(song);
+
+        assertNotNull(savedArtist, "Artist was not created");
         assertNotNull(savedSong, "Song was not created");
 
         Song updatedSong = new Song();
@@ -119,21 +96,11 @@ public class SongsServiceTest {
 
     @Test
     public void getAllSongsTest() {
-        Artist artist = new Artist();
-        artist.setNickname("test");
-        artist.setBiography("test");
+        Artist artist = createArtist("test", "test");
         Artist savedArtist = artistService.save(artist);
-        assertNotNull(savedArtist, "Artist was not created");
 
-        Song song = new Song();
-        song.setArtistId(savedArtist.getId());
-        song.setTitle("testSongTitle");
-        song.setFile(null);
-        song.setFormat("MP3");
-        song.setYear(2024);
-        song.setGenre("Pop");
-        Song savedSong = songService.save(song);
-        assertNotNull(savedSong, "Song was not created");
+        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
+        songService.save(song);
 
         Collection<Song> songs = songService.findAll();
         assertNotNull(songs, "No songs found");
@@ -143,21 +110,11 @@ public class SongsServiceTest {
     @Test
 
     public void deleteSongByIdTest() {
-        Artist artist = new Artist();
-        artist.setNickname("test");
-        artist.setBiography("test");
+        Artist artist = createArtist("test", "test");
         Artist savedArtist = artistService.save(artist);
-        assertNotNull(savedArtist, "Artist was not created");
 
-        Song song = new Song();
-        song.setArtistId(savedArtist.getId());
-        song.setTitle("testSongTitle");
-        song.setFile(null);
-        song.setFormat("MP3");
-        song.setYear(2024);
-        song.setGenre("Pop");
+        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
         Song savedSong = songService.save(song);
-        assertNotNull(savedSong, "Song was not created");
 
         songService.deleteById((long) savedSong.getId());
 
@@ -168,20 +125,10 @@ public class SongsServiceTest {
     @Test
     public void deleteAllSongsTest() {
 
-        Artist artist = new Artist();
-        artist.setNickname("test");
-        artist.setBiography("test");
+        Artist artist = createArtist("test", "test");
         Artist savedArtist = artistService.save(artist);
-        assertNotNull(savedArtist, "Artist was not created");
-        Song song = new Song();
-        song.setArtistId(savedArtist.getId());
 
-        song.setTitle("testSongTitle");
-        song.setFile(null);
-        song.setFormat("MP3");
-        song.setYear(2024);
-        song.setGenre("Pop");
-
+        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
         Song savedSong = songService.save(song);
 
         assertNotNull(savedSong, "Song was not created");
@@ -191,6 +138,23 @@ public class SongsServiceTest {
         Collection<Song> getDeletedSongs = songService.findAll();
         assertTrue(getDeletedSongs.isEmpty());
         assertEquals(0, getDeletedSongs.size());
+    }
+
+    private Artist createArtist(String nickname, String biography) {
+        Artist artist = new Artist();
+        artist.setNickname(nickname);
+        artist.setBiography(biography);
+        return artist;
+    }
+
+    private Song createSong(int artistId, String title) {
+        Song song = new Song();
+        song.setArtistId(artistId);
+        song.setTitle(title);
+        song.setFormat("MP3");
+        song.setYear(2024);
+        song.setGenre("Pop");
+        return song;
     }
 
 

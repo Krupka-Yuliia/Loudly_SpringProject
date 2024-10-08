@@ -16,6 +16,4 @@ public class Artist {
     private int id;
     private String nickname;
     private String biography;
-//    @OneToMany
-//    private List<Song> songs;
 }

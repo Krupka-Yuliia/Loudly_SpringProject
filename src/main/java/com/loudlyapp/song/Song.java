@@ -16,14 +16,12 @@ import java.util.List;
 public class Song {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
     private String title;
     private byte[] file;
     private String format;
     private int artistId;
     private String genre;
     private int year;
-//    @ManyToMany(mappedBy = "songs")
-//    private List<Playlist> playlists = new ArrayList<>();
 
 }

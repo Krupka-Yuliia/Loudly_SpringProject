@@ -1,9 +1,7 @@
 package com.loudlyapp.artists;
 
 import com.loudlyapp.artist.Artist;
-import com.loudlyapp.artist.ArtistRepository;
 import com.loudlyapp.artist.ArtistService;
-import com.loudlyapp.user.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -23,8 +21,6 @@ public class ArtistsServiceTests {
     @Autowired
     private ArtistService artistService;
 
-    @Autowired
-    private ArtistRepository artistRepository;
 
     @AfterEach
     void tearDown() {
@@ -32,11 +28,8 @@ public class ArtistsServiceTests {
     }
 
     @Test
-    public void createArtistTest() {
-        Artist artist = new Artist();
-        artist.setBiography("Pop diva");
-        artist.setNickname("Sabrina Carpenter");
-
+    public void createAndSaveArtistTest() {
+        Artist artist = createArtist("test", "test");
         Artist savedArtist = artistService.save(artist);
 
         assertNotNull(savedArtist, "Artist was not created");
@@ -46,9 +39,7 @@ public class ArtistsServiceTests {
 
     @Test
     public void getArtistByIdTest() {
-        Artist artist = new Artist();
-        artist.setBiography("Pop diva");
-        artist.setNickname("Sabrina Carpenter");
+        Artist artist = createArtist("test", "test");
         Artist savedArtist = artistService.save(artist);
         assertNotNull(savedArtist, "Artist was not created");
         assertNotNull(savedArtist.getBiography(), "Bio was not created");
@@ -81,9 +72,7 @@ public class ArtistsServiceTests {
 
     @Test
     public void getAllArtistsTest() {
-        Artist artist = new Artist();
-        artist.setBiography("Pop diva");
-        artist.setNickname("Sabrina Carpenter");
+        Artist artist = createArtist("test", "test");
         Artist savedArtist = artistService.save(artist);
         assertNotNull(savedArtist, "Artist was not created");
         Collection<Artist> artists = artistService.getAllArtists();
@@ -93,9 +82,7 @@ public class ArtistsServiceTests {
 
     @Test
     public void updateArtistTest() {
-        Artist artist = new Artist();
-        artist.setBiography("Pop diva");
-        artist.setNickname("Sabrina Carpenter");
+        Artist artist = createArtist("test", "test");
         Artist savedArtist = artistService.save(artist);
         assertNotNull(savedArtist, "Artist was not created");
 
@@ -115,9 +102,7 @@ public class ArtistsServiceTests {
 
     @Test
     public void deleteArtistTest() {
-        Artist artist = new Artist();
-        artist.setBiography("Pop diva");
-        artist.setNickname("Sabrina Carpenter");
+        Artist artist = createArtist("test", "test");
         Artist savedArtist = artistService.save(artist);
         assertNotNull(savedArtist, "Artist was not created");
 
@@ -127,6 +112,11 @@ public class ArtistsServiceTests {
         Assertions.assertFalse(deletedArtist.isPresent());
     }
 
-
+    private Artist createArtist(String nickname, String biography) {
+        Artist artist = new Artist();
+        artist.setNickname(nickname);
+        artist.setBiography(biography);
+        return artist;
+    }
 
 }

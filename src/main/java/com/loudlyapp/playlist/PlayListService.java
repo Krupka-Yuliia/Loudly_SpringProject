@@ -11,10 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 
-//delete playlist by id
-//create a playlist
-//add a song to the playlist
-//delete a song from a playlist
 
 @Service
 public class PlayListService {
@@ -38,10 +34,10 @@ public class PlayListService {
         return playlistRepository.findById(id);
     }
 
-    public Playlist createPlaylist(Playlist playlist) {
+    public Playlist save(Playlist playlist) {
         return playlistRepository.save(playlist);
     }
-    public void deletePlaylist(long playlist) {
+    public void delete(long playlist) {
         playlistRepository.deleteById(playlist);
     }
 
@@ -50,8 +46,7 @@ public class PlayListService {
     }
 
     public List<Playlist> findPlaylistsByUserId(long userId) {
-        List<Playlist> playlists = playlistRepository.findByUserId(userId);
-        return playlists;
+        return playlistRepository.findByUserId(userId);
     }
 
     public Playlist addSongToPlaylist(Long playlistId, Long songId) {
@@ -62,9 +57,9 @@ public class PlayListService {
 
         if (playlist.containsSong(song)) {
             throw new RuntimeException("Playlist already contains song");
-        } else {
-            playlist.addSong(song);
         }
+
+        playlist.addSong(song);
         return playlistRepository.save(playlist);
     }
 
