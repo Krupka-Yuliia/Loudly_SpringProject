@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/songs")
@@ -21,8 +22,18 @@ public class SongController {
     }
 
     @PostMapping
-    public Song addSong(@RequestBody Song song) {
+    public Song createSong(@RequestBody Song song) {
         return songService.save(song);
+    }
+
+    @GetMapping("/{songId}")
+    public Optional<Song> getSongById(@PathVariable Long songId) {
+        return songService.findById(songId);
+    }
+
+    @DeleteMapping("/{songId}")
+    public void deleteSongById(@PathVariable Long songId) {
+        songService.deleteById(songId);
     }
 
     @GetMapping("/search")

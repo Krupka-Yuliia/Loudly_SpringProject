@@ -140,6 +140,60 @@ public class SongsServiceTest {
         assertEquals(0, getDeletedSongs.size());
     }
 
+    @Test
+    public void getSongByIdTest() {
+        Artist artist = createArtist("test", "test");
+        Artist savedArtist = artistService.save(artist);
+        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
+        Song savedSong = songService.save(song);
+        assertNotNull(savedSong, "Song was not created");
+
+        Optional<Song> getSongById = songService.findById(savedSong.getId());
+        assertTrue(getSongById.isPresent());
+        assertEquals(savedSong.getId(), getSongById.get().getId());
+        assertEquals(savedSong.getTitle(), getSongById.get().getTitle());
+        assertEquals(savedSong.getArtistId(), getSongById.get().getArtistId());
+    }
+
+    @Test
+    public void getAllSongsByArtistTest() {
+        Artist artist = createArtist("test", "test");
+        Artist savedArtist = artistService.save(artist);
+        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
+        Song savedSong = songService.save(song);
+        assertNotNull(savedSong, "Song was not created");
+        Song song2 = createSong(savedArtist.getId(), UUID.randomUUID().toString());
+        Song savedSong2 = songService.save(song2);
+        assertNotNull(savedSong2, "Song was not created");
+
+        Collection<Song> getSongsByArtist = songService.findByArtistId(savedArtist.getId());
+        assertFalse(getSongsByArtist.isEmpty());
+        assertEquals(2, getSongsByArtist.size());
+
+    }
+
+    @Test
+    public void getAllSongsByTitleTest() {
+        Artist artist = createArtist("test", "test");
+        Artist savedArtist = artistService.save(artist);
+
+        Artist artist2 = createArtist("test", "test");
+        Artist savedArtist2 = artistService.save(artist2);
+
+        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
+        Song savedSong = songService.save(song);
+        assertNotNull(savedSong, "Song was not created");
+
+        Song song2 = createSong(savedArtist2.getId(), savedSong.getTitle());
+        Song savedSong2 = songService.save(song2);
+        assertNotNull(savedSong2, "Song was not created");
+
+        Collection<Song> getSongsByTitle = songService.findByTitle(savedSong.getTitle());
+        assertFalse(getSongsByTitle.isEmpty());
+        assertEquals(2, getSongsByTitle.size());
+
+    }
+
     private Artist createArtist(String nickname, String biography) {
         Artist artist = new Artist();
         artist.setNickname(nickname);

@@ -112,6 +112,18 @@ public class ArtistsServiceTests {
         Assertions.assertFalse(deletedArtist.isPresent());
     }
 
+    @Test
+    public void searchArtistByNameTest() {
+        Artist artist = createArtist("test", "test");
+        Artist savedArtist = artistService.save(artist);
+        assertNotNull(savedArtist, "Artist was not created");
+
+        Optional<Artist> foundByName = artistService.findByName(savedArtist.getNickname());
+
+        assertNotNull(foundByName);
+        assertEquals(foundByName.get().getNickname(), savedArtist.getNickname());
+    }
+
     private Artist createArtist(String nickname, String biography) {
         Artist artist = new Artist();
         artist.setNickname(nickname);

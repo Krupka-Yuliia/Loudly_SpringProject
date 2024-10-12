@@ -2,6 +2,7 @@ package com.loudlyapp.playlist;
 
 import com.loudlyapp.song.Song;
 import com.loudlyapp.song.SongRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,16 +19,11 @@ public class PlayListService {
     @Getter
     @Autowired
     private PlaylistRepository playlistRepository;
-
     @Autowired
     private SongRepository songRepository;
 
     public List<Playlist> findAll() {
         return playlistRepository.findAll();
-    }
-
-    public Playlist findByName(String name) {
-        return playlistRepository.findByName(name);
     }
 
     public Optional<Playlist> findById(Long id) {
@@ -37,8 +33,31 @@ public class PlayListService {
     public Playlist save(Playlist playlist) {
         return playlistRepository.save(playlist);
     }
-    public void delete(long playlist) {
-        playlistRepository.deleteById(playlist);
+
+    public void deleteById(Long id) {
+        playlistRepository.deleteById(id);
+    }
+
+    public Playlist update(Long id, Playlist playlist) {
+        return playlistRepository.findById(id)
+                .map(existingPlaylist -> {
+                    existingPlaylist.setName(playlist.getName());
+                    return playlistRepository.save(existingPlaylist);
+                })
+                .orElseThrow(() -> new EntityNotFoundException("Playlist with id " + id + " not found"));
+    }
+
+    public List<Song> getAllSongsFromPlaylist(Long playlistId) {
+        Playlist playlist = findById(playlistId).get();
+        List<Song> songs = playlist.getSongs();
+        return songs;
+    }
+
+    public void deleteAllSongsFromPlaylist(Long playlistId) {
+        Playlist playlist = playlistRepository.findById(playlistId)
+                .orElseThrow(() -> new RuntimeException("Playlist not found"));
+        playlist.clearSongs();
+        playlistRepository.save(playlist);
     }
 
     public void deleteAll() {
@@ -71,6 +90,7 @@ public class PlayListService {
 
         if (playlist.containsSong(song)) {
             playlist.removeSong(song);
+            playlistRepository.save(playlist);
         } else {
             throw new RuntimeException("Playlist does not have contains song");
         }

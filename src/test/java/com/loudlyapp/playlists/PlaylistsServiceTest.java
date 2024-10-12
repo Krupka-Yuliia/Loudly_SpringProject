@@ -43,7 +43,8 @@ public class PlaylistsServiceTest {
 
     @Test
     public void createPlaylist() {
-        User user = createUser("test");
+        User user = createUser(UUID.randomUUID().toString());
+        user.setEmail(UUID.randomUUID().toString());
         User savedUser = userService.save(user);
 
         assertNotNull(savedUser, "User was not created");
@@ -60,7 +61,8 @@ public class PlaylistsServiceTest {
 
     @Test
     public void findAllPlaylists() {
-        User user = createUser("testUsername");
+        User user = createUser(UUID.randomUUID().toString());
+        user.setEmail(UUID.randomUUID().toString());
         User savedUser = userService.save(user);
 
         createAndSavePlaylist(savedUser.getId());
@@ -74,7 +76,8 @@ public class PlaylistsServiceTest {
 
     @Test
     public void findPlaylistByUserId() {
-        User user = createUser("testUsername");
+        User user = createUser(UUID.randomUUID().toString());
+        user.setEmail(UUID.randomUUID().toString());
         User savedUser = userService.save(user);
 
         createAndSavePlaylist(savedUser.getId());
@@ -86,11 +89,12 @@ public class PlaylistsServiceTest {
 
     @Test
     public void findPlaylistById() {
-        User user = createUser("testUsername");
+        User user = createUser(UUID.randomUUID().toString());
+        user.setEmail(UUID.randomUUID().toString());
         User savedUser = userService.save(user);
 
         Playlist playlist = createAndSavePlaylist(savedUser.getId());
-        playListService.delete(playlist.getId());
+        playListService.deleteById(playlist.getId());
 
         Optional<Playlist> foundPlaylist = playListService.findById(playlist.getId());
 
@@ -99,7 +103,8 @@ public class PlaylistsServiceTest {
 
     @Test
     public void testDeleteAllPlaylists() {
-        User user = createUser("testUsername");
+        User user = createUser(UUID.randomUUID().toString());
+        user.setEmail(UUID.randomUUID().toString());
         User savedUser = userService.save(user);
 
         createAndSavePlaylist(savedUser.getId());
@@ -113,7 +118,8 @@ public class PlaylistsServiceTest {
 
     @Test
     public void addSongToPlaylistTest() {
-        User user = createUser("test");
+        User user = createUser(UUID.randomUUID().toString());
+        user.setEmail(UUID.randomUUID().toString());
         User savedUser = userService.save(user);
 
         assertNotNull(savedUser, "User was not created");
@@ -139,6 +145,104 @@ public class PlaylistsServiceTest {
         assertEquals(1, retrievedPlaylist.get().getSongs().size(), "Playlist should contain one song");
         assertEquals(song.getTitle(), retrievedPlaylist.get().getSongs().get(0).getTitle(), "Playlist should contain the added song");
     }
+
+    @Test
+    public void deleteSongFromPlaylistTest() {
+        User user = createUser(UUID.randomUUID().toString());
+        user.setEmail(UUID.randomUUID().toString());
+        User savedUser = userService.save(user);
+
+        Playlist playlist = createAndSavePlaylist(savedUser.getId());
+
+
+        Artist artist = createArtist("test", "test");
+        Artist savedArtist = artistService.save(artist);
+
+        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
+        Song savedSong = songService.save(song);
+
+        playListService.addSongToPlaylist(playlist.getId(), savedSong.getId());
+
+        assertTrue(playListService.getAllSongsFromPlaylist(playlist.getId()).contains(savedSong));
+
+        playListService.deleteSongFromPlaylist(playlist.getId(), savedSong.getId());
+
+        assertFalse(playListService.getAllSongsFromPlaylist(playlist.getId()).contains(savedSong));
+    }
+
+    @Test
+    public void updatePlaylist() {
+        User user = createUser(UUID.randomUUID().toString());
+        user.setEmail(UUID.randomUUID().toString());
+        User savedUser = userService.save(user);
+        Playlist playlist = createAndSavePlaylist(savedUser.getId());
+
+        Playlist updatedPlaylist = new Playlist();
+        updatedPlaylist.setId(playlist.getId());
+        updatedPlaylist.setName("test2");
+        updatedPlaylist.setUserId(savedUser.getId());
+
+        playListService.update(playlist.getId(), updatedPlaylist);
+
+        Playlist retrievedPlaylist = playListService.findById(playlist.getId()).orElseThrow();
+
+        assertNotEquals(playlist.getName(), retrievedPlaylist.getName());
+        assertEquals(updatedPlaylist.getId(), retrievedPlaylist.getId());
+        assertEquals(updatedPlaylist.getUserId(), retrievedPlaylist.getUserId());
+    }
+
+
+    @Test
+    public void deletePlaylist() {
+        User user = createUser(UUID.randomUUID().toString());
+        user.setEmail(UUID.randomUUID().toString());
+        User savedUser = userService.save(user);
+        Playlist playlist = createAndSavePlaylist(savedUser.getId());
+        playListService.deleteById(playlist.getId());
+        Optional<Playlist> retrievedPlaylist = playListService.findById(playlist.getId());
+        assertFalse(retrievedPlaylist.isPresent());
+    }
+
+    @Test
+    public void getAllSongsFromPlaylistTest() {
+        User user = createUser(UUID.randomUUID().toString());
+        user.setEmail(UUID.randomUUID().toString());
+        User savedUser = userService.save(user);
+        Playlist playlist = createAndSavePlaylist(savedUser.getId());
+        Artist artist = createArtist("test", "test");
+        Artist savedArtist = artistService.save(artist);
+        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
+        Song savedSong = songService.save(song);
+        playListService.addSongToPlaylist(playlist.getId(), song.getId());
+
+        List<Song> songs = playListService.getAllSongsFromPlaylist(playlist.getId());
+        assertEquals(1, songs.size());
+    }
+
+    @Test
+    public void deleteAllSongsFromPlaylistTest() {
+        User user = createUser(UUID.randomUUID().toString());
+        user.setEmail(UUID.randomUUID().toString());
+        User savedUser = userService.save(user);
+        Playlist playlist = createAndSavePlaylist(savedUser.getId());
+
+        Artist artist = createArtist("test", "test");
+        Artist savedArtist = artistService.save(artist);
+
+        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
+        songService.save(song);
+
+        playListService.addSongToPlaylist(playlist.getId(), song.getId());
+
+        List<Song> songsBeforeDeletion = playListService.getAllSongsFromPlaylist(playlist.getId());
+        assertEquals(1, songsBeforeDeletion.size());
+
+        playListService.deleteAllSongsFromPlaylist(playlist.getId());
+
+        List<Song> songsAfterDeletion = playListService.getAllSongsFromPlaylist(playlist.getId());
+        assertTrue(songsAfterDeletion.isEmpty());
+    }
+
 
     private User createUser(String username) {
         User user = new User();

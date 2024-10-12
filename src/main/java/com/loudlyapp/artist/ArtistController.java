@@ -1,6 +1,5 @@
 package com.loudlyapp.artist;
 
-import com.loudlyapp.song.Song;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,5 +46,11 @@ public class ArtistController {
     public void deleteArtist(@PathVariable Long artistId) {
         artistService.deleteArtistById(artistId);
     }
+
+    @GetMapping("/search")
+    public Optional<Artist> getArtistByName(@RequestParam String name) {
+        return artistService.findByName(name);
+    }
 }
+
 

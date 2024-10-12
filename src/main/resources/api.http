@@ -6,7 +6,7 @@ GET http://localhost:8080/users
 
 ### GET user by id
 
-GET http://localhost:8080/users/1
+GET http://localhost:8080/users/167
 
 ### POST create a user
 
@@ -14,8 +14,8 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "username": "yulia_kr",
-  "email": "yulia@gmail.com",
+  "username": "yulaaa",
+  "email": "yulaaa@gmail.com",
   "password": "12345",
   "role": "user"
 }
@@ -26,7 +26,7 @@ DELETE http://localhost:8080/users
 
 ### PUT update a user
 
-PUT http://localhost:8080/users/48
+PUT http://localhost:8080/users/177
 Content-Type:application/json
 
 {
@@ -40,9 +40,17 @@ Content-Type:application/json
 
 DELETE http://localhost:8080/users/48
 
+### GET find by role
+GET http://localhost:8080/users/searchByRole?userRole=admin
 
 
+###GET user by username
 
+GET http://localhost:8080/users/searchByUsername?username=yulia_kr
+
+### GET user by email
+
+GET http://localhost:8080/users/searchByEmail?email=yulia@gmail.com
 
 
 #-----------PLAYLISTS-------------------------
@@ -53,11 +61,11 @@ GET http://localhost:8080/playlists
 
 ### POST playlist by userId
 
-POST http://localhost:8080/playlists/users/81
+POST http://localhost:8080/playlists/users/229
 Content-Type: application/json
 
 {
-  "name": "pop mix"
+  "name": "uhu"
 }
 
 ### DELETE playlist by id
@@ -70,12 +78,38 @@ GET http://localhost:8080/playlists/users/4
 
 
 ### POST add a song to a playlist
-POST http://localhost:8080/playlists/29/songs/32
+POST http://localhost:8080/playlists/60/songs/77
+
+### DELETE song from a playlist
+
+DELETE http://localhost:8080/playlists/60/songs/77
+
+### DELETE all songs from playlist
+
+DELETE http://localhost:8080/playlists/60/songs
 
 
 ### DELETE all playlists
 
 DELETE http://localhost:8080/playlists
+
+### GET playlist by id
+
+GET http://localhost:8080/playlists/60
+
+### PUT update a playlist
+
+PUT http://localhost:8080/playlists/61
+Content-Type: application/json
+
+{
+  "name": "rock mix"
+
+}
+
+### GET all songs from playlist
+
+GET http://localhost:8080/playlists/60/songs
 
 
 
@@ -90,17 +124,26 @@ POST http://localhost:8080/songs
 Content-Type: application/json
 
 {
-  "artistId": "79",
+  "artistId": "197",
   "file": null,
   "format": "MP3",
   "genre": "rap",
-  "title": "HeavydirtySoul",
+  "title": "Heavydirtysoul22",
   "year": "2015"
 }
 
 ### GET ALL SONGS
 
 GET http://localhost:8080/songs
+
+### GET song by id
+
+GET http://localhost:8080/songs/68
+
+
+### DELETE song by id
+
+DELETE http://localhost:8080/songs/69
 
 ### GET search songs by title
 
@@ -147,7 +190,7 @@ GET http://localhost:8080/artists
 
 ### GET Artist by Id
 
-GET http://localhost:8080/artists/4
+GET http://localhost:8080/artists/188
 
 ### POST add artist
 
@@ -155,8 +198,8 @@ POST http://localhost:8080/artists
 Content-Type: application/json
 
 {
-  "nickname": "Sabrina Carpenter",
-  "biography": "Pop diva of the century"
+  "nickname": "Twenty One Pilots",
+  "biography": "Best rock band"
 }
 
 ### DELETE all artists
@@ -166,7 +209,7 @@ DELETE http://localhost:8080/artists
 
 ### PUT update an artist
 
-PUT http://localhost:8080/artists/6
+PUT http://localhost:8080/artists/164
 Content-Type: application/json
 
 {
@@ -177,6 +220,10 @@ Content-Type: application/json
 ### DELETE artist by id
 
 DELETE http://localhost:8080/artists/39
+
+### GET artist by name
+
+GET http://localhost:8080/artists/search?name=SabrinaCarpenter
 
 
 

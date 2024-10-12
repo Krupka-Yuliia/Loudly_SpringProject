@@ -27,6 +27,12 @@ public class UserService {
     }
 
     public User save(User user) {
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new IllegalArgumentException("Username already exists: " + user.getUsername());
+        }
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new IllegalArgumentException("Email already exists: " + user.getEmail());
+        }
         return userRepository.save(user);
     }
 
@@ -44,6 +50,17 @@ public class UserService {
                     return userRepository.save(existingUser);
                 })
                 .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found"));
+    }
+
+    public List<User> findByRole(String role) {
+        return userRepository.findByRole(role);
+    }
+
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
 }

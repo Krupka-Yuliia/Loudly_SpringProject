@@ -28,7 +28,7 @@ public class ArtistService {
         return artistRepository.save(artist);
     }
 
-    public void deleteAll(){
+    public void deleteAll() {
         artistRepository.deleteAll();
     }
 
@@ -44,6 +44,15 @@ public class ArtistService {
 
     public void deleteArtistById(long id) {
         artistRepository.deleteById(id);
+    }
+
+    public Optional<Artist> findByName(String name) {
+
+        if (name == null || name.trim().isEmpty()) {
+            return Optional.empty();
+        }
+        return artistRepository.findByNickname(name);
+
     }
 }
 

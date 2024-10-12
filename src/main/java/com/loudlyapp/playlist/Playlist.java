@@ -49,4 +49,8 @@ public class Playlist {
         }
     }
 
+    public void clearSongs() {
+        this.songs.clear();
+    }
+
 }

@@ -7,11 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class UserServiceTest {
@@ -22,10 +23,8 @@ public class UserServiceTest {
     @Autowired
     private UserService userService;
 
-    private static final String DEFAULT_EMAIL = "test@test.com";
     private static final String DEFAULT_PASSWORD = "password";
     private static final String DEFAULT_ROLE = "user";
-
     @AfterEach
     void tearDown() {
         this.userService.deleteAll();
@@ -35,14 +34,14 @@ public class UserServiceTest {
         User user = new User();
         user.setUsername(username);
         user.setPassword(DEFAULT_PASSWORD);
-        user.setEmail(DEFAULT_EMAIL);
+        user.setEmail(UUID.randomUUID().toString());
         user.setRole(DEFAULT_ROLE);
         return user;
     }
 
     @Test
     public void createAndSaveUserTest() {
-        User user = createUser("test");
+        User user = createUser(UUID.randomUUID().toString());
         User savedUser = userService.save(user);
 
         assertNotNull(savedUser, "User was not created");
@@ -54,7 +53,7 @@ public class UserServiceTest {
 
     @Test
     public void getUserByIdTest() {
-        User user = createUser("test");
+        User user = createUser(UUID.randomUUID().toString());
         User savedUser = userService.save(user);
         Optional<User> foundById = userService.findById(savedUser.getId());
         assertEquals(savedUser, foundById.get());
@@ -66,7 +65,7 @@ public class UserServiceTest {
 
     @Test
     public void findAllUsersTest() {
-        User user = createUser("test");
+        User user = createUser(UUID.randomUUID().toString());
         userService.save(user);
         Collection<User> users = userService.getAllUsers();
         assertNotNull(users);
@@ -79,8 +78,8 @@ public class UserServiceTest {
         assertEquals(0, users.size());
         IntStream.range(0, 10).forEach(i -> {
             User user = new User();
-            user.setUsername("testUsername");
-            user.setEmail("test@test.com");
+            user.setUsername("testUse" + i);
+            user.setEmail("test@tst.com" + i);
             user.setPassword("password");
             user.setRole("user");
             userService.save(user);
@@ -95,7 +94,7 @@ public class UserServiceTest {
 
     @Test
     public void deleteUserByIdTest() {
-        User user = createUser("test");
+        User user = createUser(UUID.randomUUID().toString());
         User savedUser = userService.save(user);
         assertNotNull(savedUser, "User was not created");
 
@@ -109,13 +108,13 @@ public class UserServiceTest {
 
     @Test
     public void updateUserTest() {
-        User user = createUser("test");
+        User user = createUser(UUID.randomUUID().toString());
         User savedUser = userService.save(user);
 
         assertNotNull(savedUser, "User was not created");
 
         User updatedUser = new User();
-        updatedUser.setUsername("vikky_test@test.com");
+        updatedUser.setUsername(UUID.randomUUID().toString());
         updatedUser.setEmail(user.getEmail());
         updatedUser.setPassword(user.getPassword());
         updatedUser.setRole(user.getRole());
@@ -129,6 +128,39 @@ public class UserServiceTest {
         assertEquals(getUpdatedUser.get().getUsername(), updatedUser.getUsername());
         assertEquals(getUpdatedUser.get().getRole(), updatedUser.getRole());
         assertEquals(getUpdatedUser.get().getId(), savedUser.getId(), "ID should remain the same");
+    }
+
+
+    @Test
+    public void findUserByEmailTest() {
+        User user = createUser(UUID.randomUUID().toString());
+        User savedUser = userService.save(user);
+        assertNotNull(savedUser, "User was not created");
+
+       Optional<User> foundByEmail = userService.findByEmail(savedUser.getEmail());
+       assertEquals(savedUser, foundByEmail.get());
+    }
+
+    @Test
+    public void findUserByUsernameTest() {
+        User user = createUser(UUID.randomUUID().toString());
+        User savedUser = userService.save(user);
+        assertNotNull(savedUser, "User was not created");
+
+        Optional<User> foundByUsername = userService.findByUsername(savedUser.getUsername());
+        assertEquals(savedUser, foundByUsername.get());
+    }
+
+    @Test
+    public void findUserByRoleTest() {
+        User user = createUser(UUID.randomUUID().toString());
+        user.setRole("admin");
+        User savedUser = userService.save(user);
+        assertNotNull(savedUser, "User was not created");
+
+        List<User> foundByRole = userService.findByRole(savedUser.getRole());
+        assertFalse(foundByRole.isEmpty());
+        assertEquals(savedUser, foundByRole.get(0));
     }
 
 }
