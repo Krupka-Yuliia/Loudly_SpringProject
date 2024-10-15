@@ -23,5 +23,7 @@ public class Song {
     private int artistId;
     private String genre;
     private int year;
+    @Transient
+    private String artistName;
 
 }

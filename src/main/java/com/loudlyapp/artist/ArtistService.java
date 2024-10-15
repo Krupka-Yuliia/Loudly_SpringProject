@@ -1,7 +1,5 @@
 package com.loudlyapp.artist;
 
-import com.loudlyapp.song.Song;
-import com.loudlyapp.user.User;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -54,5 +52,7 @@ public class ArtistService {
         return artistRepository.findByNickname(name);
 
     }
+
+
 }
 

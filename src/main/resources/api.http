@@ -14,8 +14,8 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "username": "yulaaa",
-  "email": "yulaaa@gmail.com",
+  "username": "yuliaaa",
+  "email": "yuliaaa@gmail.com",
   "password": "12345",
   "role": "user"
 }
@@ -61,11 +61,11 @@ GET http://localhost:8080/playlists
 
 ### POST playlist by userId
 
-POST http://localhost:8080/playlists/users/229
+POST http://localhost:8080/playlists/users/319
 Content-Type: application/json
 
 {
-  "name": "uhu"
+  "name": "Pop mix 24"
 }
 
 ### DELETE playlist by id
@@ -78,7 +78,7 @@ GET http://localhost:8080/playlists/users/4
 
 
 ### POST add a song to a playlist
-POST http://localhost:8080/playlists/60/songs/77
+POST http://localhost:8080/playlists/101/songs/111
 
 ### DELETE song from a playlist
 
@@ -124,12 +124,12 @@ POST http://localhost:8080/songs
 Content-Type: application/json
 
 {
-  "artistId": "197",
+  "artistId": "240",
   "file": null,
   "format": "MP3",
-  "genre": "rap",
-  "title": "Heavydirtysoul22",
-  "year": "2015"
+  "genre": "pop",
+  "title": "Espresso",
+  "year": "2024"
 }
 
 ### GET ALL SONGS
@@ -157,7 +157,7 @@ GET http://localhost:8080/songs/searchByGenre?genre=pop
 
 ### PUT update a song
 
-PUT http://localhost:8080/songs/2
+PUT http://localhost:8080/songs/105
 Content-Type: application/json
 
 {
@@ -166,7 +166,7 @@ Content-Type: application/json
   "genre": "rock",
   "format": "MP3",
   "file": null,
-  "artistId": "5"
+  "artistId": "239"
 }
 
 ### GET search songs by artist id
@@ -198,8 +198,8 @@ POST http://localhost:8080/artists
 Content-Type: application/json
 
 {
-  "nickname": "Twenty One Pilots",
-  "biography": "Best rock band"
+  "nickname": "Sabrina Carpenter",
+  "biography": "Pop diva of the century"
 }
 
 ### DELETE all artists
