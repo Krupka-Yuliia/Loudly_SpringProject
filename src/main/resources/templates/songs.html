@@ -77,7 +77,7 @@
 
         <tr th:each="song : ${songs}">
             <td th:text="${song.id}">1</td>
-            <td class="names"><a th:href="@{'/song/' + ${song.id}}" th:text="${song.title}">Song Name</a></td>
+            <td class="names"><a th:href="@{'/songs/show/' + ${song.id}}" th:text="${song.title}">Song Name</a></td>
             <td th:text="${song.artist}">Artist</td>
             <td th:text="${song.year}">Year</td>
             <td th:text="${song.genre}">Genre</td>

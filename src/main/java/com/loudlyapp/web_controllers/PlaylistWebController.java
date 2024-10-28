@@ -22,7 +22,7 @@ public class PlaylistWebController {
     private final ArtistService artistService;
 
 
-    @GetMapping("/playlist/{id}")
+    @GetMapping("/playlists/show/{id}")
     public String getPlaylist(Model model, @PathVariable long id) {
         Optional<Playlist> playlist = playListService.findById(id);
 

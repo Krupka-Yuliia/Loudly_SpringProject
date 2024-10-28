@@ -1,13 +1,7 @@
 package com.loudlyapp.song;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.loudlyapp.playlist.Playlist;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Entity
 @Data //getters,setters,hashcode,equals

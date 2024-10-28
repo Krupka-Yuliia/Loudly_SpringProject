@@ -12,8 +12,4 @@ public class HomeController {
         model.addAttribute("message", "Welcome to Loudly!");
         return "home";
     }
-
-
-
-
 }

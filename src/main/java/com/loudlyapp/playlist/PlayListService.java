@@ -3,23 +3,17 @@ package com.loudlyapp.playlist;
 import com.loudlyapp.song.Song;
 import com.loudlyapp.song.SongRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
-
+@AllArgsConstructor
 @Service
 public class PlayListService {
 
-    @Getter
-    @Autowired
     private PlaylistRepository playlistRepository;
-    @Autowired
     private SongRepository songRepository;
 
     public List<Playlist> findAll() {
@@ -95,17 +89,4 @@ public class PlayListService {
             throw new RuntimeException("Playlist does not have contains song");
         }
     }
-
-    public List<Playlist> getPlaylistsByUserId(Long userId) {
-        if (userId == null) {
-            throw new RuntimeException("UserId cannot be null");
-        }
-        else{
-            List<Playlist> playlists = new ArrayList<>();
-        }
-        return null;
-    }
-
-
-
 }

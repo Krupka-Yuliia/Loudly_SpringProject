@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
 
@@ -20,7 +19,7 @@ public class SongWebController {
     private final SongService songService;
     private final ArtistService artistService;
 
-    @GetMapping("/song/{id}")
+    @GetMapping("/songs/show/{id}")
     public String getSongPage(@PathVariable Long id, Model model) {
         Optional<Song> songOptional = songService.findById(id);
 
@@ -44,7 +43,7 @@ public class SongWebController {
         return "song";
     }
 
-    @GetMapping("/song")
+    @GetMapping("/songs/show")
     public String getAllSongs(Model model) {
         List<Song> songs = songService.findAll();
         List<Map<String, Object>> songList = new ArrayList<>();

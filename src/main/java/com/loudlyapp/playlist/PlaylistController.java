@@ -2,8 +2,6 @@ package com.loudlyapp.playlist;
 
 import com.loudlyapp.song.Song;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,7 +12,6 @@ import java.util.Optional;
 @AllArgsConstructor
 public class PlaylistController {
 
-    @Autowired
     private final PlayListService playlistService;
 
     @PostMapping("/users/{userId}")
@@ -78,7 +75,4 @@ public class PlaylistController {
             @PathVariable Long songId) {
         playlistService.deleteSongFromPlaylist(playlistId, songId);
     }
-
-
-
 }

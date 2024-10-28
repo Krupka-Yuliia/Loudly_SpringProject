@@ -26,7 +26,7 @@ DELETE http://localhost:8080/users
 
 ### PUT update a user
 
-PUT http://localhost:8080/users/177
+PUT http://localhost:8080/users/1
 Content-Type:application/json
 
 {
@@ -61,11 +61,11 @@ GET http://localhost:8080/playlists
 
 ### POST playlist by userId
 
-POST http://localhost:8080/playlists/users/319
+POST http://localhost:8080/playlists/users/1
 Content-Type: application/json
 
 {
-  "name": "Pop mix 24"
+  "name": "Mix Fall 24"
 }
 
 ### DELETE playlist by id
@@ -78,7 +78,7 @@ GET http://localhost:8080/playlists/users/4
 
 
 ### POST add a song to a playlist
-POST http://localhost:8080/playlists/101/songs/111
+POST http://localhost:8080/playlists/1/songs/3
 
 ### DELETE song from a playlist
 
@@ -124,12 +124,12 @@ POST http://localhost:8080/songs
 Content-Type: application/json
 
 {
-  "artistId": "240",
+  "artistId": "18",
   "file": null,
   "format": "MP3",
   "genre": "pop",
   "title": "Espresso",
-  "year": "2024"
+  "year": "2018"
 }
 
 ### GET ALL SONGS
@@ -166,7 +166,7 @@ Content-Type: application/json
   "genre": "rock",
   "format": "MP3",
   "file": null,
-  "artistId": "239"
+  "artistId": "17"
 }
 
 ### GET search songs by artist id
@@ -199,7 +199,7 @@ Content-Type: application/json
 
 {
   "nickname": "Sabrina Carpenter",
-  "biography": "Pop diva of the century"
+  "biography": "Pop diva"
 }
 
 ### DELETE all artists

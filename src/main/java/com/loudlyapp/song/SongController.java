@@ -37,36 +37,27 @@ public class SongController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Song>> searchSongsByTitle(@RequestParam String title) {
+    public List<Song> searchSongsByTitle(@RequestParam String title) {
         List<Song> songs = songService.findByTitle(title);
-        if (songs.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(songs);
+        return songs;
     }
 
     @GetMapping("/searchByGenre")
-    public ResponseEntity<List<Song>> searchSongsByGenre(@RequestParam String genre) {
+    public List<Song> searchSongsByGenre(@RequestParam String genre) {
         List<Song> songs = songService.findByGenre(genre);
-        if (songs.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(songs);
+        return songs;
     }
 
     @GetMapping("/searchByArtistId")
-    public ResponseEntity<List<Song>> searchSongsByArtistId(@RequestParam int artistId) {
+    public List<Song> searchSongsByArtistId(@RequestParam int artistId) {
         List<Song> songs = songService.findByArtistId(artistId);
-        if (songs.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(songs);
+        return songs;
     }
 
     @PutMapping("/{songId}")
-    public ResponseEntity<Song> updateSong(@PathVariable Long songId, @RequestBody Song song) {
+    public Song updateSong(@PathVariable Long songId, @RequestBody Song song) {
         Song updatedSong = songService.updateSong(songId, song);
-        return ResponseEntity.ok(updatedSong);
+        return updatedSong;
     }
 
     @DeleteMapping

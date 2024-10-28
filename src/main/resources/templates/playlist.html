@@ -79,8 +79,8 @@
                 </thead>
                 <tbody>
                 <tr th:each="song : ${playlist.songs}">
-                    <td class="names"><a  th:href="@{'/song/' + ${song.id}}" th:text="${song.title}">Song Title</a></td>
-                    <td class="names"><a th:href="@{'/artist/' + ${song.artistId}}" th:text="${song.artistName}">Artist
+                    <td class="names"><a  th:href="@{'/songs/show/' + ${song.id}}" th:text="${song.title}">Song Title</a></td>
+                    <td class="names"><a th:href="@{'/artists/show/' + ${song.artistId}}" th:text="${song.artistName}">Artist
                         Name</a></td>
                     <td th:text="${song.year}">Year</td>
                     <td th:text="${song.genre}">Genre</td>
@@ -90,7 +90,7 @@
         </div>
     </div>
 
-    <a href="/playlists" class="btn play-button">Back to Playlists</a>
+    <a href="/playlists/show" class="btn play-button">Back to Playlists</a>
 </div>
 
 <!-- Bootstrap Bundle with Popper -->

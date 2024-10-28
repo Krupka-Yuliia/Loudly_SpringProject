@@ -7,9 +7,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-@Service
 @AllArgsConstructor
-
+@Service
 public class UserService {
 
     private final UserRepository userRepository;
@@ -39,7 +38,7 @@ public class UserService {
     public void deleteUserById(long id) {
         userRepository.deleteById(id);
     }
-    
+
     public User updateUser(Long userId, User user) {
         return userRepository.findById(userId)
                 .map(existingUser -> {
@@ -59,6 +58,7 @@ public class UserService {
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }

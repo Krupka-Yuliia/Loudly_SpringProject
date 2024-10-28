@@ -61,14 +61,14 @@
         <div class="card-body">
             <p class="names">
                 <strong>Artist:</strong>
-                <a th:href="@{'/artist/' + ${artistId}}" th:text="${artist}">Artist Name</a>
+                <a th:href="@{'/artists/show/' + ${artistId}} " th:text="${artist}">Artist Name</a>
             </p>
             <p><strong>Year:</strong> <span th:text="${year}">Year</span></p>
             <p class="mb-0"><strong>Genre:</strong> <span th:text="${genre}">Genre</span></p>
             <button class="btn play-button">Play ▶</button>
         </div>
     </div>
-    <a href="/song" class="btn play-button">Back to Songs List</a>
+    <a href="/songs/show" class="btn play-button">Back to Songs List</a>
 </div>
 
 <!-- Bootstrap Bundle with Popper -->

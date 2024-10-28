@@ -1,18 +1,17 @@
 package com.loudlyapp.artist;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 @Service
 public class ArtistService {
     private final ArtistRepository artistRepository;
 
-    public ArtistService(ArtistRepository artistRepository) {
-        this.artistRepository = artistRepository;
-    }
 
     public List<Artist> getAllArtists() {
         return artistRepository.findAll();
@@ -45,14 +44,7 @@ public class ArtistService {
     }
 
     public Optional<Artist> findByName(String name) {
-
-        if (name == null || name.trim().isEmpty()) {
-            return Optional.empty();
-        }
         return artistRepository.findByNickname(name);
-
     }
-
-
 }
 

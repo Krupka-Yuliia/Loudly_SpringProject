@@ -20,7 +20,7 @@ public class ArtistWebController {
     private final SongService songService;
     private final ArtistService artistService;
 
-    @GetMapping("/artist/{id}")
+    @GetMapping("/artists/show/{id}")
     public String getArtist(@PathVariable Long id, Model model) {
         Optional<Artist> artistOptional = artistService.findById(id);
 
@@ -40,7 +40,7 @@ public class ArtistWebController {
         return "artist";
     }
 
-    @GetMapping("/artist")
+    @GetMapping("/artists/show")
     public String getAllArtists(Model model) {
         List<Artist> artists = artistService.getAllArtists();
         model.addAttribute("artists", artists);
