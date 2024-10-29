@@ -31,13 +31,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        try {
-            User createdUser = userService.save(user);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null); // Повертаємо 400 Bad Request, якщо username або email вже існує
-        }
+    public User createUser(@RequestBody User user) {
+        return userService.save(user);
     }
 
     @DeleteMapping("/{userId}")
@@ -49,22 +44,6 @@ public class UserController {
     @PutMapping("/{userId}")
     public User updateUser(@PathVariable Long userId, @RequestBody User user) {
         return userService.updateUser(userId, user);
-    }
-
-    @GetMapping("/searchByRole")
-    public List<User> getUserByRole(@RequestParam String userRole) {
-        List<User> foundByRole = userService.findByRole(userRole);
-        return foundByRole;
-    }
-
-    @GetMapping("/searchByUsername")
-    public Optional<User> getUserByUsername(@RequestParam String username) {
-        return userService.findByUsername(username);
-    }
-
-    @GetMapping("/searchByEmail")
-    public Optional<User> getUserByEmail(@RequestParam String email) {
-        return userService.findByEmail(email);
     }
 
 }

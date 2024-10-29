@@ -51,16 +51,4 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found"));
     }
 
-    public List<User> findByRole(String role) {
-        return userRepository.findByRole(role);
-    }
-
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
-
 }

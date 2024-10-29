@@ -14,8 +14,8 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "username": "yuliaaa",
-  "email": "yuliaaa@gmail.com",
+  "username": "yulia12",
+  "email": "yulia12@gmail.com",
   "password": "12345",
   "role": "user"
 }
@@ -39,18 +39,6 @@ Content-Type:application/json
 ### DELETE user by id
 
 DELETE http://localhost:8080/users/48
-
-### GET find by role
-GET http://localhost:8080/users/searchByRole?userRole=admin
-
-
-###GET user by username
-
-GET http://localhost:8080/users/searchByUsername?username=yulia_kr
-
-### GET user by email
-
-GET http://localhost:8080/users/searchByEmail?email=yulia@gmail.com
 
 
 #-----------PLAYLISTS-------------------------
@@ -124,12 +112,12 @@ POST http://localhost:8080/songs
 Content-Type: application/json
 
 {
-  "artistId": "18",
+  "artistId": "82",
   "file": null,
   "format": "MP3",
-  "genre": "pop",
-  "title": "Espresso",
-  "year": "2018"
+  "genre": "rock",
+  "title": "Levitate",
+  "year": "2024"
 }
 
 ### GET ALL SONGS
