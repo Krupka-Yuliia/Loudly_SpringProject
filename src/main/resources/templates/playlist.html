@@ -44,7 +44,7 @@
             transition: font-weight 0.3s ease;
         }
 
-        .yellow{
+        .yellow {
             background-color: #ffd700;
             color: orangered;
         }
@@ -79,7 +79,8 @@
                 </thead>
                 <tbody>
                 <tr th:each="song : ${playlist.songs}">
-                    <td class="names"><a  th:href="@{'/songs/show/' + ${song.id}}" th:text="${song.title}">Song Title</a></td>
+                    <td class="names"><a th:href="@{'/songs/show/' + ${song.id}}" th:text="${song.title}">Song Title</a>
+                    </td>
                     <td class="names"><a th:href="@{'/artists/show/' + ${song.artistId}}" th:text="${song.artistName}">Artist
                         Name</a></td>
                     <td th:text="${song.year}">Year</td>

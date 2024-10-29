@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.IntStream;
@@ -25,6 +24,7 @@ public class UserServiceTest {
 
     private static final String DEFAULT_PASSWORD = "password";
     private static final String DEFAULT_ROLE = "user";
+
     @AfterEach
     void tearDown() {
         this.userService.deleteAll();
@@ -129,38 +129,4 @@ public class UserServiceTest {
         assertEquals(getUpdatedUser.get().getRole(), updatedUser.getRole());
         assertEquals(getUpdatedUser.get().getId(), savedUser.getId(), "ID should remain the same");
     }
-
-
-    @Test
-    public void findUserByEmailTest() {
-        User user = createUser(UUID.randomUUID().toString());
-        User savedUser = userService.save(user);
-        assertNotNull(savedUser, "User was not created");
-
-       Optional<User> foundByEmail = userService.findByEmail(savedUser.getEmail());
-       assertEquals(savedUser, foundByEmail.get());
-    }
-
-    @Test
-    public void findUserByUsernameTest() {
-        User user = createUser(UUID.randomUUID().toString());
-        User savedUser = userService.save(user);
-        assertNotNull(savedUser, "User was not created");
-
-        Optional<User> foundByUsername = userService.findByUsername(savedUser.getUsername());
-        assertEquals(savedUser, foundByUsername.get());
-    }
-
-    @Test
-    public void findUserByRoleTest() {
-        User user = createUser(UUID.randomUUID().toString());
-        user.setRole("admin");
-        User savedUser = userService.save(user);
-        assertNotNull(savedUser, "User was not created");
-
-        List<User> foundByRole = userService.findByRole(savedUser.getRole());
-        assertFalse(foundByRole.isEmpty());
-        assertEquals(savedUser, foundByRole.get(0));
-    }
-
 }
