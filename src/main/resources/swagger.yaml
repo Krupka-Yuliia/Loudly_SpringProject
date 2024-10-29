@@ -1,0 +1,432 @@
+openapi: 3.0.0
+info:
+  title: Music Application API
+  description: Application for managing users, playlists, songs, and artists.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+paths:
+  /users:
+    get:
+      summary: Get all users
+      responses:
+        '200':
+          description: Successfully retrieved all users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    username:
+                      type: string
+                      example: "testUser"
+                    email:
+                      type: string
+                      example: "testUser@gmail.com"
+    post:
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "test12"
+                email:
+                  type: string
+                  example: "test12@gmail.com"
+                password:
+                  type: string
+                  example: "test12456"
+                role:
+                  type: string
+                  example: "User"
+      responses:
+        '201':
+          description: User created successfully
+    delete:
+      summary: Delete all users
+      responses:
+        '204':
+          description: All users deleted successfully
+
+  /users/{id}:
+    get:
+      summary: Get user by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            example: 1
+          required: true
+          description: Numeric ID of the user to retrieve
+      responses:
+        '200':
+          description: Successfully retrieved user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  username:
+                    type: string
+                    example: "testUser"
+                  email:
+                    type: string
+                    example: "testUser@gmail.com"
+    put:
+      summary: Update a user
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            example: 1
+          required: true
+          description: Numeric ID of the user to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "updatedUser"
+                email:
+                  type: string
+                  example: "updatedUser@gmail.com"
+                password:
+                  type: string
+                  example: "newPassword123"
+                role:
+                  type: string
+                  example: "Admin"
+      responses:
+        '200':
+          description: User updated successfully
+    delete:
+      summary: Delete user by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            example: 1
+          required: true
+          description: Numeric ID of the user to delete
+      responses:
+        '204':
+          description: User deleted successfully
+
+  /users/searchByRole:
+    get:
+      summary: Find users by role
+      parameters:
+        - in: query
+          name: userRole
+          schema:
+            type: string
+            example: "User"
+          required: true
+          description: Role of the user
+      responses:
+        '200':
+          description: Successfully found users by role
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    username:
+                      type: string
+                      example: "testUser"
+                    role:
+                      type: string
+                      example: "User"
+
+  /users/searchByUsername:
+    get:
+      summary: Find user by username
+      parameters:
+        - in: query
+          name: username
+          schema:
+            type: string
+            example: "testUser"
+          required: true
+          description: Username of the user
+      responses:
+        '200':
+          description: Successfully found user by username
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  username:
+                    type: string
+                    example: "testUser"
+                  email:
+                    type: string
+                    example: "testUser@gmail.com"
+
+  /users/searchByEmail:
+    get:
+      summary: Find user by email
+      parameters:
+        - in: query
+          name: email
+          schema:
+            type: string
+            example: "testUser@gmail.com"
+          required: true
+          description: Email of the user
+      responses:
+        '200':
+          description: Successfully found user by email
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  username:
+                    type: string
+                    example: "testUser"
+                  email:
+                    type: string
+                    example: "testUser@gmail.com"
+
+  /playlists:
+    get:
+      summary: Get all playlists
+      responses:
+        '200':
+          description: Successfully retrieved all playlists
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    name:
+                      type: string
+                      example: "My Playlist"
+    delete:
+      summary: Delete all playlists
+      responses:
+        '204':
+          description: All playlists deleted successfully
+
+  /playlists/{id}:
+    get:
+      summary: Get playlist by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            example: 1
+          required: true
+          description: Numeric ID of the playlist to retrieve
+      responses:
+        '200':
+          description: Successfully retrieved playlist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: "My Playlist"
+    put:
+      summary: Update a playlist
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            example: 1
+          required: true
+          description: Numeric ID of the playlist to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Updated Playlist"
+      responses:
+        '200':
+          description: Playlist updated successfully
+    delete:
+      summary: Delete playlist by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            example: 1
+          required: true
+          description: Numeric ID of the playlist to delete
+      responses:
+        '204':
+          description: Playlist deleted successfully
+
+  /playlists/users/{userId}:
+    get:
+      summary: Get all playlists by user
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+            example: 1
+          required: true
+          description: Numeric ID of the user
+      responses:
+        '200':
+          description: Successfully retrieved playlists for user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    name:
+                      type: string
+                      example: "My Playlist"
+    post:
+      summary: Create a playlist for a user
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+            example: 1
+          required: true
+          description: Numeric ID of the user to create a playlist for
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "My New Playlist"
+      responses:
+        '201':
+          description: Playlist created successfully
+
+  /playlists/{playlistId}/songs/{songId}:
+    post:
+      summary: Add a song to a playlist
+      parameters:
+        - in: path
+          name: playlistId
+          schema:
+            type: integer
+            example: 1
+          required: true
+        - in: path
+          name: songId
+          schema:
+            type: integer
+            example: 1
+          required: true
+      responses:
+        '200':
+          description: Song added to playlist
+    delete:
+      summary: Delete song from a playlist
+      parameters:
+        - in: path
+          name: playlistId
+          schema:
+            type: integer
+            example: 1
+          required: true
+        - in: path
+          name: songId
+          schema:
+            type: integer
+            example: 1
+          required: true
+      responses:
+        '204':
+          description: Song deleted from playlist
+
+  /playlists/{id}/songs:
+    get:
+      summary: Get all songs from playlist
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            example: 1
+          required: true
+          description: Numeric ID of the playlist
+      responses:
+        '200':
+          description: Successfully retrieved all
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    title:
+                      type: string
+                      example: "Song Title"
+                    artist:
+                      type: string
+                      example: "Artist Name"
+                    genre:
+                      type: string
+                      example: "Rock"
