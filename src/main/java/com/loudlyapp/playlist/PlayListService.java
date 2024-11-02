@@ -1,6 +1,8 @@
 package com.loudlyapp.playlist;
 
+import com.loudlyapp.artist.ArtistService;
 import com.loudlyapp.song.Song;
+import com.loudlyapp.song.SongDTO;
 import com.loudlyapp.song.SongRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -8,44 +10,51 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
 public class PlayListService {
 
-    private PlaylistRepository playlistRepository;
-    private SongRepository songRepository;
+    private final PlaylistRepository playlistRepository;
+    private final SongRepository songRepository;
+    private final ArtistService artistService;
 
-    public List<Playlist> findAll() {
-        return playlistRepository.findAll();
+    public List<PlaylistDTO> findAll() {
+        return playlistRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
-    public Optional<Playlist> findById(Long id) {
-        return playlistRepository.findById(id);
+    public Optional<PlaylistDTO> findById(Long id) {
+        return playlistRepository.findById(id)
+                .map(this::convertToDTO);
     }
 
-    public Playlist save(Playlist playlist) {
-        return playlistRepository.save(playlist);
+    public PlaylistDTO save(PlaylistDTO playlistDTO) {
+        Playlist playlist = convertToEntity(playlistDTO);
+        Playlist savedPlaylist = playlistRepository.save(playlist);
+        return convertToDTO(savedPlaylist);
     }
 
     public void deleteById(Long id) {
         playlistRepository.deleteById(id);
     }
 
-    public Playlist update(Long id, Playlist playlist) {
+    public PlaylistDTO update(Long id, PlaylistDTO playlistDTO) {
         return playlistRepository.findById(id)
                 .map(existingPlaylist -> {
-                    existingPlaylist.setName(playlist.getName());
-                    return playlistRepository.save(existingPlaylist);
+                    existingPlaylist.setName(playlistDTO.getName());
+                    return convertToDTO(playlistRepository.save(existingPlaylist));
                 })
                 .orElseThrow(() -> new EntityNotFoundException("Playlist with id " + id + " not found"));
     }
 
-    public List<Song> getAllSongsFromPlaylist(Long playlistId) {
-        Playlist playlist = findById(playlistId).get();
-        List<Song> songs = playlist.getSongs();
-        return songs;
+    public List<SongDTO> getAllSongsFromPlaylist(Long playlistId) {
+        PlaylistDTO playlist = findById(playlistId).orElseThrow(() -> new RuntimeException("Playlist not found"));
+        return playlist.getSongs(); // Return the list of SongDTO directly
     }
+
 
     public void deleteAllSongsFromPlaylist(Long playlistId) {
         Playlist playlist = playlistRepository.findById(playlistId)
@@ -58,11 +67,13 @@ public class PlayListService {
         playlistRepository.deleteAll();
     }
 
-    public List<Playlist> findPlaylistsByUserId(long userId) {
-        return playlistRepository.findByUserId(userId);
+    public List<PlaylistDTO> findPlaylistsByUserId(long userId) {
+        return playlistRepository.findByUserId(userId).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
-    public Playlist addSongToPlaylist(Long playlistId, Long songId) {
+    public PlaylistDTO addSongToPlaylist(Long playlistId, Long songId) {
         Playlist playlist = playlistRepository.findById(playlistId)
                 .orElseThrow(() -> new RuntimeException("Playlist not found"));
         Song song = songRepository.findById(songId)
@@ -73,7 +84,7 @@ public class PlayListService {
         }
 
         playlist.addSong(song);
-        return playlistRepository.save(playlist);
+        return convertToDTO(playlistRepository.save(playlist));
     }
 
     public void deleteSongFromPlaylist(Long playlistId, Long songId) {
@@ -86,7 +97,41 @@ public class PlayListService {
             playlist.removeSong(song);
             playlistRepository.save(playlist);
         } else {
-            throw new RuntimeException("Playlist does not have contains song");
+            throw new RuntimeException("Playlist does not contain song");
         }
+    }
+
+    private PlaylistDTO convertToDTO(Playlist playlist) {
+        List<SongDTO> songDTOs = playlist.getSongs().stream()
+                .map(this::convertToSongDTO)
+                .collect(Collectors.toList());
+        return new PlaylistDTO(playlist.getId(), playlist.getName(), playlist.getUserId(), songDTOs);
+    }
+
+    private Playlist convertToEntity(PlaylistDTO playlistDTO) {
+        Playlist playlist = new Playlist();
+        playlist.setId(playlistDTO.getId());
+        playlist.setName(playlistDTO.getName());
+        playlist.setUserId(playlistDTO.getUserId());
+        return playlist;
+    }
+
+    private SongDTO convertToSongDTO(Song song) {
+        if (song == null) {
+            return null;
+        }
+        SongDTO songDTO = new SongDTO();
+        songDTO.setId(song.getId());
+        songDTO.setTitle(song.getTitle());
+        songDTO.setArtistId(song.getArtistId());
+
+
+        String artistName = artistService.getArtistNameById(song.getArtistId());
+        songDTO.setArtistName(artistName);
+
+        songDTO.setFormat(song.getFormat());
+        songDTO.setGenre(song.getGenre());
+        songDTO.setYear(song.getYear());
+        return songDTO;
     }
 }

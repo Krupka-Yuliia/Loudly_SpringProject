@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -13,42 +14,95 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public Optional<UserDTO> getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .map(this::convertToDTO);
     }
 
-    public Optional<User> findById(long id) {
-        return userRepository.findById(id);
+
+    public UserDTO save(UserDTO userDTO) {
+        if (userRepository.existsByUsername(userDTO.getUsername())) {
+            throw new IllegalArgumentException("Username already exists: " + userDTO.getUsername());
+        }
+        if (userRepository.existsByEmail(userDTO.getEmail())) {
+            throw new IllegalArgumentException("Email already exists: " + userDTO.getEmail());
+        }
+
+        User user = convertToEntity(userDTO);
+
+        User savedUser = userRepository.save(user);
+
+        return convertToDTO(savedUser);
+    }
+
+
+    private UserDTO convertToDTO(User user) {
+        if (user == null) {
+            return null;
+        }
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setUsername(user.getUsername());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setPassword(user.getPassword());
+        userDTO.setRole(user.getRole());
+        return userDTO;
+    }
+
+    private User convertToEntity(UserDTO userDTO) {
+        if (userDTO == null) {
+            return null;
+        }
+        User user = new User();
+
+        user.setId(userDTO.getId());
+        user.setUsername(userDTO.getUsername());
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(userDTO.getPassword());
+        user.setRole(userDTO.getRole());
+        return user;
+    }
+
+    public List<UserDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public Optional<UserDTO> findById(long id) {
+        return userRepository.findById(id)
+                .map(this::convertToDTO);
     }
 
     public void deleteAll() {
         userRepository.deleteAll();
     }
 
-    public User save(User user) {
-        if (userRepository.existsByUsername(user.getUsername())) {
-            throw new IllegalArgumentException("Username already exists: " + user.getUsername());
-        }
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new IllegalArgumentException("Email already exists: " + user.getEmail());
-        }
-        return userRepository.save(user);
-    }
 
     public void deleteUserById(long id) {
         userRepository.deleteById(id);
     }
 
-    public User updateUser(Long userId, User user) {
+    public UserDTO updateUserDTO(Long userId, UserDTO userDTO) {
         return userRepository.findById(userId)
                 .map(existingUser -> {
-                    existingUser.setUsername(user.getUsername());
-                    existingUser.setEmail(user.getEmail());
-                    existingUser.setPassword(user.getPassword());
-                    existingUser.setRole(user.getRole());
-                    return userRepository.save(existingUser);
+                    if (userDTO.getUsername() != null) {
+                        existingUser.setUsername(userDTO.getUsername());
+                    }
+                    if (userDTO.getEmail() != null) {
+                        existingUser.setEmail(userDTO.getEmail());
+                    }
+                    if (userDTO.getPassword() != null) {
+                        existingUser.setPassword(userDTO.getPassword());
+                    }
+                    if (userDTO.getRole() != null) {
+                        existingUser.setRole(userDTO.getRole());
+                    }
+                    return convertToDTO(userRepository.save(existingUser));
                 })
                 .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found"));
     }
+
 
 }

@@ -1,19 +1,21 @@
 package com.loudlyapp.playlists;
 
-import com.loudlyapp.artist.Artist;
+import com.loudlyapp.artist.ArtistDTO;
 import com.loudlyapp.artist.ArtistService;
 import com.loudlyapp.playlist.PlayListService;
-import com.loudlyapp.playlist.Playlist;
-import com.loudlyapp.song.Song;
+import com.loudlyapp.playlist.PlaylistDTO;
+import com.loudlyapp.song.SongDTO;
 import com.loudlyapp.song.SongService;
-import com.loudlyapp.user.User;
+import com.loudlyapp.user.UserDTO;
 import com.loudlyapp.user.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -43,209 +45,211 @@ public class PlaylistsServiceTest {
 
     @Test
     public void createPlaylist() {
-        User user = createUser(UUID.randomUUID().toString());
-        user.setEmail(UUID.randomUUID().toString());
-        User savedUser = userService.save(user);
+        UserDTO userDTO = createUserDTO(UUID.randomUUID().toString());
+        userDTO.setEmail(DEFAULT_EMAIL + UUID.randomUUID());
+        UserDTO savedUserDTO = userService.save(userDTO);
 
-        assertNotNull(savedUser, "User was not created");
+        assertNotNull(savedUserDTO, "User was not created");
 
-        Playlist playlist = new Playlist();
-        playlist.setName("test");
-        playlist.setUserId(savedUser.getId());
+        PlaylistDTO playlistDTO = new PlaylistDTO();
+        playlistDTO.setName("test");
+        playlistDTO.setUserId(savedUserDTO.getId());
 
-        Playlist savedPlaylist = playListService.save(playlist);
+        PlaylistDTO savedPlaylistDTO = playListService.save(playlistDTO);
 
-        assertNotNull(savedPlaylist, "Playlist was not created");
-        assertEquals(savedUser.getId(), savedPlaylist.getUserId());
+        assertNotNull(savedPlaylistDTO, "Playlist was not created");
+        assertEquals(savedUserDTO.getId(), savedPlaylistDTO.getUserId());
     }
 
     @Test
     public void findAllPlaylists() {
-        User user = createUser(UUID.randomUUID().toString());
-        user.setEmail(UUID.randomUUID().toString());
-        User savedUser = userService.save(user);
+        UserDTO userDTO = createUserDTO(UUID.randomUUID().toString());
+        userDTO.setEmail(DEFAULT_EMAIL + UUID.randomUUID());
+        UserDTO savedUserDTO = userService.save(userDTO);
 
-        createAndSavePlaylist(savedUser.getId());
-        createAndSavePlaylist(savedUser.getId());
+        createAndSavePlaylistDTO(savedUserDTO.getId());
+        createAndSavePlaylistDTO(savedUserDTO.getId());
 
-        Collection<Playlist> playlists = playListService.findAll();
+        List<PlaylistDTO> playlists = playListService.findAll();
 
         assertNotNull(playlists, "Playlists collection should not be null");
-        assertEquals(2, playlists.size(), "There should be one playlist in the collection");
+        assertEquals(2, playlists.size(), "There should be two playlists in the collection");
     }
 
     @Test
     public void findPlaylistByUserId() {
-        User user = createUser(UUID.randomUUID().toString());
-        user.setEmail(UUID.randomUUID().toString());
-        User savedUser = userService.save(user);
+        UserDTO userDTO = createUserDTO(UUID.randomUUID().toString());
+        userDTO.setEmail(DEFAULT_EMAIL + UUID.randomUUID());
+        UserDTO savedUserDTO = userService.save(userDTO);
 
-        createAndSavePlaylist(savedUser.getId());
+        createAndSavePlaylistDTO(savedUserDTO.getId());
 
-        Collection<Playlist> playlistsByUser = playListService.findPlaylistsByUserId(savedUser.getId());
+        List<PlaylistDTO> playlistsByUser = playListService.findPlaylistsByUserId(savedUserDTO.getId());
 
         assertNotNull(playlistsByUser, "Playlists collection should not be null");
     }
 
     @Test
     public void findPlaylistById() {
-        User user = createUser(UUID.randomUUID().toString());
-        user.setEmail(UUID.randomUUID().toString());
-        User savedUser = userService.save(user);
+        UserDTO userDTO = createUserDTO(UUID.randomUUID().toString());
+        userDTO.setEmail(DEFAULT_EMAIL + UUID.randomUUID());
+        UserDTO savedUserDTO = userService.save(userDTO);
 
-        Playlist playlist = createAndSavePlaylist(savedUser.getId());
-        playListService.deleteById(playlist.getId());
+        PlaylistDTO playlistDTO = createAndSavePlaylistDTO(savedUserDTO.getId());
+        playListService.deleteById(playlistDTO.getId());
 
-        Optional<Playlist> foundPlaylist = playListService.findById(playlist.getId());
+        Optional<PlaylistDTO> foundPlaylist = playListService.findById(playlistDTO.getId());
 
         assertFalse(foundPlaylist.isPresent());
     }
 
     @Test
     public void testDeleteAllPlaylists() {
-        User user = createUser(UUID.randomUUID().toString());
-        user.setEmail(UUID.randomUUID().toString());
-        User savedUser = userService.save(user);
+        UserDTO userDTO = createUserDTO(UUID.randomUUID().toString());
+        userDTO.setEmail(DEFAULT_EMAIL + UUID.randomUUID());
+        UserDTO savedUserDTO = userService.save(userDTO);
 
-        createAndSavePlaylist(savedUser.getId());
-        createAndSavePlaylist(savedUser.getId());
+        createAndSavePlaylistDTO(savedUserDTO.getId());
+        createAndSavePlaylistDTO(savedUserDTO.getId());
 
         playListService.deleteAll();
 
-        Collection<Playlist> playlists = playListService.findAll();
+        List<PlaylistDTO> playlists = playListService.findAll();
         assertEquals(0, playlists.size());
     }
 
     @Test
     public void addSongToPlaylistTest() {
-        User user = createUser(UUID.randomUUID().toString());
+        UserDTO user = createUserDTO(UUID.randomUUID().toString());
         user.setEmail(UUID.randomUUID().toString());
-        User savedUser = userService.save(user);
+        UserDTO savedUser = userService.save(user);
 
         assertNotNull(savedUser, "User was not created");
 
-        Playlist playlist = new Playlist();
+        PlaylistDTO playlist = new PlaylistDTO();
         playlist.setName("test");
         playlist.setUserId(savedUser.getId());
-        Playlist savedPlaylist = playListService.save(playlist);
+        PlaylistDTO savedPlaylist = playListService.save(playlist);
 
         assertNotNull(savedPlaylist, "Playlist was not created");
 
-        Artist artist = createArtist("test", "test");
-        Artist savedArtist = artistService.save(artist);
+        ArtistDTO artist = createArtistDTO("test", "test");
+        ArtistDTO savedArtist = artistService.save(artist);
 
-        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
-        Song savedSong = songService.save(song);
+        SongDTO song = createSongDTO(savedArtist.getId(), UUID.randomUUID().toString());
+        SongDTO savedSong = songService.save(song);
 
         playListService.addSongToPlaylist(savedPlaylist.getId(), savedSong.getId());
 
-        Optional<Playlist> retrievedPlaylist = playListService.findById(playlist.getId());
+        Optional<PlaylistDTO> retrievedPlaylist = playListService.findById(savedPlaylist.getId());
 
         assertTrue(retrievedPlaylist.isPresent(), "Playlist should be found by id");
         assertEquals(1, retrievedPlaylist.get().getSongs().size(), "Playlist should contain one song");
         assertEquals(song.getTitle(), retrievedPlaylist.get().getSongs().get(0).getTitle(), "Playlist should contain the added song");
     }
 
+
     @Test
     public void deleteSongFromPlaylistTest() {
-        User user = createUser(UUID.randomUUID().toString());
-        user.setEmail(UUID.randomUUID().toString());
-        User savedUser = userService.save(user);
+        UserDTO userDTO = createUserDTO(UUID.randomUUID().toString());
+        userDTO.setEmail(DEFAULT_EMAIL + UUID.randomUUID());
+        UserDTO savedUserDTO = userService.save(userDTO);
 
-        Playlist playlist = createAndSavePlaylist(savedUser.getId());
+        PlaylistDTO playlistDTO = createAndSavePlaylistDTO(savedUserDTO.getId());
 
+        ArtistDTO artist = createArtistDTO("test", "test");
+        ArtistDTO savedArtist = artistService.save(artist);
 
-        Artist artist = createArtist("test", "test");
-        Artist savedArtist = artistService.save(artist);
+        SongDTO songDTO = createSongDTO(savedArtist.getId(), UUID.randomUUID().toString());
+        SongDTO savedSong = songService.save(songDTO);
 
-        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
-        Song savedSong = songService.save(song);
+        playListService.addSongToPlaylist(playlistDTO.getId(), savedSong.getId());
 
-        playListService.addSongToPlaylist(playlist.getId(), savedSong.getId());
+        assertTrue(playListService.getAllSongsFromPlaylist(playlistDTO.getId()).contains(savedSong));
 
-        assertTrue(playListService.getAllSongsFromPlaylist(playlist.getId()).contains(savedSong));
+        playListService.deleteSongFromPlaylist(playlistDTO.getId(), savedSong.getId());
 
-        playListService.deleteSongFromPlaylist(playlist.getId(), savedSong.getId());
-
-        assertFalse(playListService.getAllSongsFromPlaylist(playlist.getId()).contains(savedSong));
+        assertFalse(playListService.getAllSongsFromPlaylist(playlistDTO.getId()).contains(savedSong));
     }
 
     @Test
     public void updatePlaylist() {
-        User user = createUser(UUID.randomUUID().toString());
-        user.setEmail(UUID.randomUUID().toString());
-        User savedUser = userService.save(user);
-        Playlist playlist = createAndSavePlaylist(savedUser.getId());
+        UserDTO userDTO = createUserDTO(UUID.randomUUID().toString());
+        userDTO.setEmail(DEFAULT_EMAIL + UUID.randomUUID());
+        UserDTO savedUserDTO = userService.save(userDTO);
+        PlaylistDTO playlistDTO = createAndSavePlaylistDTO(savedUserDTO.getId());
 
-        Playlist updatedPlaylist = new Playlist();
-        updatedPlaylist.setId(playlist.getId());
-        updatedPlaylist.setName("test2");
-        updatedPlaylist.setUserId(savedUser.getId());
+        PlaylistDTO updatedPlaylistDTO = new PlaylistDTO();
+        updatedPlaylistDTO.setId(playlistDTO.getId());
+        updatedPlaylistDTO.setName("test2");
+        updatedPlaylistDTO.setUserId(savedUserDTO.getId());
 
-        playListService.update(playlist.getId(), updatedPlaylist);
+        playListService.update(playlistDTO.getId(), updatedPlaylistDTO);
 
-        Playlist retrievedPlaylist = playListService.findById(playlist.getId()).orElseThrow();
+        PlaylistDTO retrievedPlaylist = playListService.findById(playlistDTO.getId()).orElseThrow();
 
-        assertNotEquals(playlist.getName(), retrievedPlaylist.getName());
-        assertEquals(updatedPlaylist.getId(), retrievedPlaylist.getId());
-        assertEquals(updatedPlaylist.getUserId(), retrievedPlaylist.getUserId());
+        assertNotEquals(playlistDTO.getName(), retrievedPlaylist.getName());
+        assertEquals(updatedPlaylistDTO.getId(), retrievedPlaylist.getId());
+        assertEquals(updatedPlaylistDTO.getUserId(), retrievedPlaylist.getUserId());
     }
-
 
     @Test
     public void deletePlaylist() {
-        User user = createUser(UUID.randomUUID().toString());
-        user.setEmail(UUID.randomUUID().toString());
-        User savedUser = userService.save(user);
-        Playlist playlist = createAndSavePlaylist(savedUser.getId());
-        playListService.deleteById(playlist.getId());
-        Optional<Playlist> retrievedPlaylist = playListService.findById(playlist.getId());
+        UserDTO userDTO = createUserDTO(UUID.randomUUID().toString());
+        userDTO.setEmail(DEFAULT_EMAIL + UUID.randomUUID());
+        UserDTO savedUserDTO = userService.save(userDTO);
+        PlaylistDTO playlistDTO = createAndSavePlaylistDTO(savedUserDTO.getId());
+        playListService.deleteById(playlistDTO.getId());
+        Optional<PlaylistDTO> retrievedPlaylist = playListService.findById(playlistDTO.getId());
         assertFalse(retrievedPlaylist.isPresent());
     }
 
     @Test
     public void getAllSongsFromPlaylistTest() {
-        User user = createUser(UUID.randomUUID().toString());
-        user.setEmail(UUID.randomUUID().toString());
-        User savedUser = userService.save(user);
-        Playlist playlist = createAndSavePlaylist(savedUser.getId());
-        Artist artist = createArtist("test", "test");
-        Artist savedArtist = artistService.save(artist);
-        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
-        Song savedSong = songService.save(song);
-        playListService.addSongToPlaylist(playlist.getId(), song.getId());
+        UserDTO userDTO = createUserDTO(UUID.randomUUID().toString());
+        userDTO.setEmail(DEFAULT_EMAIL + UUID.randomUUID());
+        UserDTO savedUserDTO = userService.save(userDTO);
+        PlaylistDTO playlistDTO = createAndSavePlaylistDTO(savedUserDTO.getId());
+        ArtistDTO artist = createArtistDTO("test", "test");
+        ArtistDTO savedArtist = artistService.save(artist);
+        SongDTO songDTO = createSongDTO(savedArtist.getId(), UUID.randomUUID().toString());
+        SongDTO savedSong = songService.save(songDTO);
+        playListService.addSongToPlaylist(playlistDTO.getId(), savedSong.getId());
 
-        List<Song> songs = playListService.getAllSongsFromPlaylist(playlist.getId());
+        List<SongDTO> songs = playListService.getAllSongsFromPlaylist(playlistDTO.getId());
         assertEquals(1, songs.size());
     }
 
     @Test
     public void deleteAllSongsFromPlaylistTest() {
-        User user = createUser(UUID.randomUUID().toString());
-        user.setEmail(UUID.randomUUID().toString());
-        User savedUser = userService.save(user);
-        Playlist playlist = createAndSavePlaylist(savedUser.getId());
+        UserDTO userDTO = createUserDTO(UUID.randomUUID().toString());
+        userDTO.setEmail(DEFAULT_EMAIL + UUID.randomUUID());
+        UserDTO savedUserDTO = userService.save(userDTO);
 
-        Artist artist = createArtist("test", "test");
-        Artist savedArtist = artistService.save(artist);
+        PlaylistDTO playlistDTO = createAndSavePlaylistDTO(savedUserDTO.getId());
 
-        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
-        songService.save(song);
+        ArtistDTO artist = createArtistDTO("test", "test");
+        ArtistDTO savedArtist = artistService.save(artist);
 
-        playListService.addSongToPlaylist(playlist.getId(), song.getId());
+        SongDTO songDTO = createSongDTO(savedArtist.getId(), UUID.randomUUID().toString());
+        SongDTO savedSongDTO = songService.save(songDTO);
 
-        List<Song> songsBeforeDeletion = playListService.getAllSongsFromPlaylist(playlist.getId());
+        assertNotNull(savedSongDTO.getId(), "Song should be saved and have an ID");
+
+        playListService.addSongToPlaylist(playlistDTO.getId(), savedSongDTO.getId());
+
+        List<SongDTO> songsBeforeDeletion = playListService.getAllSongsFromPlaylist(playlistDTO.getId());
         assertEquals(1, songsBeforeDeletion.size());
 
-        playListService.deleteAllSongsFromPlaylist(playlist.getId());
+        playListService.deleteAllSongsFromPlaylist(playlistDTO.getId());
 
-        List<Song> songsAfterDeletion = playListService.getAllSongsFromPlaylist(playlist.getId());
-        assertTrue(songsAfterDeletion.isEmpty());
+        List<SongDTO> songsAfterDeletion = playListService.getAllSongsFromPlaylist(playlistDTO.getId());
+        assertTrue(songsAfterDeletion.isEmpty(), "Playlist should be empty after deletion");
     }
 
 
-    private User createUser(String username) {
-        User user = new User();
+    private UserDTO createUserDTO(String username) {
+        UserDTO user = new UserDTO();
         user.setUsername(username);
         user.setPassword(DEFAULT_PASSWORD);
         user.setEmail(DEFAULT_EMAIL);
@@ -253,26 +257,27 @@ public class PlaylistsServiceTest {
         return user;
     }
 
-    private Playlist createAndSavePlaylist(int userId) {
-        return createAndSavePlaylist(UUID.randomUUID().toString(), userId);
+
+    private PlaylistDTO createAndSavePlaylistDTO(int userId) {
+        return createAndSavePlaylistDTO(UUID.randomUUID().toString(), userId);
     }
 
-    private Playlist createAndSavePlaylist(String name, int userId) {
-        Playlist playlist = new Playlist();
+    private PlaylistDTO createAndSavePlaylistDTO(String name, int userId) {
+        PlaylistDTO playlist = new PlaylistDTO();
         playlist.setName(name);
         playlist.setUserId(userId);
         return playListService.save(playlist);
     }
 
-    private Artist createArtist(String nickname, String biography) {
-        Artist artist = new Artist();
+    private ArtistDTO createArtistDTO(String nickname, String biography) {
+        ArtistDTO artist = new ArtistDTO();
         artist.setNickname(nickname);
         artist.setBiography(biography);
         return artist;
     }
 
-    private Song createSong(int artistId, String title) {
-        Song song = new Song();
+    private SongDTO createSongDTO(int artistId, String title) {
+        SongDTO song = new SongDTO();
         song.setArtistId(artistId);
         song.setTitle(title);
         song.setFormat("MP3");

@@ -13,15 +13,17 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping()
-    public List<User> getUsers() {
+    @GetMapping
+    public List<UserDTO> getUsers() {
         return userService.getAllUsers();
     }
 
     @GetMapping("/{userId}")
-    public Optional<User> getUser(@PathVariable Long userId) {
-        return userService.findById(userId);
+    public Optional<UserDTO> getUser(@PathVariable Long userId) {
+        Optional<UserDTO> userDTO = userService.findById(userId);
+        return userDTO;
     }
+
 
     @DeleteMapping()
     public void deleteAllUsers() {
@@ -29,9 +31,10 @@ public class UserController {
     }
 
     @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userService.save(user);
+    public UserDTO createUser(@RequestBody UserDTO userDTO) {
+        return userService.save(userDTO);
     }
+
 
     @DeleteMapping("/{userId}")
     public void deleteUserById(@PathVariable Long userId) {
@@ -40,8 +43,8 @@ public class UserController {
 
 
     @PutMapping("/{userId}")
-    public User updateUser(@PathVariable Long userId, @RequestBody User user) {
-        return userService.updateUser(userId, user);
+    public UserDTO updateUser(@PathVariable Long userId, @RequestBody UserDTO userDTO) {
+        UserDTO updatedUserDTO = userService.updateUserDTO(userId, userDTO);
+        return updatedUserDTO;
     }
-
 }

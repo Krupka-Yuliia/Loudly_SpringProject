@@ -1,6 +1,6 @@
 package com.loudlyapp.playlist;
 
-import com.loudlyapp.song.Song;
+import com.loudlyapp.song.SongDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,38 +15,35 @@ public class PlaylistController {
     private final PlayListService playlistService;
 
     @PostMapping("/users/{userId}")
-    public Playlist createPlaylist(@PathVariable int userId, @RequestBody Playlist playlist) {
-        playlist.setUserId(userId);
-        return playlistService.save(playlist);
-
+    public PlaylistDTO createPlaylist(@PathVariable int userId, @RequestBody PlaylistDTO playlistDTO) {
+        playlistDTO.setUserId(userId);
+        return playlistService.save(playlistDTO);
     }
 
     @GetMapping("/{playlistId}")
-    public Optional<Playlist> getPlaylistById(@PathVariable long playlistId) {
+    public Optional<PlaylistDTO> getPlaylistById(@PathVariable long playlistId) {
         return playlistService.findById(playlistId);
     }
 
     @GetMapping
-    public List<Playlist> getPlaylists() {
+    public List<PlaylistDTO> getPlaylists() {
         return playlistService.findAll();
     }
 
     @GetMapping("/users/{userId}")
-    public List<Playlist> getPlaylistsByUserId(@PathVariable Long userId) {
+    public List<PlaylistDTO> getPlaylistsByUserId(@PathVariable Long userId) {
         return playlistService.findPlaylistsByUserId(userId);
     }
 
     @PostMapping("/{playlistId}/songs/{songId}")
-    public Playlist addSongToPlaylist(@PathVariable Long playlistId, @PathVariable Long songId) {
+    public PlaylistDTO addSongToPlaylist(@PathVariable Long playlistId, @PathVariable Long songId) {
         return playlistService.addSongToPlaylist(playlistId, songId);
     }
-
 
     @DeleteMapping
     public void deleteAllPlaylists() {
         playlistService.deleteAll();
     }
-
 
     @DeleteMapping("/{playlistId}")
     public void deletePlaylistById(@PathVariable Long playlistId) {
@@ -59,20 +56,17 @@ public class PlaylistController {
     }
 
     @GetMapping("/{playlistId}/songs")
-    public List<Song> getPlaylistSongs(@PathVariable Long playlistId) {
+    public List<SongDTO> getPlaylistSongs(@PathVariable Long playlistId) {
         return playlistService.getAllSongsFromPlaylist(playlistId);
     }
 
     @PutMapping("/{playlistId}")
-    public Playlist updatePlaylist(@PathVariable Long playlistId, @RequestBody Playlist playlist) {
-        Playlist updatedPlaylist = playlistService.update(playlistId, playlist);
-        return updatedPlaylist;
+    public PlaylistDTO updatePlaylist(@PathVariable Long playlistId, @RequestBody PlaylistDTO playlistDTO) {
+        return playlistService.update(playlistId, playlistDTO);
     }
 
     @DeleteMapping("/{playlistId}/songs/{songId}")
-    public void deleteSongFromPlaylist(
-            @PathVariable Long playlistId,
-            @PathVariable Long songId) {
+    public void deleteSongFromPlaylist(@PathVariable Long playlistId, @PathVariable Long songId) {
         playlistService.deleteSongFromPlaylist(playlistId, songId);
     }
 }

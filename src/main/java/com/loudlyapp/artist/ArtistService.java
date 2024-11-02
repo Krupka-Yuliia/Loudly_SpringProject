@@ -1,5 +1,6 @@
 package com.loudlyapp.artist;
 
+import com.loudlyapp.user.UserDTO;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,30 +13,62 @@ import java.util.Optional;
 public class ArtistService {
     private final ArtistRepository artistRepository;
 
-
-    public List<Artist> getAllArtists() {
-        return artistRepository.findAll();
+    private ArtistDTO convertToDTO(Artist artist) {
+        if (artist == null) {
+            return null;
+        }
+        ArtistDTO artistDTO = new ArtistDTO();
+        artistDTO.setId(artist.getId());
+        artistDTO.setBiography(artist.getBiography());
+        artistDTO.setNickname(artist.getNickname());
+        return artistDTO;
     }
 
-    public Optional<Artist> findById(long id) {
-        return artistRepository.findById(id);
+    private Artist convertToEntity(ArtistDTO artistDTO) {
+        if (artistDTO == null) {
+            return null;
+        }
+        Artist artist = new Artist();
+        artist.setId(artistDTO.getId());
+        artist.setBiography(artistDTO.getBiography());
+        artist.setNickname(artistDTO.getNickname());
+        return artist;
     }
 
-    public Artist save(Artist artist) {
-        return artistRepository.save(artist);
+    public String getArtistNameById(int artistId) {
+        Optional<Artist> artistOptional = artistRepository.findById((long) artistId);
+        return artistOptional.map(Artist::getNickname).orElse(null);
+    }
+
+    public List<ArtistDTO> getAllArtists() {
+        return artistRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    public Optional<ArtistDTO> findById(long id) {
+        return artistRepository.findById(id)
+                .map(this::convertToDTO);
+    }
+
+    public ArtistDTO save(ArtistDTO artistDTO) {
+        Artist artist = convertToEntity(artistDTO);
+        Artist savedArtist = artistRepository.save(artist);
+        return convertToDTO(savedArtist);
     }
 
     public void deleteAll() {
         artistRepository.deleteAll();
     }
 
-    public Artist updateArtist(long id, Artist artist) {
+    public ArtistDTO updateArtist(long id, ArtistDTO artistDTO) {
         return artistRepository.findById(id)
                 .map(existingArtist -> {
-                    existingArtist.setNickname(artist.getNickname());
-                    existingArtist.setBiography(artist.getBiography());
+                    existingArtist.setNickname(artistDTO.getNickname());
+                    existingArtist.setBiography(artistDTO.getBiography());
                     return artistRepository.save(existingArtist);
                 })
+                .map(this::convertToDTO)
                 .orElseThrow(() -> new EntityNotFoundException("Artist with id " + id + " not found"));
     }
 
@@ -43,8 +76,8 @@ public class ArtistService {
         artistRepository.deleteById(id);
     }
 
-    public Optional<Artist> findByName(String name) {
-        return artistRepository.findByNickname(name);
+    public Optional<ArtistDTO> findByName(String name) {
+        return artistRepository.findByNickname(name)
+                .map(this::convertToDTO);
     }
 }
-

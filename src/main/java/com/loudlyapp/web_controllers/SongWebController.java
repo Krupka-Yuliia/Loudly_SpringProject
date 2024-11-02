@@ -1,8 +1,8 @@
 package com.loudlyapp.web_controllers;
 
+import com.loudlyapp.artist.ArtistDTO;
 import com.loudlyapp.artist.ArtistService;
-import com.loudlyapp.song.Song;
-import com.loudlyapp.artist.Artist;
+import com.loudlyapp.song.SongDTO;
 import com.loudlyapp.song.SongService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -21,14 +21,14 @@ public class SongWebController {
 
     @GetMapping("/songs/show/{id}")
     public String getSongPage(@PathVariable Long id, Model model) {
-        Optional<Song> songOptional = songService.findById(id);
+        Optional<SongDTO> songOptional = songService.findById(id);
 
         if (songOptional.isPresent()) {
-            Song song = songOptional.get();
-            Optional<Artist> artistOptional = artistService.findById(song.getArtistId());
+            SongDTO song = songOptional.get();
+            Optional<ArtistDTO> artistOptional = artistService.findById(song.getArtistId());
 
             if (artistOptional.isPresent()) {
-                Artist artist = artistOptional.get();
+                ArtistDTO artist = artistOptional.get();
                 song.setArtistName(artist.getNickname());
                 model.addAttribute("artistId", artist.getId());
             } else {
@@ -39,17 +39,19 @@ public class SongWebController {
             model.addAttribute("artist", song.getArtistName());
             model.addAttribute("year", song.getYear());
             model.addAttribute("genre", song.getGenre());
+        } else {
+            model.addAttribute("error", "Song not found");
         }
         return "song";
     }
 
     @GetMapping("/songs/show")
     public String getAllSongs(Model model) {
-        List<Song> songs = songService.findAll();
+        List<SongDTO> songs = songService.findAll();
         List<Map<String, Object>> songList = new ArrayList<>();
 
-        for (Song song : songs) {
-            Optional<Artist> artistOptional = artistService.findById(song.getArtistId());
+        for (SongDTO song : songs) {
+            Optional<ArtistDTO> artistOptional = artistService.findById(song.getArtistId());
             if (artistOptional.isPresent()) {
                 song.setArtistName(artistOptional.get().getNickname());
             }

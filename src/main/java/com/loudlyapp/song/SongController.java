@@ -14,17 +14,17 @@ public class SongController {
     private final SongService songService;
 
     @GetMapping
-    public List<Song> getAllSongs() {
+    public List<SongDTO> getAllSongs() {
         return songService.findAll();
     }
 
     @PostMapping
-    public Song createSong(@RequestBody Song song) {
-        return songService.save(song);
+    public SongDTO createSong(@RequestBody SongDTO songDTO) {
+        return songService.save(songDTO);
     }
 
     @GetMapping("/{songId}")
-    public Optional<Song> getSongById(@PathVariable Long songId) {
+    public Optional<SongDTO> getSongById(@PathVariable Long songId) {
         return songService.findById(songId);
     }
 
@@ -34,32 +34,27 @@ public class SongController {
     }
 
     @GetMapping("/search")
-    public List<Song> searchSongsByTitle(@RequestParam String title) {
-        List<Song> songs = songService.findByTitle(title);
-        return songs;
+    public List<SongDTO> searchSongsByTitle(@RequestParam String title) {
+        return songService.findByTitle(title);
     }
 
     @GetMapping("/searchByGenre")
-    public List<Song> searchSongsByGenre(@RequestParam String genre) {
-        List<Song> songs = songService.findByGenre(genre);
-        return songs;
+    public List<SongDTO> searchSongsByGenre(@RequestParam String genre) {
+        return songService.findByGenre(genre);
     }
 
     @GetMapping("/searchByArtistId")
-    public List<Song> searchSongsByArtistId(@RequestParam int artistId) {
-        List<Song> songs = songService.findByArtistId(artistId);
-        return songs;
+    public List<SongDTO> searchSongsByArtistId(@RequestParam int artistId) {
+        return songService.findByArtistId(artistId);
     }
 
     @PutMapping("/{songId}")
-    public Song updateSong(@PathVariable Long songId, @RequestBody Song song) {
-        Song updatedSong = songService.updateSong(songId, song);
-        return updatedSong;
+    public SongDTO updateSong(@PathVariable Long songId, @RequestBody SongDTO songDTO) {
+        return songService.updateSong(songId, songDTO);
     }
 
     @DeleteMapping
     public void deleteAllSongs() {
         songService.deleteAll();
     }
-
 }

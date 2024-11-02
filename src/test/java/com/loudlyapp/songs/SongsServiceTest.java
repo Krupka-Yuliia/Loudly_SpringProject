@@ -1,8 +1,8 @@
 package com.loudlyapp.songs;
 
-import com.loudlyapp.artist.Artist;
+import com.loudlyapp.artist.ArtistDTO;
 import com.loudlyapp.artist.ArtistService;
-import com.loudlyapp.song.Song;
+import com.loudlyapp.song.SongDTO;
 import com.loudlyapp.song.SongService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -32,184 +32,178 @@ public class SongsServiceTest {
 
     @Test
     public void testCreateSong() {
-        Artist artist = createArtist("test", "test");
-        Artist savedArtist = artistService.save(artist);
+        ArtistDTO artistDTO = createArtistDTO("test", "test biography");
+        ArtistDTO savedArtistDTO = artistService.save(artistDTO);
 
-        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
-        Song savedSong = songService.save(song);
+        SongDTO songDTO = createSongDTO(savedArtistDTO.getId(), UUID.randomUUID().toString());
+        SongDTO savedSongDTO = songService.save(songDTO);
 
-        assertNotNull(savedSong, "Song was not created");
-        assertNotNull(savedSong.getTitle(), "Title was not created");
-        assertNotNull(savedSong.getFormat(), "Format was not created");
-        assertNotNull(savedSong.getGenre(), "Genre was not created");
+        assertNotNull(savedSongDTO, "Song was not created");
+        assertNotNull(savedSongDTO.getTitle(), "Title was not created");
+        assertNotNull(savedSongDTO.getFormat(), "Format was not created");
+        assertNotNull(savedSongDTO.getGenre(), "Genre was not created");
     }
 
     @Test
     public void searchSongByTitleTest() {
-        Artist artist = createArtist("test", "test");
-        Artist savedArtist = artistService.save(artist);
+        ArtistDTO artistDTO = createArtistDTO("test", "test biography");
+        ArtistDTO savedArtistDTO = artistService.save(artistDTO);
 
-        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
-        Song savedSong = songService.save(song);
+        SongDTO songDTO = createSongDTO(savedArtistDTO.getId(), UUID.randomUUID().toString());
+        SongDTO savedSongDTO = songService.save(songDTO);
 
-        assertNotNull(savedArtist, "Artist was not created");
-        assertNotNull(savedSong, "Song was not created");
+        assertNotNull(savedArtistDTO, "Artist was not created");
+        assertNotNull(savedSongDTO, "Song was not created");
 
-        List<Song> foundByTitle = songService.findByTitle(savedSong.getTitle());
+        List<SongDTO> foundByTitle = songService.findByTitle(savedSongDTO.getTitle());
         assertNotNull(foundByTitle, "No songs found with the given title");
 
         assertEquals(1, foundByTitle.size(), "Incorrect number of songs found");
-        assertEquals(savedSong.getId(), foundByTitle.get(0).getId(), "The found song ID does not match the saved one");
-        assertEquals(savedSong.getTitle(), foundByTitle.get(0).getTitle(), "The found song title does not match");
+        assertEquals(savedSongDTO.getId(), foundByTitle.get(0).getId(), "The found song ID does not match the saved one");
+        assertEquals(savedSongDTO.getTitle(), foundByTitle.get(0).getTitle(), "The found song title does not match");
     }
 
     @Test
     public void updateSongTest() {
-        Artist artist = createArtist("test", "test");
-        Artist savedArtist = artistService.save(artist);
+        ArtistDTO artistDTO = createArtistDTO("test", "test biography");
+        ArtistDTO savedArtistDTO = artistService.save(artistDTO);
 
-        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
-        Song savedSong = songService.save(song);
+        SongDTO songDTO = createSongDTO(savedArtistDTO.getId(), UUID.randomUUID().toString());
+        SongDTO savedSongDTO = songService.save(songDTO);
 
-        assertNotNull(savedArtist, "Artist was not created");
-        assertNotNull(savedSong, "Song was not created");
+        assertNotNull(savedArtistDTO, "Artist was not created");
+        assertNotNull(savedSongDTO, "Song was not created");
 
-        Song updatedSong = new Song();
-        updatedSong.setArtistId(savedSong.getArtistId());
-        updatedSong.setTitle("testSongTitleUpdated");
-        updatedSong.setFile(savedSong.getFile());
-        updatedSong.setFormat(savedSong.getFormat());
-        updatedSong.setYear(savedSong.getYear());
-        updatedSong.setGenre(savedSong.getGenre());
+        SongDTO updatedSongDTO = new SongDTO();
+        updatedSongDTO.setId(savedSongDTO.getId());
+        updatedSongDTO.setArtistId(savedSongDTO.getArtistId());
+        updatedSongDTO.setTitle("testSongTitleUpdated");
+        updatedSongDTO.setFormat(savedSongDTO.getFormat());
+        updatedSongDTO.setYear(savedSongDTO.getYear());
+        updatedSongDTO.setGenre(savedSongDTO.getGenre());
 
-        songService.updateSong(savedSong.getId(), updatedSong);
+        songService.updateSong(savedSongDTO.getId(), updatedSongDTO);
 
-        Optional<Song> getUpdatedSong = songService.findById(savedSong.getId());
+        Optional<SongDTO> getUpdatedSongDTO = songService.findById(savedSongDTO.getId());
 
-        assertTrue(getUpdatedSong.isPresent(), "Updated song not found");
-        assertEquals(savedSong.getId(), getUpdatedSong.get().getId(), "Song ID should remain the same");
-        assertEquals(updatedSong.getYear(), getUpdatedSong.get().getYear(), "Year was not updated correctly");
-        assertEquals(updatedSong.getTitle(), getUpdatedSong.get().getTitle(), "Title was not updated correctly");
-        assertEquals(updatedSong.getGenre(), getUpdatedSong.get().getGenre(), "Genre was not updated correctly");
+        assertTrue(getUpdatedSongDTO.isPresent(), "Updated song not found");
+        assertEquals(savedSongDTO.getId(), getUpdatedSongDTO.get().getId(), "Song ID should remain the same");
+        assertEquals(updatedSongDTO.getYear(), getUpdatedSongDTO.get().getYear(), "Year was not updated correctly");
+        assertEquals(updatedSongDTO.getTitle(), getUpdatedSongDTO.get().getTitle(), "Title was not updated correctly");
+        assertEquals(updatedSongDTO.getGenre(), getUpdatedSongDTO.get().getGenre(), "Genre was not updated correctly");
     }
-
 
     @Test
     public void getAllSongsTest() {
-        Artist artist = createArtist("test", "test");
-        Artist savedArtist = artistService.save(artist);
+        ArtistDTO artistDTO = createArtistDTO("test", "test biography");
+        ArtistDTO savedArtistDTO = artistService.save(artistDTO);
 
-        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
-        songService.save(song);
+        SongDTO songDTO = createSongDTO(savedArtistDTO.getId(), UUID.randomUUID().toString());
+        songService.save(songDTO);
 
-        Collection<Song> songs = songService.findAll();
+        Collection<SongDTO> songs = songService.findAll();
         assertNotNull(songs, "No songs found");
         assertEquals(1, songs.size());
     }
 
     @Test
-
     public void deleteSongByIdTest() {
-        Artist artist = createArtist("test", "test");
-        Artist savedArtist = artistService.save(artist);
+        ArtistDTO artistDTO = createArtistDTO("test", "test biography");
+        ArtistDTO savedArtistDTO = artistService.save(artistDTO);
 
-        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
-        Song savedSong = songService.save(song);
+        SongDTO songDTO = createSongDTO(savedArtistDTO.getId(), UUID.randomUUID().toString());
+        SongDTO savedSongDTO = songService.save(songDTO);
 
-        songService.deleteById((long) savedSong.getId());
+        songService.deleteById(savedSongDTO.getId());
 
-        Optional<Song> getDeletedSong = songService.findById(savedSong.getId());
-        assertFalse(getDeletedSong.isPresent());
+        Optional<SongDTO> getDeletedSongDTO = songService.findById(savedSongDTO.getId());
+        assertFalse(getDeletedSongDTO.isPresent());
     }
 
     @Test
     public void deleteAllSongsTest() {
+        ArtistDTO artistDTO = createArtistDTO("test", "test biography");
+        ArtistDTO savedArtistDTO = artistService.save(artistDTO);
 
-        Artist artist = createArtist("test", "test");
-        Artist savedArtist = artistService.save(artist);
+        SongDTO songDTO = createSongDTO(savedArtistDTO.getId(), UUID.randomUUID().toString());
+        SongDTO savedSongDTO = songService.save(songDTO);
 
-        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
-        Song savedSong = songService.save(song);
-
-        assertNotNull(savedSong, "Song was not created");
+        assertNotNull(savedSongDTO, "Song was not created");
 
         songService.deleteAll();
 
-        Collection<Song> getDeletedSongs = songService.findAll();
+        Collection<SongDTO> getDeletedSongs = songService.findAll();
         assertTrue(getDeletedSongs.isEmpty());
         assertEquals(0, getDeletedSongs.size());
     }
 
     @Test
     public void getSongByIdTest() {
-        Artist artist = createArtist("test", "test");
-        Artist savedArtist = artistService.save(artist);
-        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
-        Song savedSong = songService.save(song);
-        assertNotNull(savedSong, "Song was not created");
+        ArtistDTO artistDTO = createArtistDTO("test", "test biography");
+        ArtistDTO savedArtistDTO = artistService.save(artistDTO);
+        SongDTO songDTO = createSongDTO(savedArtistDTO.getId(), UUID.randomUUID().toString());
+        SongDTO savedSongDTO = songService.save(songDTO);
+        assertNotNull(savedSongDTO, "Song was not created");
 
-        Optional<Song> getSongById = songService.findById(savedSong.getId());
+        Optional<SongDTO> getSongById = songService.findById(savedSongDTO.getId());
         assertTrue(getSongById.isPresent());
-        assertEquals(savedSong.getId(), getSongById.get().getId());
-        assertEquals(savedSong.getTitle(), getSongById.get().getTitle());
-        assertEquals(savedSong.getArtistId(), getSongById.get().getArtistId());
+        assertEquals(savedSongDTO.getId(), getSongById.get().getId());
+        assertEquals(savedSongDTO.getTitle(), getSongById.get().getTitle());
+        assertEquals(savedSongDTO.getArtistId(), getSongById.get().getArtistId());
     }
 
     @Test
     public void getAllSongsByArtistTest() {
-        Artist artist = createArtist("test", "test");
-        Artist savedArtist = artistService.save(artist);
-        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
-        Song savedSong = songService.save(song);
-        assertNotNull(savedSong, "Song was not created");
-        Song song2 = createSong(savedArtist.getId(), UUID.randomUUID().toString());
-        Song savedSong2 = songService.save(song2);
-        assertNotNull(savedSong2, "Song was not created");
+        ArtistDTO artistDTO = createArtistDTO("test", "test biography");
+        ArtistDTO savedArtistDTO = artistService.save(artistDTO);
+        SongDTO songDTO = createSongDTO(savedArtistDTO.getId(), UUID.randomUUID().toString());
+        SongDTO savedSongDTO = songService.save(songDTO);
+        assertNotNull(savedSongDTO, "Song was not created");
 
-        Collection<Song> getSongsByArtist = songService.findByArtistId(savedArtist.getId());
+        SongDTO songDTO2 = createSongDTO(savedArtistDTO.getId(), UUID.randomUUID().toString());
+        SongDTO savedSongDTO2 = songService.save(songDTO2);
+        assertNotNull(savedSongDTO2, "Song was not created");
+
+        Collection<SongDTO> getSongsByArtist = songService.findByArtistId(savedArtistDTO.getId());
         assertFalse(getSongsByArtist.isEmpty());
         assertEquals(2, getSongsByArtist.size());
-
     }
 
     @Test
     public void getAllSongsByTitleTest() {
-        Artist artist = createArtist("test", "test");
-        Artist savedArtist = artistService.save(artist);
+        ArtistDTO artistDTO = createArtistDTO("test", "test biography");
+        ArtistDTO savedArtistDTO = artistService.save(artistDTO);
 
-        Artist artist2 = createArtist("test", "test");
-        Artist savedArtist2 = artistService.save(artist2);
+        ArtistDTO artistDTO2 = createArtistDTO("test2", "test biography");
+        ArtistDTO savedArtistDTO2 = artistService.save(artistDTO2);
 
-        Song song = createSong(savedArtist.getId(), UUID.randomUUID().toString());
-        Song savedSong = songService.save(song);
-        assertNotNull(savedSong, "Song was not created");
+        SongDTO songDTO = createSongDTO(savedArtistDTO.getId(), UUID.randomUUID().toString());
+        SongDTO savedSongDTO = songService.save(songDTO);
+        assertNotNull(savedSongDTO, "Song was not created");
 
-        Song song2 = createSong(savedArtist2.getId(), savedSong.getTitle());
-        Song savedSong2 = songService.save(song2);
-        assertNotNull(savedSong2, "Song was not created");
+        SongDTO songDTO2 = createSongDTO(savedArtistDTO2.getId(), savedSongDTO.getTitle());
+        SongDTO savedSongDTO2 = songService.save(songDTO2);
+        assertNotNull(savedSongDTO2, "Song was not created");
 
-        Collection<Song> getSongsByTitle = songService.findByTitle(savedSong.getTitle());
+        Collection<SongDTO> getSongsByTitle = songService.findByTitle(savedSongDTO.getTitle());
         assertFalse(getSongsByTitle.isEmpty());
         assertEquals(2, getSongsByTitle.size());
-
     }
 
-    private Artist createArtist(String nickname, String biography) {
-        Artist artist = new Artist();
-        artist.setNickname(nickname);
-        artist.setBiography(biography);
-        return artist;
+    private ArtistDTO createArtistDTO(String nickname, String biography) {
+        ArtistDTO artistDTO = new ArtistDTO();
+        artistDTO.setNickname(nickname);
+        artistDTO.setBiography(biography);
+        return artistDTO;
     }
 
-    private Song createSong(int artistId, String title) {
-        Song song = new Song();
-        song.setArtistId(artistId);
-        song.setTitle(title);
-        song.setFormat("MP3");
-        song.setYear(2024);
-        song.setGenre("Pop");
-        return song;
+    private SongDTO createSongDTO(int artistId, String title) {
+        SongDTO songDTO = new SongDTO();
+        songDTO.setArtistId(artistId);
+        songDTO.setTitle(title);
+        songDTO.setFormat("MP3");
+        songDTO.setYear(2020);
+        songDTO.setGenre("Pop");
+        return songDTO;
     }
-
-
 }

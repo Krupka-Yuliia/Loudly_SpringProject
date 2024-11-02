@@ -30,103 +30,104 @@ public class UserServiceTest {
         this.userService.deleteAll();
     }
 
-    private User createUser(String username) {
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(DEFAULT_PASSWORD);
-        user.setEmail(UUID.randomUUID().toString());
-        user.setRole(DEFAULT_ROLE);
-        return user;
+    private UserDTO createUserDTO(String username) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername(username);
+        userDTO.setPassword(DEFAULT_PASSWORD);
+        userDTO.setEmail(UUID.randomUUID().toString());
+        userDTO.setRole(DEFAULT_ROLE);
+        return userDTO;
     }
 
     @Test
     public void createAndSaveUserTest() {
-        User user = createUser(UUID.randomUUID().toString());
-        User savedUser = userService.save(user);
-
-        assertNotNull(savedUser, "User was not created");
-        assertNotNull(savedUser.getEmail(), "Email was not created");
-        assertNotNull(savedUser.getPassword(), "Password was not created");
-        assertNotNull(savedUser.getRole(), "Role was not created");
-        assertNotNull(savedUser.getId(), "Id was not created");
+        UserDTO userDTO = createUserDTO(UUID.randomUUID().toString());
+        UserDTO savedUserDTO = userService.save(userDTO);
+        assertNotNull(savedUserDTO, "UserDTO was not created");
+        assertNotNull(savedUserDTO.getEmail(), "Email was not created");
+        assertNotNull(savedUserDTO.getPassword(), "Password was not created");
+        assertNotNull(savedUserDTO.getRole(), "Role was not created");
     }
 
     @Test
     public void getUserByIdTest() {
-        User user = createUser(UUID.randomUUID().toString());
-        User savedUser = userService.save(user);
-        Optional<User> foundById = userService.findById(savedUser.getId());
-        assertEquals(savedUser, foundById.get());
-        assertEquals(savedUser.getEmail(), foundById.get().getEmail());
-        assertEquals(savedUser.getPassword(), foundById.get().getPassword());
-        assertEquals(savedUser.getRole(), foundById.get().getRole());
+        UserDTO userDTO = createUserDTO(UUID.randomUUID().toString());
+        UserDTO savedUserDTO = userService.save(userDTO);
+        Optional<UserDTO> foundByIdDTO = userService.getUserById((long) savedUserDTO.getId());
 
+        assertTrue(foundByIdDTO.isPresent(), "UserDTO not found by ID");
+        assertEquals(savedUserDTO, foundByIdDTO.get());
+        assertEquals(savedUserDTO.getEmail(), foundByIdDTO.get().getEmail());
+        assertEquals(savedUserDTO.getPassword(), foundByIdDTO.get().getPassword());
+        assertEquals(savedUserDTO.getRole(), foundByIdDTO.get().getRole());
     }
+
 
     @Test
     public void findAllUsersTest() {
-        User user = createUser(UUID.randomUUID().toString());
-        userService.save(user);
-        Collection<User> users = userService.getAllUsers();
-        assertNotNull(users);
-        assertEquals(users.size(), 1);
+        UserDTO userDTO = createUserDTO(UUID.randomUUID().toString());
+        userService.save(userDTO);
+        Collection<UserDTO> usersDTO = userService.getAllUsers();
+        assertNotNull(usersDTO);
+        assertEquals(usersDTO.size(), 1);
     }
 
     @Test
     public void deleteAllUsersTest() {
-        Collection<User> users = userService.getAllUsers();
-        assertEquals(0, users.size());
+        Collection<UserDTO> usersDTO = userService.getAllUsers();
+        assertEquals(0, usersDTO.size());
         IntStream.range(0, 10).forEach(i -> {
-            User user = new User();
-            user.setUsername("testUse" + i);
-            user.setEmail("test@tst.com" + i);
-            user.setPassword("password");
-            user.setRole("user");
-            userService.save(user);
+            UserDTO userDTO = new UserDTO();
+            userDTO.setUsername("testUse" + i);
+            userDTO.setEmail("test@tst.com" + i);
+            userDTO.setPassword("password");
+            userDTO.setRole("UserDTO");
+            userService.save(userDTO);
         });
-        Collection<User> savedUsers = userService.getAllUsers();
-        assertEquals(10, savedUsers.size());
+        Collection<UserDTO> savedUserDTOs = userService.getAllUsers();
+        assertEquals(10, savedUserDTOs.size());
         userRepository.deleteAll();
-        Collection<User> deletedUsers = userService.getAllUsers();
-        assertEquals(0, deletedUsers.size());
+        Collection<UserDTO> deletedUserDTOs = userService.getAllUsers();
+        assertEquals(0, deletedUserDTOs.size());
 
     }
 
     @Test
     public void deleteUserByIdTest() {
-        User user = createUser(UUID.randomUUID().toString());
-        User savedUser = userService.save(user);
+        UserDTO userDTO = createUserDTO(UUID.randomUUID().toString());
+        UserDTO savedUser = userService.save(userDTO);
         assertNotNull(savedUser, "User was not created");
 
         userService.deleteUserById(savedUser.getId());
 
-        Optional<User> deletedUser = userService.findById(Long.valueOf(savedUser.getId()));
-
-        Assertions.assertFalse(deletedUser.isPresent());
-
+        Optional<UserDTO> deletedUser = userService.findById(savedUser.getId());
+        Assertions.assertFalse(deletedUser.isPresent(), "User was not deleted");
     }
+
 
     @Test
-    public void updateUserTest() {
-        User user = createUser(UUID.randomUUID().toString());
-        User savedUser = userService.save(user);
+    public void updateUserDTOTest() {
+        UserDTO userDTO = createUserDTO(UUID.randomUUID().toString());
+        UserDTO savedUserDTO = userService.save(userDTO);
 
-        assertNotNull(savedUser, "User was not created");
+        assertNotNull(savedUserDTO, "User was not created");
 
-        User updatedUser = new User();
-        updatedUser.setUsername(UUID.randomUUID().toString());
-        updatedUser.setEmail(user.getEmail());
-        updatedUser.setPassword(user.getPassword());
-        updatedUser.setRole(user.getRole());
+        UserDTO updatedUserDTO = new UserDTO();
+        updatedUserDTO.setUsername(UUID.randomUUID().toString());
+        updatedUserDTO.setEmail(savedUserDTO.getEmail());
+        updatedUserDTO.setPassword(savedUserDTO.getPassword());
+        updatedUserDTO.setRole(savedUserDTO.getRole());
 
-        userService.updateUser((long) savedUser.getId(), updatedUser);
+         userService.updateUserDTO((long) savedUserDTO.getId(), updatedUserDTO);
 
-        Optional<User> getUpdatedUser = userService.findById(savedUser.getId());
-        assertNotNull(getUpdatedUser, "Updated user not found");
-        assertEquals(getUpdatedUser.get().getEmail(), updatedUser.getEmail());
-        assertEquals(getUpdatedUser.get().getPassword(), updatedUser.getPassword());
-        assertEquals(getUpdatedUser.get().getUsername(), updatedUser.getUsername());
-        assertEquals(getUpdatedUser.get().getRole(), updatedUser.getRole());
-        assertEquals(getUpdatedUser.get().getId(), savedUser.getId(), "ID should remain the same");
+        Optional<UserDTO> getUpdatedUser = userService.findById(savedUserDTO.getId());
+        assertTrue(getUpdatedUser.isPresent(), "Updated user not found");
+
+        assertEquals(updatedUserDTO.getUsername(), getUpdatedUser.get().getUsername(), "Username should be updated");
+        assertEquals(savedUserDTO.getEmail(), getUpdatedUser.get().getEmail(), "Email should remain the same");
+        assertEquals(savedUserDTO.getPassword(), getUpdatedUser.get().getPassword(), "Password should remain the same");
+        assertEquals(savedUserDTO.getRole(), getUpdatedUser.get().getRole(), "Role should remain the same");
+        assertEquals(savedUserDTO.getId(), getUpdatedUser.get().getId(), "ID should remain the same");
     }
+
 }

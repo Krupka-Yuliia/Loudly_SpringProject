@@ -1,6 +1,6 @@
 package com.loudlyapp.artists;
 
-import com.loudlyapp.artist.Artist;
+import com.loudlyapp.artist.ArtistDTO;
 import com.loudlyapp.artist.ArtistService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -21,7 +21,6 @@ public class ArtistsServiceTests {
     @Autowired
     private ArtistService artistService;
 
-
     @AfterEach
     void tearDown() {
         this.artistService.deleteAll();
@@ -29,8 +28,8 @@ public class ArtistsServiceTests {
 
     @Test
     public void createAndSaveArtistTest() {
-        Artist artist = createArtist("test", "test");
-        Artist savedArtist = artistService.save(artist);
+        ArtistDTO artistDTO = createArtistDTO("test", "test");
+        ArtistDTO savedArtist = artistService.save(artistDTO);
 
         assertNotNull(savedArtist, "Artist was not created");
         assertNotNull(savedArtist.getBiography(), "Bio was not created");
@@ -39,13 +38,13 @@ public class ArtistsServiceTests {
 
     @Test
     public void getArtistByIdTest() {
-        Artist artist = createArtist("test", "test");
-        Artist savedArtist = artistService.save(artist);
+        ArtistDTO artistDTO = createArtistDTO("test", "test");
+        ArtistDTO savedArtist = artistService.save(artistDTO);
         assertNotNull(savedArtist, "Artist was not created");
         assertNotNull(savedArtist.getBiography(), "Bio was not created");
         assertNotNull(savedArtist.getNickname(), "Nickname was not created");
 
-        Optional<Artist> foundById = artistService.findById(savedArtist.getId());
+        Optional<ArtistDTO> foundById = artistService.findById(savedArtist.getId());
 
         assertEquals(foundById.get().getId(), savedArtist.getId());
         assertEquals(foundById.get().getBiography(), savedArtist.getBiography());
@@ -53,82 +52,78 @@ public class ArtistsServiceTests {
     }
 
     @Test
-    public void deleteAllUsersTest() {
-        Collection<Artist> artists = artistService.getAllArtists();
+    public void deleteAllArtistsTest() {
+        Collection<ArtistDTO> artists = artistService.getAllArtists();
         assertEquals(0, artists.size());
         IntStream.range(0, 10).forEach(i -> {
-            Artist artist = new Artist();
-            artist.setBiography("Pop diva" + i);
-            artist.setNickname("Artist" + i);
-            artistService.save(artist);
+            ArtistDTO artistDTO = createArtistDTO("Artist" + i, "Pop diva" + i);
+            artistService.save(artistDTO);
         });
-        Collection<Artist> savedArtists = artistService.getAllArtists();
+        Collection<ArtistDTO> savedArtists = artistService.getAllArtists();
         assertEquals(10, savedArtists.size());
         artistService.deleteAll();
-        Collection<Artist> deletedArtists = artistService.getAllArtists();
+        Collection<ArtistDTO> deletedArtists = artistService.getAllArtists();
         assertEquals(0, deletedArtists.size());
-
     }
 
     @Test
     public void getAllArtistsTest() {
-        Artist artist = createArtist("test", "test");
-        Artist savedArtist = artistService.save(artist);
+        ArtistDTO artistDTO = createArtistDTO("test", "test");
+        ArtistDTO savedArtist = artistService.save(artistDTO);
         assertNotNull(savedArtist, "Artist was not created");
-        Collection<Artist> artists = artistService.getAllArtists();
+        Collection<ArtistDTO> artists = artistService.getAllArtists();
         assertNotNull(artists);
         assertEquals(1, artists.size());
     }
 
     @Test
     public void updateArtistTest() {
-        Artist artist = createArtist("test", "test");
-        Artist savedArtist = artistService.save(artist);
+        ArtistDTO artistDTO = createArtistDTO("test", "test");
+        ArtistDTO savedArtist = artistService.save(artistDTO);
         assertNotNull(savedArtist, "Artist was not created");
 
-        Artist updatedArtist = new Artist();
-        updatedArtist.setBiography("Even better pop diva now");
-        updatedArtist.setNickname(savedArtist.getNickname());
+        ArtistDTO updatedArtistDTO = new ArtistDTO();
+        updatedArtistDTO.setBiography("Even better pop diva now");
+        updatedArtistDTO.setNickname(savedArtist.getNickname());
 
-        artistService.updateArtist(savedArtist.getId(), updatedArtist);
+        artistService.updateArtist(savedArtist.getId(), updatedArtistDTO);
 
-        Optional<Artist> getUpdatedArtist = artistService.findById(savedArtist.getId());
+        Optional<ArtistDTO> getUpdatedArtist = artistService.findById(savedArtist.getId());
 
         assertNotNull(getUpdatedArtist, "Updated artist not found");
-        assertEquals(getUpdatedArtist.get().getBiography(), updatedArtist.getBiography(), "Biography was not updated");
-        assertEquals(getUpdatedArtist.get().getNickname(), updatedArtist.getNickname(), "Nickname was not updated");
+        assertEquals(getUpdatedArtist.get().getBiography(), updatedArtistDTO.getBiography(), "Biography was not updated");
+        assertEquals(getUpdatedArtist.get().getNickname(), updatedArtistDTO.getNickname(), "Nickname was not updated");
         assertEquals(getUpdatedArtist.get().getId(), savedArtist.getId(), "ID should remain the same");
     }
 
     @Test
     public void deleteArtistTest() {
-        Artist artist = createArtist("test", "test");
-        Artist savedArtist = artistService.save(artist);
+        ArtistDTO artistDTO = createArtistDTO("test", "test");
+        ArtistDTO savedArtist = artistService.save(artistDTO);
         assertNotNull(savedArtist, "Artist was not created");
 
         artistService.deleteArtistById(savedArtist.getId());
-        Optional<Artist> deletedArtist = artistService.findById(savedArtist.getId());
+        Optional<ArtistDTO> deletedArtist = artistService.findById(savedArtist.getId());
 
         Assertions.assertFalse(deletedArtist.isPresent());
     }
 
     @Test
     public void searchArtistByNameTest() {
-        Artist artist = createArtist("test", "test");
-        Artist savedArtist = artistService.save(artist);
+        ArtistDTO artistDTO = createArtistDTO("test", "test");
+        ArtistDTO savedArtist = artistService.save(artistDTO);
         assertNotNull(savedArtist, "Artist was not created");
 
-        Optional<Artist> foundByName = artistService.findByName(savedArtist.getNickname());
+        Optional<ArtistDTO> foundByName = artistService.findByName(savedArtist.getNickname());
 
         assertNotNull(foundByName);
         assertEquals(foundByName.get().getNickname(), savedArtist.getNickname());
     }
 
-    private Artist createArtist(String nickname, String biography) {
-        Artist artist = new Artist();
-        artist.setNickname(nickname);
-        artist.setBiography(biography);
-        return artist;
+    private ArtistDTO createArtistDTO(String nickname, String biography) {
+        ArtistDTO artistDTO = new ArtistDTO();
+        artistDTO.setNickname(nickname);
+        artistDTO.setBiography(biography);
+        return artistDTO;
     }
-
 }

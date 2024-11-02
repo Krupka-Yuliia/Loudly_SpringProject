@@ -1,9 +1,17 @@
 package com.loudlyapp.user;
 
-public record UserDTO(
-        int id,
-        String username,
-        String email,
-        String role
-) {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserDTO {
+    private int id;
+    private String username;
+    private String email;
+    private String password;
+    private String role;
+
 }

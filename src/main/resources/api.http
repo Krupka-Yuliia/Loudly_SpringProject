@@ -6,7 +6,7 @@ GET http://localhost:8080/users
 
 ### GET user by id
 
-GET http://localhost:8080/users/167
+GET http://localhost:8080/users/82
 
 ### POST create a user
 
@@ -26,7 +26,7 @@ DELETE http://localhost:8080/users
 
 ### PUT update a user
 
-PUT http://localhost:8080/users/1
+PUT http://localhost:8080/users/82
 Content-Type:application/json
 
 {
@@ -49,7 +49,7 @@ GET http://localhost:8080/playlists
 
 ### POST playlist by userId
 
-POST http://localhost:8080/playlists/users/1
+POST http://localhost:8080/playlists/users/153
 Content-Type: application/json
 
 {
@@ -66,7 +66,7 @@ GET http://localhost:8080/playlists/users/4
 
 
 ### POST add a song to a playlist
-POST http://localhost:8080/playlists/1/songs/3
+POST http://localhost:8080/playlists/79/songs/118
 
 ### DELETE song from a playlist
 
@@ -111,7 +111,7 @@ POST http://localhost:8080/songs
 Content-Type: application/json
 
 {
-  "artistId": "82",
+  "artistId": "211",
   "file": null,
   "format": "MP3",
   "genre": "rock",
@@ -125,7 +125,7 @@ GET http://localhost:8080/songs
 
 ### GET song by id
 
-GET http://localhost:8080/songs/68
+GET http://localhost:8080/songs/59
 
 
 ### DELETE song by id
@@ -134,12 +134,12 @@ DELETE http://localhost:8080/songs/69
 
 ### GET search songs by title
 
-GET http://localhost:8080/songs/search?title=Taste
+GET http://localhost:8080/songs/search?title=Levitate
 
 
 ### GET search songs by genre
 
-GET http://localhost:8080/songs/searchByGenre?genre=pop
+GET http://localhost:8080/songs/searchByGenre?genre=rock
 
 
 ### PUT update a song
@@ -153,12 +153,12 @@ Content-Type: application/json
   "genre": "rock",
   "format": "MP3",
   "file": null,
-  "artistId": "17"
+  "artistId": "108"
 }
 
 ### GET search songs by artist id
 
-GET http://localhost:8080/songs/searchByArtistId?artistId=41
+GET http://localhost:8080/songs/searchByArtistId?artistId=108
 
 ### DELETE all songs
 
@@ -177,7 +177,7 @@ GET http://localhost:8080/artists
 
 ### GET Artist by Id
 
-GET http://localhost:8080/artists/188
+GET http://localhost:8080/artists/107
 
 ### POST add artist
 
@@ -185,8 +185,8 @@ POST http://localhost:8080/artists
 Content-Type: application/json
 
 {
-  "nickname": "Sabrina Carpenter",
-  "biography": "Pop diva"
+  "nickname": "Twenty one pilots",
+  "biography": "Best rock band"
 }
 
 ### DELETE all artists
@@ -196,7 +196,7 @@ DELETE http://localhost:8080/artists
 
 ### PUT update an artist
 
-PUT http://localhost:8080/artists/164
+PUT http://localhost:8080/artists/106
 Content-Type: application/json
 
 {
@@ -206,7 +206,7 @@ Content-Type: application/json
 
 ### DELETE artist by id
 
-DELETE http://localhost:8080/artists/39
+DELETE http://localhost:8080/artists/106
 
 ### GET artist by name
 

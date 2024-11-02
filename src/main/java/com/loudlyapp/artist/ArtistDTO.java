@@ -1,9 +1,15 @@
 package com.loudlyapp.artist;
 
-public record ArtistDTO(
-        int id,
-        String nickname,
-        String biography
-) {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@Data
+@NoArgsConstructor
+public class ArtistDTO {
+    private int id;
+    private String nickname;
+    private String biography;
 
 }

@@ -12,45 +12,48 @@ import java.util.Optional;
 @AllArgsConstructor
 public class ArtistController {
 
-
     private final ArtistService artistService;
 
-
-    @GetMapping()
-    public List<Artist> getArtists() {
+    @GetMapping
+    public List<ArtistDTO> getArtists() {
         return artistService.getAllArtists();
     }
 
     @GetMapping("/{artistId}")
-    public Optional<Artist> getArtist(@PathVariable Long artistId) {
-        return artistService.findById(artistId);
+    public ResponseEntity<ArtistDTO> getArtist(@PathVariable Long artistId) {
+        return artistService.findById(artistId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping()
-    public Artist createArtist(@RequestBody Artist artist) {
-        return artistService.save(artist);
+    @PostMapping
+    public ResponseEntity<ArtistDTO> createArtist(@RequestBody ArtistDTO artistDTO) {
+        ArtistDTO createdArtist = artistService.save(artistDTO);
+        return ResponseEntity.status(201).body(createdArtist);
     }
 
     @DeleteMapping
-    public void deleteAll() {
+    public ResponseEntity<Void> deleteAll() {
         artistService.deleteAll();
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{artistId}")
-    public ResponseEntity<Artist> updateArtist(@PathVariable Long artistId, @RequestBody Artist artist) {
-        Artist updatedArtist = artistService.updateArtist(artistId, artist);
+    public ResponseEntity<ArtistDTO> updateArtist(@PathVariable Long artistId, @RequestBody ArtistDTO artistDTO) {
+        ArtistDTO updatedArtist = artistService.updateArtist(artistId, artistDTO);
         return ResponseEntity.ok(updatedArtist);
     }
 
     @DeleteMapping("/{artistId}")
-    public void deleteArtist(@PathVariable Long artistId) {
+    public ResponseEntity<Void> deleteArtist(@PathVariable Long artistId) {
         artistService.deleteArtistById(artistId);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/search")
-    public Optional<Artist> getArtistByName(@RequestParam String name) {
-        return artistService.findByName(name);
+    public ResponseEntity<ArtistDTO> getArtistByName(@RequestParam String nickname) {
+        return artistService.findByName(nickname)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
-
-

@@ -1,8 +1,8 @@
 package com.loudlyapp.web_controllers;
 
-import com.loudlyapp.artist.Artist;
+import com.loudlyapp.artist.ArtistDTO;
 import com.loudlyapp.artist.ArtistService;
-import com.loudlyapp.song.Song;
+import com.loudlyapp.song.SongDTO;
 import com.loudlyapp.song.SongService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -22,27 +22,22 @@ public class ArtistWebController {
 
     @GetMapping("/artists/show/{id}")
     public String getArtist(@PathVariable Long id, Model model) {
-        Optional<Artist> artistOptional = artistService.findById(id);
+        Optional<ArtistDTO> artistOptional = artistService.findById(id);
 
         if (artistOptional.isPresent()) {
-            Artist artist = artistOptional.get();
+            ArtistDTO artist = artistOptional.get();
             model.addAttribute("artist", artist);
 
-            List<Song> songs = songService.findByArtistId(artist.getId());
-
-            for (Song song : songs) {
-                song.setArtistName(artist.getNickname());
-            }
+            List<SongDTO> songs = songService.findByArtistId(artist.getId());
 
             model.addAttribute("songs", songs);
         }
-
         return "artist";
     }
 
     @GetMapping("/artists/show")
     public String getAllArtists(Model model) {
-        List<Artist> artists = artistService.getAllArtists();
+        List<ArtistDTO> artists = artistService.getAllArtists();
         model.addAttribute("artists", artists);
         return "artists";
     }
