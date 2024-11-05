@@ -22,7 +22,7 @@
 | GET    | `/songs`                            | Get all songs                    |
 | GET    | `/artists`                          | Get all artists                  |
 | GET    | `/songs/search`                     | Search for songs                 |
-| GET    | `/songs/{id}/play`                  | Play a song                      |
+| POST   | `/songs/{id}/play`                  | Play a song                      |
 | GET    | `/users`                            | Get all users                    |
 | GET    | `/songs/genre`                      | Get songs by genre               |
 | GET    | `/songs/artist/{id}`                | Get songs by artist              |
