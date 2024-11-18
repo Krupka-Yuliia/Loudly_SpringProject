@@ -22,14 +22,12 @@ public class ArtistWebController {
 
     @GetMapping("/artists/show/{id}")
     public String getArtist(@PathVariable Long id, Model model) {
-        Optional<ArtistDTO> artistOptional = artistService.findById(id);
+        Optional<ArtistDTO> artistDTO = artistService.findById(id);
 
-        if (artistOptional.isPresent()) {
-            ArtistDTO artist = artistOptional.get();
+        if (artistDTO.isPresent()) {
+            ArtistDTO artist = artistDTO.get();
             model.addAttribute("artist", artist);
-
             List<SongDTO> songs = songService.findByArtistId(artist.getId());
-
             model.addAttribute("songs", songs);
         }
         return "artist";

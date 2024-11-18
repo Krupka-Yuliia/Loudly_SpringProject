@@ -14,10 +14,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Playlist {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
+
     @Column(name = "user_id")
     private int userId;
 
@@ -30,25 +32,18 @@ public class Playlist {
     private List<Song> songs = new ArrayList<>();
 
     public void addSong(Song song) {
-        if (songs == null) {
-            songs = new ArrayList<>();
-        }
         songs.add(song);
     }
 
     public boolean containsSong(Song song) {
-        return songs != null && songs.contains(song);
+        return songs.contains(song);
     }
 
-
     public void removeSong(Song song) {
-        if (songs != null) {
-            songs.remove(song);
-        }
+        songs.remove(song);
     }
 
     public void clearSongs() {
-        this.songs.clear();
+        songs.clear();
     }
-
 }

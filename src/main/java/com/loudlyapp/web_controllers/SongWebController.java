@@ -10,7 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Controller
@@ -48,24 +49,7 @@ public class SongWebController {
     @GetMapping("/songs/show")
     public String getAllSongs(Model model) {
         List<SongDTO> songs = songService.findAll();
-        List<Map<String, Object>> songList = new ArrayList<>();
-
-        for (SongDTO song : songs) {
-            Optional<ArtistDTO> artistOptional = artistService.findById(song.getArtistId());
-            if (artistOptional.isPresent()) {
-                song.setArtistName(artistOptional.get().getNickname());
-            }
-
-            Map<String, Object> songData = new HashMap<>();
-            songData.put("id", song.getId());
-            songData.put("title", song.getTitle());
-            songData.put("artist", song.getArtistName());
-            songData.put("year", song.getYear());
-            songData.put("genre", song.getGenre());
-            songList.add(songData);
-        }
-
-        model.addAttribute("songs", songList);
+        model.addAttribute("songs", songs);
         return "songs";
     }
 }

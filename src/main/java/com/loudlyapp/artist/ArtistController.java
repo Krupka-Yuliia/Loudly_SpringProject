@@ -1,7 +1,6 @@
 package com.loudlyapp.artist;
 
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,40 +19,34 @@ public class ArtistController {
     }
 
     @GetMapping("/{artistId}")
-    public ResponseEntity<ArtistDTO> getArtist(@PathVariable Long artistId) {
-        return artistService.findById(artistId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public Optional<ArtistDTO> getArtist(@PathVariable Long artistId) {
+        return artistService.findById(artistId);
     }
 
     @PostMapping
-    public ResponseEntity<ArtistDTO> createArtist(@RequestBody ArtistDTO artistDTO) {
+    public ArtistDTO createArtist(@RequestBody ArtistDTO artistDTO) {
         ArtistDTO createdArtist = artistService.save(artistDTO);
-        return ResponseEntity.status(201).body(createdArtist);
+        return createdArtist;
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteAll() {
+    public void deleteAll() {
         artistService.deleteAll();
-        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{artistId}")
-    public ResponseEntity<ArtistDTO> updateArtist(@PathVariable Long artistId, @RequestBody ArtistDTO artistDTO) {
+    public ArtistDTO updateArtist(@PathVariable Long artistId, @RequestBody ArtistDTO artistDTO) {
         ArtistDTO updatedArtist = artistService.updateArtist(artistId, artistDTO);
-        return ResponseEntity.ok(updatedArtist);
+        return updatedArtist;
     }
 
     @DeleteMapping("/{artistId}")
-    public ResponseEntity<Void> deleteArtist(@PathVariable Long artistId) {
+    public void deleteArtist(@PathVariable Long artistId) {
         artistService.deleteArtistById(artistId);
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ArtistDTO> getArtistByName(@RequestParam String nickname) {
-        return artistService.findByName(nickname)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public Optional<ArtistDTO> getArtistByName(@RequestParam String nickname) {
+        return artistService.findByName(nickname);
     }
 }

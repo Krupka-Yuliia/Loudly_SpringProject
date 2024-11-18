@@ -51,10 +51,12 @@ public class PlayListService {
     }
 
     public List<SongDTO> getAllSongsFromPlaylist(Long playlistId) {
-        PlaylistDTO playlist = findById(playlistId).orElseThrow(() -> new RuntimeException("Playlist not found"));
-        return playlist.getSongs(); // Return the list of SongDTO directly
+        Playlist playlist = playlistRepository.findById(playlistId)
+                .orElseThrow(() -> new RuntimeException("Playlist not found"));
+        return playlist.getSongs().stream()
+                .map(this::convertToSongDTO)
+                .collect(Collectors.toList());
     }
-
 
     public void deleteAllSongsFromPlaylist(Long playlistId) {
         Playlist playlist = playlistRepository.findById(playlistId)
@@ -80,7 +82,7 @@ public class PlayListService {
                 .orElseThrow(() -> new RuntimeException("Song not found"));
 
         if (playlist.containsSong(song)) {
-            throw new RuntimeException("Playlist already contains song");
+            throw new RuntimeException("Playlist already contains the song");
         }
 
         playlist.addSong(song);
@@ -97,7 +99,7 @@ public class PlayListService {
             playlist.removeSong(song);
             playlistRepository.save(playlist);
         } else {
-            throw new RuntimeException("Playlist does not contain song");
+            throw new RuntimeException("Playlist does not contain the song");
         }
     }
 
@@ -113,25 +115,36 @@ public class PlayListService {
         playlist.setId(playlistDTO.getId());
         playlist.setName(playlistDTO.getName());
         playlist.setUserId(playlistDTO.getUserId());
+        if (playlistDTO.getSongs() != null) {
+            List<Song> songs = playlistDTO.getSongs().stream()
+                    .map(this::convertToSongEntity)
+                    .collect(Collectors.toList());
+            playlist.setSongs(songs);
+        }
         return playlist;
     }
 
     private SongDTO convertToSongDTO(Song song) {
-        if (song == null) {
-            return null;
-        }
         SongDTO songDTO = new SongDTO();
         songDTO.setId(song.getId());
         songDTO.setTitle(song.getTitle());
         songDTO.setArtistId(song.getArtistId());
-
-
         String artistName = artistService.getArtistNameById(song.getArtistId());
         songDTO.setArtistName(artistName);
-
         songDTO.setFormat(song.getFormat());
         songDTO.setGenre(song.getGenre());
         songDTO.setYear(song.getYear());
         return songDTO;
+    }
+
+    private Song convertToSongEntity(SongDTO songDTO) {
+        Song song = new Song();
+        song.setId(songDTO.getId());
+        song.setTitle(songDTO.getTitle());
+        song.setArtistId(songDTO.getArtistId());
+        song.setFormat(songDTO.getFormat());
+        song.setGenre(songDTO.getGenre());
+        song.setYear(songDTO.getYear());
+        return song;
     }
 }

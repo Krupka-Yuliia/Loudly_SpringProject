@@ -1,6 +1,5 @@
 package com.loudlyapp.artist;
 
-import com.loudlyapp.user.UserDTO;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

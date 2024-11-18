@@ -4,36 +4,52 @@ import com.loudlyapp.artist.ArtistDTO;
 import com.loudlyapp.artist.ArtistService;
 import com.loudlyapp.playlist.PlayListService;
 import com.loudlyapp.playlist.PlaylistDTO;
-import com.loudlyapp.song.SongDTO;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Controller
 public class PlaylistWebController {
-
     private final PlayListService playListService;
     private final ArtistService artistService;
 
-    @GetMapping("/playlists/show/{id}")
-    public String getPlaylist(Model model, @PathVariable long id) {
-        Optional<PlaylistDTO> playlistOpt = playListService.findById(id);
+    @GetMapping("/playlists/show/{playlistId}")
+    public String getPlaylist(Model model, @PathVariable long playlistId) {
+        Optional<PlaylistDTO> playlistDTO = playListService.findById(playlistId);
+        if (playlistDTO.isPresent()) {
+            PlaylistDTO currentPlaylistDTO = playlistDTO.get();
 
+            currentPlaylistDTO.getSongs().forEach(songDTO -> {
+                Optional<ArtistDTO> artistDTO = artistService.findById(songDTO.getArtistId());
+                artistDTO.ifPresent(artist -> songDTO.setArtistName(artist.getNickname()));
+            });
 
-        PlaylistDTO currentPlaylist = playlistOpt.get();
-
-        currentPlaylist.getSongs().forEach(song -> {
-            Optional<ArtistDTO> artistOpt = artistService.findById(song.getArtistId());
-            artistOpt.ifPresent(artist -> song.setArtistName(artist.getNickname()));
-        });
-
-        model.addAttribute("playlist", currentPlaylist);
+            model.addAttribute("playlist", currentPlaylistDTO);
+        } else {
+            model.addAttribute("error", "Playlist not found.");
+        }
         return "playlist";
-
     }
+
+    @GetMapping("/add_playlist")
+    public String showAddPlaylistForm(@RequestParam int userId, Model model) {
+        model.addAttribute("playlist", new PlaylistDTO());
+        model.addAttribute("userId", userId);
+        return "add_playlist_form";
+    }
+
+
+    @PostMapping("/playlists")
+    public String addPlaylist(
+            @ModelAttribute("playlist") PlaylistDTO playlistDTO,
+            @RequestParam int userId) {
+        playlistDTO.setUserId(userId);
+        playListService.save(playlistDTO);
+        return "redirect:/users/show/" + userId;
+    }
+
 }
