@@ -1,7 +1,7 @@
 # Loudly Spring Project
 
 ## Functional Requirements:
-- **As a User**, I want to be able to:
+- **As a User** I want to be able to:
   - Search for a song
   - Play a song
   - Create a playlist
@@ -11,7 +11,7 @@
   - Seek songs by genre
   - Seek songs by artist
 
-- **As an Admin**, I want to be able to:
+- **As an Admin** I want to be able to:
   - Add songs/artists
   - Delete songs/artists
 
