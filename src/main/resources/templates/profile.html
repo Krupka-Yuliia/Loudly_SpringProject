@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(title=~{::title}, content=~{::body})}">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">User Profile</title>
+</head>
+<body>
+
+<div th:fragment="content">
+    <div th:if="${error}" class="alert alert-danger">
+        <p th:text="${error}"></p>
+    </div>
+
+
+    <h1 class="mt-3 mb-5">Welcome, <span th:text="${userName}">User</span>!</h1>
+
+    <div class="bg-warning p-2 text-light text-center mb-4 mt-3">
+        <h2>Your Playlists</h2>
+    </div>
+
+    <div th:if="${playlists.isEmpty()}" class="alert alert-info">
+        <p>You don't have any playlists yet. Start adding some!</p>
+    </div>
+    <div th:if="${not playlists.isEmpty()}">
+        <div class="row">
+            <div class="col-md-4 mb-4" th:each="playlist : ${playlists}">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${playlist.name}">Playlist Name</h5>
+                        <a th:href="@{'/playlists/show/' + ${playlist.id}}" class="btn btn-warning">View Playlist</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-info mt-4">
+        <h3>Today's Recommended Song:</h3>
+        <p th:text="${dailyRecommendation}"></p>
+    </div>
+
+</div>
+
+</body>
+</html>

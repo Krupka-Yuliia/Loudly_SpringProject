@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(title, content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title}">Default Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg header_artist">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">🎵</a>
+        <form class="d-flex search-form">
+            <button class="btn btn-outline-dark playlist-button" type="submit"><a href="/songs/show"
+                                                                                  class="link-light">Songs</a>
+            </button>
+            <button class="btn btn-outline-dark playlist-button" type="submit"><a href="/artists/show"
+                                                                                  class="link-light">Artists</a>
+            </button>
+            <button class="btn btn-outline-dark playlist-button text-light" type="submit">My playlists</button>
+            <a th:href="@{'/add_playlist?userId=' + ${userId}}"
+               class="btn btn-outline-dark playlist-button text-light">
+                Add Playlist
+            </a>
+
+
+            <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+            <button class="navbar-text">
+                <a href="/home" class="text-dark">👤</a>
+            </button>
+        </form>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div th:replace="${content}">
+        <!-- Content will be inserted here -->
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

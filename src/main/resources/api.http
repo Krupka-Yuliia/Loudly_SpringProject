@@ -111,7 +111,7 @@ POST http://localhost:8080/songs
 Content-Type: application/json
 
 {
-  "artistId": "211",
+  "artistId": "242",
   "file": null,
   "format": "MP3",
   "genre": "rock",
