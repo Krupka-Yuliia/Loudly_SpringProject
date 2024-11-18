@@ -1,7 +1,7 @@
 # Loudly Spring Project
 
 ## Functional Requirements:
-- **As a User** I want to be able to:
+- **As a User**... I want to be able to:
   - Search for a song
   - Play a song
   - Create a playlist
