@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -16,6 +17,14 @@ import java.util.Optional;
 public class PlaylistWebController {
     private final PlayListService playListService;
     private final ArtistService artistService;
+
+
+    @GetMapping("users/show/{userId}/playlists/show")
+    public String getAllPlaylistsByUserId(@PathVariable("userId") long userId, Model model) {
+        List<PlaylistDTO> playlists = playListService.findPlaylistsByUserId(userId);
+        model.addAttribute("playlists", playlists);
+        return "playlists";
+    }
 
     @GetMapping("/playlists/show/{playlistId}")
     public String getPlaylist(Model model, @PathVariable long playlistId) {
@@ -49,7 +58,7 @@ public class PlaylistWebController {
             @RequestParam int userId) {
         playlistDTO.setUserId(userId);
         playListService.save(playlistDTO);
-        return "redirect:/users/show/" + userId;
+        return "redirect:/users/show/" + userId + "/playlists/show";
     }
 
 }

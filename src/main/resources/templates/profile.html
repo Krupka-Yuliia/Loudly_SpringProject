@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: layout(title=~{::title}, content=~{::body})}">
 <head>
-
+    <title>User Profile</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${title}">User Profile</title>
@@ -21,12 +21,11 @@
         <h2>Your Playlists</h2>
     </div>
 
-    <div th:if="${playlists.isEmpty()}" class="alert alert-info">
-        <p>You don't have any playlists yet. Start adding some!</p>
-    </div>
     <div th:if="${not playlists.isEmpty()}">
         <div class="row">
-            <div class="col-md-4 mb-4" th:each="playlist : ${playlists}">
+            <div class="col-md-4 mb-4"
+                 th:each="playlist, iterStat : ${playlists}"
+                 th:if="${iterStat.index < 6}">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title" th:text="${playlist.name}">Playlist Name</h5>
@@ -36,6 +35,8 @@
             </div>
         </div>
     </div>
+
+
 
     <div class="alert alert-info mt-4">
         <h3>Today's Recommended Song:</h3>

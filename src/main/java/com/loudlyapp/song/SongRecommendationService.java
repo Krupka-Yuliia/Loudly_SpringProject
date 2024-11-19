@@ -1,7 +1,6 @@
 package com.loudlyapp.song;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +10,6 @@ import java.util.Random;
 @Service
 public class SongRecommendationService {
 
-    @Autowired
     private final SongService songService;
 
     public String getDailyRecommendation() {
