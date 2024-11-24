@@ -66,7 +66,7 @@ GET http://localhost:8080/playlists/users/4
 
 
 ### POST add a song to a playlist
-POST http://localhost:8080/playlists/79/songs/118
+POST http://localhost:8080/playlists/110/songs/118
 
 ### DELETE song from a playlist
 
@@ -111,11 +111,11 @@ POST http://localhost:8080/songs
 Content-Type: application/json
 
 {
-  "artistId": "242",
+  "artistId": "239",
   "file": null,
   "format": "MP3",
   "genre": "rock",
-  "title": "Levitate",
+  "title": "Hometown",
   "year": "2024"
 }
 
@@ -125,7 +125,7 @@ GET http://localhost:8080/songs
 
 ### GET song by id
 
-GET http://localhost:8080/songs/59
+GET http://localhost:8080/songs/112
 
 
 ### DELETE song by id
@@ -144,17 +144,20 @@ GET http://localhost:8080/songs/searchByGenre?genre=rock
 
 ### PUT update a song
 
-PUT http://localhost:8080/songs/105
+PUT http://localhost:8080/songs/112
 Content-Type: application/json
 
 {
-  "title": "My Blood",
-  "year": "2018",
-  "genre": "rock",
-  "format": "MP3",
+  "artistId": "239",
   "file": null,
-  "artistId": "108"
+  "format": "MP3",
+  "genre": "indie_rock",
+  "title": "Hometown",
+  "year": "2024"
 }
+
+
+
 
 ### GET search songs by artist id
 
@@ -185,8 +188,8 @@ POST http://localhost:8080/artists
 Content-Type: application/json
 
 {
-  "nickname": "Twenty one pilots",
-  "biography": "Best rock band"
+  "nickname": "Panic at the disco",
+  "biography": "second best rock band"
 }
 
 ### DELETE all artists

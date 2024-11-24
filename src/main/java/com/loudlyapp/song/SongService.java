@@ -5,6 +5,10 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,10 +28,10 @@ public class SongService {
         songDTO.setId(song.getId());
         songDTO.setTitle(song.getTitle());
         songDTO.setArtistId(song.getArtistId());
+        songDTO.setFile(song.getFile());
 
         String artistName = artistService.getArtistNameById(song.getArtistId());
         songDTO.setArtistName(artistName);
-
         songDTO.setFormat(song.getFormat());
         songDTO.setGenre(song.getGenre());
         songDTO.setYear(song.getYear());
@@ -45,7 +49,13 @@ public class SongService {
         song.setFormat(songDTO.getFormat());
         song.setGenre(songDTO.getGenre());
         song.setYear(songDTO.getYear());
+        song.setFile(songDTO.getFile());
         return song;
+    }
+
+    public byte[] convertFileToBytes(String filePath) throws IOException {
+        Path path = Paths.get(filePath);
+        return Files.readAllBytes(path);
     }
 
     public List<SongDTO> findAll() {
@@ -97,6 +107,9 @@ public class SongService {
                     existingSong.setTitle(songDTO.getTitle());
                     existingSong.setGenre(songDTO.getGenre());
                     existingSong.setArtistId(songDTO.getArtistId());
+                    existingSong.setFile(songDTO.getFile());
+                    existingSong.setFormat(songDTO.getFormat());
+                    existingSong.setYear(songDTO.getYear());
                     Song updatedSong = songRepository.save(existingSong);
                     return convertToDTO(updatedSong);
                 })

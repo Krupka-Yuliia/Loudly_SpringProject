@@ -11,6 +11,7 @@ public class SongDTO {
     private long id;
     private String title;
     private String format;
+    private byte[] file;
     private int artistId;
     private String artistName;
     private String genre;

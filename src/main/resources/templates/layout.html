@@ -8,17 +8,18 @@
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg header_artist">
+<nav class="navbar navbar-expand-lg header_artist ">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">🎵</a>
+        <a href="#"><h1 class="navbar-brand">LOUDLY🎵</h1></a>
         <form class="d-flex search-form">
-            <button class="btn btn-outline-dark playlist-button" type="submit"><a href="/songs/show"
-                                                                                  class="link-light">Songs</a>
-            </button>
-            <button class="btn btn-outline-dark playlist-button" type="submit"><a href="/artists/show"
-                                                                                  class="link-light">Artists</a>
-            </button>
-            <a th:href="@{'/users/show/' + ${userId} + '/playlists/show'}" class="btn btn-outline-dark playlist-button link-light">My playlists</a>
+            <a href="/songs/show" class="btn btn-outline-dark playlist-button link-light">
+                Songs
+            </a>
+            <a href="/artists/show" class="btn btn-outline-dark playlist-button link-light">
+                Artists
+            </a>
+            <a th:href="@{'/users/show/' + ${userId} + '/playlists/show'}"
+               class="btn btn-outline-dark playlist-button link-light">My playlists</a>
             <input class="form-control" type="search" placeholder="Search" aria-label="Search">
             <button class="navbar-text">
                 <a href="/home" class="text-dark">👤</a>

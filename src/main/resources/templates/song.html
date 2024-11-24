@@ -23,7 +23,12 @@
                 <strong>Genre:</strong>
                 <span th:text="${genre}">Genre</span>
             </p>
-            <button class="btn play-button">Play ▶</button>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <audio controls>
+                    <source th:src="@{'/songs/play/' + ${id}}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </td>
         </div>
     </div>
 </div>

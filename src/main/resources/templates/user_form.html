@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOUDLY - Register</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="home_body">
+<div class="register-container">
+    <h5 class="mb-1 title2">Join</h5>
+    <h1 class="mb-4 title">LOUDLY</h1>
+
+    <div class="card p-4 shadow-lg border-0">
+        <h4 class="text-center mb-3">Create Your Account</h4>
+        <form th:action="@{/register}" method="post" th:object="${userDTO}">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" id="username" name="username" class="form-control" th:field="*{username}"
+                       placeholder="Enter your username" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" name="email" class="form-control" th:field="*{email}"
+                       placeholder="Enter your email" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="form-control" th:field="*{password}"
+                       placeholder="Enter your password" required>
+            </div>
+            <div class="mb-4">
+                <label for="role" class="form-label">Role</label>
+                <input type="text" id="role" name="role" class="form-control" th:field="*{role}"
+                       placeholder="Enter your role" required>
+            </div>
+            <button type="submit" class="btn btn-warning w-100">Register</button>
+        </form>
+    </div>
+
+    <div class="text-center mt-4">
+        <p>Already have an account? <a href="/login" class="link-warning fw-bold">Log in here</a>.</p>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

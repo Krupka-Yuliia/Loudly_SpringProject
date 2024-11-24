@@ -104,5 +104,14 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found"));
     }
 
+    public UserDTO findByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        return convertToDTO(user);
+    }
+
+    public UserDTO findByEmailAndPassword(String username, String password) {
+        Optional<User> userOptional = userRepository.findByEmailAndPassword(username, password);
+        return userOptional.map(this::convertToDTO).orElse(null);
+    }
 
 }
