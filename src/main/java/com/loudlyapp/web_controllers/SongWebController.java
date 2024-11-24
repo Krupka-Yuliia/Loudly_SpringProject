@@ -62,12 +62,12 @@ public class SongWebController {
         return "songs";
     }
 
-    @GetMapping("/songs/upload")
+    @GetMapping("/admin/songs/upload")
     public String showUploadForm() {
         return "add_song_form";
     }
 
-    @PostMapping("/songs/upload")
+    @PostMapping("/admin/songs/upload")
     public String uploadSong(@RequestParam("file") MultipartFile file,
                              @RequestParam("title") String title,
                              @RequestParam("artistId") int artistId,

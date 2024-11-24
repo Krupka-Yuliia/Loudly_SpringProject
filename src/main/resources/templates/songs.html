@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(title=~{::title}, content=~{::body})}">
+      th:replace="~{layout :: layout(title=~{::title}, content=~{::body})}" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Songs List</title>
 </head>
@@ -8,6 +9,11 @@
 <div class="songs_body">
     <div class="container mt-4">
         <h1 class="mb-4">All Songs</h1>
+
+        <div class="mb-4" sec:authorize="hasRole('ADMIN')">
+            <a href="/admin/songs/upload" class="btn btn-primary d-inline-flex align-items-center gap-2">Add Song</a>
+        </div>
+
 
         <table class="table table-striped">
             <thead>

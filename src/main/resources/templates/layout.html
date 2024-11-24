@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(title, content)">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(title, content)"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,7 +19,7 @@
             <a href="/artists/show" class="btn btn-outline-dark me-2">
                 Artists
             </a>
-            <a href="/playlists/show" class="btn btn-outline-dark me-2">
+            <a href="/playlists/show" class="btn btn-outline-dark me-2" sec:authorize="hasRole('USER')">
                 MyPlaylists
             </a>
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
