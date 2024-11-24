@@ -38,10 +38,9 @@
     </div>
 
     <div class="text-center">
-        <a th:href="@{'/users/show/' + ${playlist.userId} + '/playlists/show'}" class="btn play-button">All
-            Playlists</a>
+        <a href="/playlists/show" class="btn play-button">All Playlists</a>
         <br>
-        <a th:href="@{'/users/show/' + ${playlist.userId}}" class="btn play-button">Back to my profile</a>
+        <a href="/profile" class="btn play-button">Back to my profile</a>
     </div>
 </div>
 </body>

@@ -7,15 +7,16 @@ import com.loudlyapp.user.UserDTO;
 import com.loudlyapp.user.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
@@ -34,6 +35,7 @@ public class UserWebController {
     @PostMapping("/register")
     public String registerUser(@ModelAttribute UserDTO userDTO, Model model, HttpSession session) {
         try {
+            userDTO.setPassword(new BCryptPasswordEncoder().encode(userDTO.getPassword()));
             UserDTO savedUser = userService.save(userDTO);
             session.setAttribute("user", savedUser);
             return String.format("redirect:/users/show/%d", savedUser.getId());
@@ -51,51 +53,26 @@ public class UserWebController {
         return "login_form";
     }
 
-    @PostMapping("/login")
-    public String loginUser(@ModelAttribute("userDTO") UserDTO userDTO, Model model, HttpSession session) {
-        try {
-            UserDTO existingUser = userService.findByEmailAndPassword(userDTO.getEmail(), userDTO.getPassword());
-            if (existingUser != null) {
-                session.setAttribute("user", existingUser);
-                return String.format("redirect:/users/show/%d", existingUser.getId());
-            } else {
-                model.addAttribute("errorMessage", "Invalid email or password");
-                model.addAttribute("userDTO", userDTO);
-                return "login_form";
-            }
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", "An error occurred during login");
-            model.addAttribute("userDTO", userDTO);
-            return "login_form";
-        }
-    }
+    @GetMapping(value = {"/home", "/profile", "/"})
+    public String showProfile(@AuthenticationPrincipal User principal, Model model) {
+        UserDTO u = userService.findByEmail(principal.getUsername());
 
-    @GetMapping("users/show/{userId}")
-    public String showProfile(@PathVariable("userId") long userId, Model model, HttpSession session) {
-        UserDTO user = (UserDTO) session.getAttribute("user");
+        model.addAttribute("user", u);
+        model.addAttribute("userName", u.getUsername());
 
-        if (user != null && user.getId() == userId) {
-            model.addAttribute("user", user);
-            model.addAttribute("userName", user.getUsername());
-        } else {
-            Optional<UserDTO> userFromDb = userService.findById(userId);
-            if (userFromDb.isPresent()) {
-                model.addAttribute("user", userFromDb.get());
-                model.addAttribute("userName", userFromDb.get().getUsername());
-            } else {
-                model.addAttribute("error", "User not found.");
-                return "profile";
-            }
-        }
-
-
-        List<PlaylistDTO> playlists = playlistService.findPlaylistsByUserId(userId);
+        List<PlaylistDTO> playlists = playlistService.findPlaylistsByUserId(u.getId());
         model.addAttribute("playlists", playlists);
         String dailyRecommendation = songRecommendationService.getDailyRecommendation();
         model.addAttribute("dailyRecommendation", dailyRecommendation);
-
         return "profile";
     }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login";
+    }
+
 
 
 }

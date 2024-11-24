@@ -4,7 +4,12 @@ import com.loudlyapp.artist.ArtistDTO;
 import com.loudlyapp.artist.ArtistService;
 import com.loudlyapp.playlist.PlayListService;
 import com.loudlyapp.playlist.PlaylistDTO;
+import com.loudlyapp.user.UserDTO;
+import com.loudlyapp.user.UserRepository;
+import com.loudlyapp.user.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +22,13 @@ import java.util.Optional;
 public class PlaylistWebController {
     private final PlayListService playListService;
     private final ArtistService artistService;
+    private final UserService userService;
 
 
-    @GetMapping("users/show/{userId}/playlists/show")
-    public String getAllPlaylistsByUserId(@PathVariable("userId") long userId, Model model) {
-        List<PlaylistDTO> playlists = playListService.findPlaylistsByUserId(userId);
+    @GetMapping("/playlists/show")
+    public String getAllPlaylistsByUserId(@AuthenticationPrincipal User principal, Model model) {
+        UserDTO user = userService.findByEmail(principal.getUsername());
+        List<PlaylistDTO> playlists = playListService.findPlaylistsByUserId(user.getId());
         model.addAttribute("playlists", playlists);
         return "playlists";
     }
@@ -45,9 +52,10 @@ public class PlaylistWebController {
     }
 
     @GetMapping("/add_playlist")
-    public String showAddPlaylistForm(@RequestParam int userId, Model model) {
+    public String showAddPlaylistForm(@AuthenticationPrincipal User principal, Model model) {
+        UserDTO user = userService.findByEmail(principal.getUsername());
         model.addAttribute("playlist", new PlaylistDTO());
-        model.addAttribute("userId", userId);
+        model.addAttribute("userId", user.getId());
         return "add_playlist_form";
     }
 
@@ -58,7 +66,7 @@ public class PlaylistWebController {
             @RequestParam int userId) {
         playlistDTO.setUserId(userId);
         playListService.save(playlistDTO);
-        return "redirect:/users/show/" + userId + "/playlists/show";
+        return "redirect:/playlists/show";
     }
 
 }
