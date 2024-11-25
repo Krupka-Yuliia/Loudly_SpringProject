@@ -109,9 +109,10 @@ public class UserService {
         return convertToDTO(user);
     }
 
-    public UserDTO findByEmailAndPassword(String username, String password) {
-        Optional<User> userOptional = userRepository.findByEmailAndPassword(username, password);
-        return userOptional.map(this::convertToDTO).orElse(null);
+
+    public UserDTO findByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        return convertToDTO(user);
     }
 
 }

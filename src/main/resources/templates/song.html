@@ -5,6 +5,13 @@
     <title th:text="${songName}">Song Page</title>
 </head>
 <body>
+<div th:if="${successMessage}" class="alert alert-success">
+    <span th:text="${successMessage}">Success message</span>
+</div>
+
+<div th:if="${errorMessage}" class="alert alert-danger">
+    <span th:text="${errorMessage}">Error message</span>
+</div>
 <div class="container mt-4">
     <h1 class="mb-4" th:text="${songName}">SongName</h1>
 
@@ -30,6 +37,22 @@
                 </audio>
             </td>
         </div>
+    </div>
+    <div class="add-to-playlist">
+        <form th:action="@{/playlists/add_song}" method="post">
+            <div class="form-group">
+                <label for="playlistSelect">Select Playlist:</label>
+                <select id="playlistSelect" name="playlistId" class="form-control">
+                    <option th:each="playlist : ${playlists}"
+                            th:value="${playlist.id}"
+                            th:text="${playlist.name}">
+                        Playlist Name
+                    </option>
+                </select>
+            </div>
+            <input type="hidden" name="songId" th:value="${id}">
+            <button type="submit" class="btn btn-primary mt-2">Add to Playlist</button>
+        </form>
     </div>
     <a href="/profile" class="btn play-button">Back to my profile</a>
 </div>

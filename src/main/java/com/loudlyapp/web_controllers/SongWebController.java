@@ -2,13 +2,19 @@ package com.loudlyapp.web_controllers;
 
 import com.loudlyapp.artist.ArtistDTO;
 import com.loudlyapp.artist.ArtistService;
+import com.loudlyapp.playlist.PlayListService;
+import com.loudlyapp.playlist.PlaylistDTO;
 import com.loudlyapp.song.SongDTO;
 import com.loudlyapp.song.SongService;
+import com.loudlyapp.user.UserDTO;
+import com.loudlyapp.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,10 +34,14 @@ public class SongWebController {
 
     private final SongService songService;
     private final ArtistService artistService;
+    private final UserService userService;
+    private final PlayListService playlistService;
 
     @GetMapping("/songs/show/{id}")
-    public String getSongPage(@PathVariable Long id, Model model) {
+    public String getSongPage(@AuthenticationPrincipal User principal, @PathVariable Long id, Model model) {
         Optional<SongDTO> songOptional = songService.findById(id);
+
+        UserDTO u = userService.findByEmail(principal.getUsername());
 
         if (songOptional.isPresent()) {
             SongDTO song = songOptional.get();
@@ -49,11 +59,15 @@ public class SongWebController {
             model.addAttribute("artist", song.getArtistName());
             model.addAttribute("year", song.getYear());
             model.addAttribute("genre", song.getGenre());
+
+            List<PlaylistDTO> playlists = playlistService.findPlaylistsByUserId(u.getId());
+            model.addAttribute("playlists", playlists);
         } else {
             model.addAttribute("error", "Song not found");
         }
         return "song";
     }
+
 
     @GetMapping("/songs/show")
     public String getAllSongs(Model model) {

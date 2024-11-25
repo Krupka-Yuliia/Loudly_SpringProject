@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -69,4 +70,25 @@ public class PlaylistWebController {
         return "redirect:/playlists/show";
     }
 
+    @PostMapping("/playlists/add_song")
+    public String addSongToPlaylist(
+            @RequestParam Long playlistId,
+            @RequestParam Long songId,
+            @AuthenticationPrincipal User principal,
+            RedirectAttributes redirectAttributes
+    ) {
+        UserDTO user = userService.findByEmail(principal.getUsername());
+
+        boolean songExists = playListService.isSongInPlaylist(playlistId, songId);
+
+        if (songExists) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Song is already in this playlist");
+            return "redirect:/songs/show/" + songId;
+        }
+
+        playListService.addSongToPlaylist(playlistId, songId);
+        redirectAttributes.addFlashAttribute("successMessage", "Song added to playlist successfully");
+
+        return "redirect:/playlists/show/" + playlistId;
+    }
 }

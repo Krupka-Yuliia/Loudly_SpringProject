@@ -124,6 +124,15 @@ public class PlayListService {
         return playlist;
     }
 
+    public boolean isSongInPlaylist(Long playlistId, Long songId) {
+        Optional<PlaylistDTO> playlist = findById(playlistId);
+
+        return playlist.map(playlistDTO ->
+                playlistDTO.getSongs().stream()
+                        .anyMatch(song -> song.getId() == songId)
+        ).orElse(false);
+    }
+
     private SongDTO convertToSongDTO(Song song) {
         SongDTO songDTO = new SongDTO();
         songDTO.setId(song.getId());

@@ -19,7 +19,26 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-//    @Bean
+    @Bean
+    @Order(2)
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/", "/home", "/css/**", "/register", "/welcome").permitAll()
+                        .requestMatchers("/artists/show/**", "/songs/show/**", "/songs/upload").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
+                )
+                .formLogin((form) -> form
+                        .loginPage("/login")
+                        .permitAll()
+                )
+                .logout(LogoutConfigurer::permitAll);
+
+        return http.build();
+    }
+
+    //    @Bean
 //    @Order(1)
 //    public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
 //        http
@@ -35,44 +54,6 @@ public class SecurityConfig {
 ////                .httpBasic();
 //
 //        return http.build();
-//    }
-
-    @Bean
-    @Order(2)
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/home", "/css/**", "/register").permitAll()
-                        .requestMatchers("/artists/show/**", "/songs/show/**", "/songs/upload").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-//                        .requestMatchers("/songs/upload", "/songs/upload/**").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .formLogin((form) -> form
-                        .loginPage("/login")
-                        .permitAll()
-                )
-                .logout(LogoutConfigurer::permitAll);
-
-        return http.build();
-    }
-
-//    @Bean
-//    public InMemoryUserDetailsManager userDetailsService(UserService userService) {
-//
-//        UserDetails user = User.builder()
-//                .username("test")
-//                .password(passwordEncoder().encode("test"))
-//                .roles("USER")
-//                .build();
-//
-//        UserDetails admin = User.builder()
-//                .username("admin")
-//                .password(passwordEncoder().encode("admin"))
-//                .roles("ADMIN", "USER")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(user, admin);
 //    }
 
     @Bean

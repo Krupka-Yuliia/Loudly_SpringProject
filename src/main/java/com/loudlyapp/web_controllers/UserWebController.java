@@ -26,6 +26,11 @@ public class UserWebController {
     private final PlayListService playlistService;
     private final SongRecommendationService songRecommendationService;
 
+    @GetMapping("/welcome")
+    public String welcome() {
+        return "home";
+    }
+
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("userDTO", new UserDTO());
@@ -72,7 +77,4 @@ public class UserWebController {
         session.invalidate();
         return "redirect:/login";
     }
-
-
-
 }
