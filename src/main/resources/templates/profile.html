@@ -29,7 +29,7 @@
                             <h5 class="card-title" th:text="${playlist.name}">Playlist Name</h5>
                         </div>
                         <div class="card-footer bg-transparent border-0">
-                            <a th:href="@{'/playlists/show/' + ${playlist.id}}"
+                            <a th:href="@{'/playlists/' + ${playlist.id}}"
                                class="btn btn-outline-warning w-100">View Playlist</a>
                         </div>
                     </div>

@@ -5,6 +5,7 @@ import com.loudlyapp.playlist.PlaylistDTO;
 import com.loudlyapp.song.SongRecommendationService;
 import com.loudlyapp.user.UserDTO;
 import com.loudlyapp.user.UserService;
+import com.loudlyapp.utils.ResourceNotFound;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
@@ -37,18 +40,41 @@ public class UserWebController {
         return "user_form";
     }
 
+
     @PostMapping("/register")
     public String registerUser(@ModelAttribute UserDTO userDTO, Model model, HttpSession session) {
         try {
+            List<String> errors = new ArrayList<>();
+
+            if (userDTO.getUsername() == null || userDTO.getUsername().isEmpty()) {
+                errors.add("Username is required.");
+            }
+            if (userDTO.getPassword() == null || userDTO.getPassword().isEmpty()) {
+                errors.add("Password is required.");
+            }
+            if (userDTO.getEmail() == null || userDTO.getEmail().isEmpty()) {
+                errors.add("Email is required.");
+            }
+            if (userDTO.getRole() == null || userDTO.getRole().isEmpty()) {
+                errors.add("Role is required.");
+            }
+
+            if (!errors.isEmpty()) {
+                model.addAttribute("errors", errors);
+                return "user_form";
+            }
+
             userDTO.setPassword(new BCryptPasswordEncoder().encode(userDTO.getPassword()));
             UserDTO savedUser = userService.save(userDTO);
             session.setAttribute("user", savedUser);
-            return String.format("redirect:/users/show/%d", savedUser.getId());
+            return String.format("redirect:/users/%d", savedUser.getId());
+
         } catch (IllegalArgumentException e) {
-            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("errors", List.of(e.getMessage()));
             return "user_form";
         }
     }
+
 
     @GetMapping("/login")
     public String showLoginForm(Model model) {
@@ -60,17 +86,24 @@ public class UserWebController {
 
     @GetMapping(value = {"/home", "/profile", "/"})
     public String showProfile(@AuthenticationPrincipal User principal, Model model) {
-        UserDTO u = userService.findByEmail(principal.getUsername());
+        Optional<UserDTO> u = userService.findByUsername(principal.getUsername());
 
-        model.addAttribute("user", u);
-        model.addAttribute("userName", u.getUsername());
+        if (u.isPresent()) {
+            model.addAttribute("user", u.get());
+            model.addAttribute("userName", u.get().getUsername());
 
-        List<PlaylistDTO> playlists = playlistService.findPlaylistsByUserId(u.getId());
-        model.addAttribute("playlists", playlists);
-        String dailyRecommendation = songRecommendationService.getDailyRecommendation();
-        model.addAttribute("dailyRecommendation", dailyRecommendation);
+            List<PlaylistDTO> playlists = playlistService.findPlaylistsByUserId(u.get().getId());
+            model.addAttribute("playlists", playlists);
+
+            String dailyRecommendation = songRecommendationService.getDailyRecommendation();
+            model.addAttribute("dailyRecommendation", dailyRecommendation);
+        } else {
+            throw new ResourceNotFound("User not found.");
+        }
+
         return "profile";
     }
+
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {

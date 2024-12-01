@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/songs")
+@RequestMapping("/api/songs")
 @AllArgsConstructor
 public class SongController {
 

@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout :: layout(title=~{::title}, content=~{::body})}">
+      th:replace="~{layout :: layout(title=~{::title}, content=~{::body})}" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <title th:text="${songName}">Song Page</title>
 </head>
 <body>
+<!-- Flash messages -->
 <div th:if="${successMessage}" class="alert alert-success">
-    <span th:text="${successMessage}">Success message</span>
+    <span th:text="${successMessage}"></span>
 </div>
-
 <div th:if="${errorMessage}" class="alert alert-danger">
-    <span th:text="${errorMessage}">Error message</span>
+    <span th:text="${errorMessage}"></span>
 </div>
-<div class="container mt-4">
-    <h1 class="mb-4" th:text="${songName}">SongName</h1>
 
+
+<div class="container mt-4">
+    <h1 class="mb-4" th:text="${songName}">Song Name</h1>
     <div class="card song-info mb-4">
         <div class="card-body">
             <p class="names">
                 <strong>Artist:</strong>
-                <a th:href="@{'/artists/show/' + ${artistId}}"
+                <a th:href="@{'/artists/' + ${artistId}}"
                    th:text="${artist}">Artist Name</a>
             </p>
             <p>
@@ -30,31 +31,36 @@
                 <strong>Genre:</strong>
                 <span th:text="${genre}">Genre</span>
             </p>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <div class="audio-player">
                 <audio controls>
                     <source th:src="@{'/songs/play/' + ${id}}" type="audio/mpeg">
                     Your browser does not support the audio element.
                 </audio>
-            </td>
+            </div>
         </div>
     </div>
-    <div class="add-to-playlist">
-        <form th:action="@{/playlists/add_song}" method="post">
-            <div class="form-group">
-                <label for="playlistSelect">Select Playlist:</label>
-                <select id="playlistSelect" name="playlistId" class="form-control">
-                    <option th:each="playlist : ${playlists}"
-                            th:value="${playlist.id}"
-                            th:text="${playlist.name}">
-                        Playlist Name
-                    </option>
-                </select>
+
+    <div class="mb-4" sec:authorize="hasRole('USER')">
+        <div th:if="${playlists}">
+            <div class="add-to-playlist">
+                <form th:action="@{/playlists/add_song}" method="post">
+                    <div class="form-group">
+                        <label for="playlistSelect">Select Playlist:</label>
+                        <select id="playlistSelect" name="playlistId" class="form-control">
+                            <option th:each="playlist : ${playlists}"
+                                    th:value="${playlist.id}"
+                                    th:text="${playlist.name}">
+                                Playlist Name
+                            </option>
+                        </select>
+                    </div>
+                    <input type="hidden" name="songId" th:value="${id}">
+                    <button type="submit" class="btn btn-primary mt-2">Add to Playlist</button>
+                </form>
             </div>
-            <input type="hidden" name="songId" th:value="${id}">
-            <button type="submit" class="btn btn-primary mt-2">Add to Playlist</button>
-        </form>
+        </div>
+        <a href="/profile" class="btn play-button">Back to my profile</a>
     </div>
-    <a href="/profile" class="btn play-button">Back to my profile</a>
 </div>
 </body>
 </html>

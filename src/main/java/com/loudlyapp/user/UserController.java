@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 @AllArgsConstructor
 public class UserController {
 
@@ -23,7 +23,6 @@ public class UserController {
         Optional<UserDTO> userDTO = userService.findById(userId);
         return userDTO;
     }
-
 
     @DeleteMapping()
     public void deleteAllUsers() {

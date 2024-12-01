@@ -2,15 +2,15 @@
 
 ### GET All users
 
-GET http://localhost:8080/users
+GET http://localhost:8080/api/users
 
 ### GET user by id
 
-GET http://localhost:8080/users/82
+GET http://localhost:8080/api/users/319
 
 ### POST create a user
 
-POST http://localhost:8080/users
+POST http://localhost:8080/api/users
 Content-Type: application/json
 
 {
@@ -22,11 +22,11 @@ Content-Type: application/json
 
 ### DELETE all users
 
-DELETE http://localhost:8080/users
+DELETE http://localhost:8080/api/users
 
 ### PUT update a user
 
-PUT http://localhost:8080/users/82
+PUT http://localhost:8080/api/users/82
 Content-Type:application/json
 
 {
@@ -38,18 +38,19 @@ Content-Type:application/json
 
 ### DELETE user by id
 
-DELETE http://localhost:8080/users/48
+DELETE http://localhost:8080/api/users/319
 
 
 #-----------PLAYLISTS-------------------------
 
 ### GET all playlists
 
-GET http://localhost:8080/playlists
+GET http://localhost:8080/api/playlists
+#Authorization: Basic user:password
 
 ### POST playlist by userId
 
-POST http://localhost:8080/playlists/users/153
+POST http://localhost:8080/api/playlists/users/153
 Content-Type: application/json
 
 {
@@ -58,36 +59,36 @@ Content-Type: application/json
 
 ### DELETE playlist by id
 
-DELETE http://localhost:8080/playlists/4
+DELETE http://localhost:8080/api/playlists/4
 
 ### GET ALL playlists by user
 
-GET http://localhost:8080/playlists/users/4
+GET http://localhost:8080/api/playlists/users/4
 
 
 ### POST add a song to a playlist
-POST http://localhost:8080/playlists/110/songs/118
+POST http://localhost:8080/api/playlists/110/songs/118
 
 ### DELETE song from a playlist
 
-DELETE http://localhost:8080/playlists/60/songs/77
+DELETE http://localhost:8080/api/playlists/60/songs/77
 
 ### DELETE all songs from playlist
 
-DELETE http://localhost:8080/playlists/60/songs
+DELETE http://localhost:8080/api/playlists/60/songs
 
 
 ### DELETE all playlists
 
-DELETE http://localhost:8080/playlists
+DELETE http://localhost:8080/api/playlists
 
 ### GET playlist by id
 
-GET http://localhost:8080/playlists/60
+GET http://localhost:8080/api/playlists/60
 
 ### PUT update a playlist
 
-PUT http://localhost:8080/playlists/61
+PUT http://localhost:8080/api/playlists/61
 Content-Type: application/json
 
 {
@@ -96,7 +97,7 @@ Content-Type: application/json
 
 ### GET all songs from playlist
 
-GET http://localhost:8080/playlists/60/songs
+GET http://localhost:8080/api/playlists/60/songs
 
 
 
@@ -107,7 +108,7 @@ GET http://localhost:8080/playlists/60/songs
 
 ### POST add a song
 
-POST http://localhost:8080/songs
+POST http://localhost:8080/api/songs
 Content-Type: application/json
 
 {
@@ -121,30 +122,30 @@ Content-Type: application/json
 
 ### GET ALL SONGS
 
-GET http://localhost:8080/songs
+GET http://localhost:8080/api/songs
 
 ### GET song by id
 
-GET http://localhost:8080/songs/112
+GET http://localhost:8080/api/songs/123
 
 
 ### DELETE song by id
 
-DELETE http://localhost:8080/songs/69
+DELETE http://localhost:8080/api/songs/123
 
 ### GET search songs by title
 
-GET http://localhost:8080/songs/search?title=Levitate
+GET http://localhost:8080/api/songs/search?title=Feel good inc
 
 
 ### GET search songs by genre
 
-GET http://localhost:8080/songs/searchByGenre?genre=rock
+GET http://localhost:8080/api/songs/searchByGenre?genre=rock
 
 
 ### PUT update a song
 
-PUT http://localhost:8080/songs/112
+PUT http://localhost:8080/api/songs/112
 Content-Type: application/json
 
 {
@@ -161,11 +162,11 @@ Content-Type: application/json
 
 ### GET search songs by artist id
 
-GET http://localhost:8080/songs/searchByArtistId?artistId=108
+GET http://localhost:8080/api/songs/searchByArtistId?artistId=108
 
 ### DELETE all songs
 
-DELETE http://localhost:8080/songs
+DELETE http://localhost:8080/api/songs
 
 
 
@@ -176,15 +177,15 @@ DELETE http://localhost:8080/songs
 
 ### GET ARTISTS
 
-GET http://localhost:8080/artists
+GET http://localhost:8080/api/artists
 
 ### GET Artist by Id
 
-GET http://localhost:8080/artists/107
+GET http://localhost:8080/api/artists/107
 
 ### POST add artist
 
-POST http://localhost:8080/artists
+POST http://localhost:8080/api/artists
 Content-Type: application/json
 
 {
@@ -194,12 +195,12 @@ Content-Type: application/json
 
 ### DELETE all artists
 
-DELETE http://localhost:8080/artists
+DELETE http://localhost:8080/api/artists
 
 
 ### PUT update an artist
 
-PUT http://localhost:8080/artists/106
+PUT http://localhost:8080/api/artists/106
 Content-Type: application/json
 
 {
@@ -209,11 +210,11 @@ Content-Type: application/json
 
 ### DELETE artist by id
 
-DELETE http://localhost:8080/artists/106
+DELETE http://localhost:8080/api/artists/106
 
 ### GET artist by name
 
-GET http://localhost:8080/artists/search?name=SabrinaCarpenter
+GET http://localhost:8080/api/artists/search?name=SabrinaCarpenter
 
 
 

@@ -1,6 +1,5 @@
 package com.loudlyapp.web_controllers;
 
-import com.loudlyapp.artist.ArtistDTO;
 import com.loudlyapp.artist.ArtistService;
 import com.loudlyapp.playlist.PlayListService;
 import com.loudlyapp.playlist.PlaylistDTO;
@@ -8,6 +7,8 @@ import com.loudlyapp.song.SongDTO;
 import com.loudlyapp.song.SongService;
 import com.loudlyapp.user.UserDTO;
 import com.loudlyapp.user.UserService;
+import com.loudlyapp.utils.InvalidInputException;
+import com.loudlyapp.utils.SongNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -17,14 +18,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,45 +32,38 @@ import java.util.Optional;
 public class SongWebController {
 
     private final SongService songService;
-    private final ArtistService artistService;
     private final UserService userService;
     private final PlayListService playlistService;
 
-    @GetMapping("/songs/show/{id}")
+    @GetMapping("/songs/{id}")
     public String getSongPage(@AuthenticationPrincipal User principal, @PathVariable Long id, Model model) {
         Optional<SongDTO> songOptional = songService.findById(id);
-
-        UserDTO u = userService.findByEmail(principal.getUsername());
+        Optional<UserDTO> userOptional = userService.findByUsername(principal.getUsername());
 
         if (songOptional.isPresent()) {
             SongDTO song = songOptional.get();
-            Optional<ArtistDTO> artistOptional = artistService.findById(song.getArtistId());
-
-            if (artistOptional.isPresent()) {
-                ArtistDTO artist = artistOptional.get();
-                song.setArtistName(artist.getNickname());
-                model.addAttribute("artistId", artist.getId());
-            } else {
-                model.addAttribute("error", "Artist not found");
-            }
-
             model.addAttribute("songName", song.getTitle());
             model.addAttribute("artist", song.getArtistName());
+            model.addAttribute("artistId", song.getArtistId());
             model.addAttribute("year", song.getYear());
             model.addAttribute("genre", song.getGenre());
+            model.addAttribute("id", song.getId());
 
-            List<PlaylistDTO> playlists = playlistService.findPlaylistsByUserId(u.getId());
-            model.addAttribute("playlists", playlists);
+            if (userOptional.isPresent()) {
+                List<PlaylistDTO> playlists = playlistService.findPlaylistsByUserId(userOptional.get().getId());
+                model.addAttribute("playlists", playlists);
+            }
         } else {
-            model.addAttribute("error", "Song not found");
+            throw new SongNotFoundException(id);
         }
         return "song";
     }
 
 
-    @GetMapping("/songs/show")
+    @GetMapping("/songs")
     public String getAllSongs(Model model) {
         List<SongDTO> songs = songService.findAll();
+        songs.sort(Comparator.comparing(SongDTO::getTitle));
         model.addAttribute("songs", songs);
         return "songs";
     }
@@ -86,8 +78,11 @@ public class SongWebController {
                              @RequestParam("title") String title,
                              @RequestParam("artistId") int artistId,
                              @RequestParam("genre") String genre,
-                             @RequestParam("year") int year,
-                             Model model) throws IOException {
+                             @RequestParam("year") int year) throws IOException {
+
+        if (file.isEmpty() || title.isEmpty() || genre.isEmpty() || artistId == 0 || year == 0) {
+            throw new InvalidInputException("All fields are required for uploading a song.");
+        }
 
         byte[] fileBytes = file.getBytes();
 
@@ -99,10 +94,9 @@ public class SongWebController {
         songDTO.setFile(fileBytes);
 
         SongDTO savedSong = songService.save(songDTO);
-
-        model.addAttribute("message", "Song uploaded successfully!");
-        return "redirect:/songs/show/" + savedSong.getId();
+        return "redirect:/songs/" + savedSong.getId();
     }
+
 
     @GetMapping("/songs/play/{id}")
     public ResponseEntity<InputStreamResource> getSongAudio(@PathVariable Long id) throws IOException {
@@ -110,12 +104,18 @@ public class SongWebController {
         if (songOptional.isPresent()) {
             SongDTO song = songOptional.get();
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(song.getFile());
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + song.getTitle() + ".mp3\"");
+            headers.add(HttpHeaders.CACHE_CONTROL, "no-cache");
+            headers.add(HttpHeaders.PRAGMA, "no-cache");
+
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + song.getTitle() + ".mp3\"")
+                    .headers(headers)
                     .contentType(MediaType.valueOf("audio/mpeg"))
                     .body(new InputStreamResource(byteArrayInputStream));
         } else {
-            return ResponseEntity.notFound().build();
+            throw new SongNotFoundException(id);
         }
     }
 }

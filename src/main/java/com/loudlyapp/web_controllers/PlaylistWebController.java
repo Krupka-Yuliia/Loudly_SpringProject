@@ -1,12 +1,11 @@
 package com.loudlyapp.web_controllers;
 
-import com.loudlyapp.artist.ArtistDTO;
-import com.loudlyapp.artist.ArtistService;
 import com.loudlyapp.playlist.PlayListService;
 import com.loudlyapp.playlist.PlaylistDTO;
 import com.loudlyapp.user.UserDTO;
-import com.loudlyapp.user.UserRepository;
 import com.loudlyapp.user.UserService;
+import com.loudlyapp.utils.ResourceNotFound;
+import com.loudlyapp.utils.SongNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -22,41 +21,32 @@ import java.util.Optional;
 @Controller
 public class PlaylistWebController {
     private final PlayListService playListService;
-    private final ArtistService artistService;
     private final UserService userService;
 
-
-    @GetMapping("/playlists/show")
-    public String getAllPlaylistsByUserId(@AuthenticationPrincipal User principal, Model model) {
-        UserDTO user = userService.findByEmail(principal.getUsername());
-        List<PlaylistDTO> playlists = playListService.findPlaylistsByUserId(user.getId());
+    @GetMapping("/playlists")
+    public String getAllPlaylists(@AuthenticationPrincipal User principal, Model model) {
+        Optional<UserDTO> user = userService.findByUsername(principal.getUsername());
+        List<PlaylistDTO> playlists = playListService.findPlaylistsByUserId(user.get().getId());
         model.addAttribute("playlists", playlists);
         return "playlists";
     }
 
-    @GetMapping("/playlists/show/{playlistId}")
+    @GetMapping("/playlists/{playlistId}")
     public String getPlaylist(Model model, @PathVariable long playlistId) {
-        Optional<PlaylistDTO> playlistDTO = playListService.findById(playlistId);
-        if (playlistDTO.isPresent()) {
-            PlaylistDTO currentPlaylistDTO = playlistDTO.get();
-
-            currentPlaylistDTO.getSongs().forEach(songDTO -> {
-                Optional<ArtistDTO> artistDTO = artistService.findById(songDTO.getArtistId());
-                artistDTO.ifPresent(artist -> songDTO.setArtistName(artist.getNickname()));
-            });
-
-            model.addAttribute("playlist", currentPlaylistDTO);
+        Optional<PlaylistDTO> playlist = playListService.findById(playlistId);
+        if (playlist.isPresent()) {
+            model.addAttribute("playlist", playlist.get());
+            return "playlist";
         } else {
-            model.addAttribute("error", "Playlist not found.");
+            throw new ResourceNotFound("Playlist not found.");
         }
-        return "playlist";
     }
 
     @GetMapping("/add_playlist")
     public String showAddPlaylistForm(@AuthenticationPrincipal User principal, Model model) {
-        UserDTO user = userService.findByEmail(principal.getUsername());
+        Optional<UserDTO> user = userService.findByUsername(principal.getUsername());
         model.addAttribute("playlist", new PlaylistDTO());
-        model.addAttribute("userId", user.getId());
+        model.addAttribute("userId", user.get().getId());
         return "add_playlist_form";
     }
 
@@ -64,31 +54,29 @@ public class PlaylistWebController {
     @PostMapping("/playlists")
     public String addPlaylist(
             @ModelAttribute("playlist") PlaylistDTO playlistDTO,
-            @RequestParam int userId) {
+            @RequestParam int userId
+    ) {
         playlistDTO.setUserId(userId);
         playListService.save(playlistDTO);
-        return "redirect:/playlists/show";
+        return "redirect:/playlists";
     }
 
     @PostMapping("/playlists/add_song")
     public String addSongToPlaylist(
             @RequestParam Long playlistId,
             @RequestParam Long songId,
-            @AuthenticationPrincipal User principal,
             RedirectAttributes redirectAttributes
     ) {
-        UserDTO user = userService.findByEmail(principal.getUsername());
-
         boolean songExists = playListService.isSongInPlaylist(playlistId, songId);
 
         if (songExists) {
             redirectAttributes.addFlashAttribute("errorMessage", "Song is already in this playlist");
-            return "redirect:/songs/show/" + songId;
+        } else {
+            playListService.addSongToPlaylist(playlistId, songId);
+            redirectAttributes.addFlashAttribute("successMessage", "Song added to playlist successfully");
         }
 
-        playListService.addSongToPlaylist(playlistId, songId);
-        redirectAttributes.addFlashAttribute("successMessage", "Song added to playlist successfully");
-
-        return "redirect:/playlists/show/" + playlistId;
+        return "redirect:/songs/" + songId;
     }
+
 }

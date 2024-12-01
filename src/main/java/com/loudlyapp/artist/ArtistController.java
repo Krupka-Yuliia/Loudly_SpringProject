@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/artists")
+@RequestMapping("/api/artists")
 @AllArgsConstructor
 public class ArtistController {
 
@@ -25,8 +25,7 @@ public class ArtistController {
 
     @PostMapping
     public ArtistDTO createArtist(@RequestBody ArtistDTO artistDTO) {
-        ArtistDTO createdArtist = artistService.save(artistDTO);
-        return createdArtist;
+        return artistService.save(artistDTO);
     }
 
     @DeleteMapping
@@ -36,8 +35,7 @@ public class ArtistController {
 
     @PutMapping("/{artistId}")
     public ArtistDTO updateArtist(@PathVariable Long artistId, @RequestBody ArtistDTO artistDTO) {
-        ArtistDTO updatedArtist = artistService.updateArtist(artistId, artistDTO);
-        return updatedArtist;
+        return artistService.updateArtist(artistId, artistDTO);
     }
 
     @DeleteMapping("/{artistId}")

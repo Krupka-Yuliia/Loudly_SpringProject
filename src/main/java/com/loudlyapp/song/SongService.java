@@ -20,43 +20,6 @@ public class SongService {
     private final SongRepository songRepository;
     private final ArtistService artistService;
 
-    private SongDTO convertToDTO(Song song) {
-        if (song == null) {
-            return null;
-        }
-        SongDTO songDTO = new SongDTO();
-        songDTO.setId(song.getId());
-        songDTO.setTitle(song.getTitle());
-        songDTO.setArtistId(song.getArtistId());
-        songDTO.setFile(song.getFile());
-
-        String artistName = artistService.getArtistNameById(song.getArtistId());
-        songDTO.setArtistName(artistName);
-        songDTO.setFormat(song.getFormat());
-        songDTO.setGenre(song.getGenre());
-        songDTO.setYear(song.getYear());
-        return songDTO;
-    }
-
-    private Song convertToEntity(SongDTO songDTO) {
-        if (songDTO == null) {
-            return null;
-        }
-        Song song = new Song();
-        song.setId(songDTO.getId());
-        song.setTitle(songDTO.getTitle());
-        song.setArtistId(songDTO.getArtistId());
-        song.setFormat(songDTO.getFormat());
-        song.setGenre(songDTO.getGenre());
-        song.setYear(songDTO.getYear());
-        song.setFile(songDTO.getFile());
-        return song;
-    }
-
-    public byte[] convertFileToBytes(String filePath) throws IOException {
-        Path path = Paths.get(filePath);
-        return Files.readAllBytes(path);
-    }
 
     public List<SongDTO> findAll() {
         return songRepository.findAll().stream()
@@ -114,5 +77,40 @@ public class SongService {
                     return convertToDTO(updatedSong);
                 })
                 .orElseThrow(() -> new EntityNotFoundException("Song with id " + id + " not found"));
+    }
+
+
+
+    private SongDTO convertToDTO(Song song) {
+        if (song == null) {
+            return null;
+        }
+        SongDTO songDTO = new SongDTO();
+        songDTO.setId(song.getId());
+        songDTO.setTitle(song.getTitle());
+        songDTO.setArtistId(song.getArtistId());
+        songDTO.setFile(song.getFile());
+
+        String artistName = artistService.getArtistNameById(song.getArtistId());
+        songDTO.setArtistName(artistName);
+        songDTO.setFormat(song.getFormat());
+        songDTO.setGenre(song.getGenre());
+        songDTO.setYear(song.getYear());
+        return songDTO;
+    }
+
+    private Song convertToEntity(SongDTO songDTO) {
+        if (songDTO == null) {
+            return null;
+        }
+        Song song = new Song();
+        song.setId(songDTO.getId());
+        song.setTitle(songDTO.getTitle());
+        song.setArtistId(songDTO.getArtistId());
+        song.setFormat(songDTO.getFormat());
+        song.setGenre(songDTO.getGenre());
+        song.setYear(songDTO.getYear());
+        song.setFile(songDTO.getFile());
+        return song;
     }
 }

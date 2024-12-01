@@ -22,11 +22,11 @@
                 <tbody>
                 <tr th:each="song : ${playlist.songs}">
                     <td class="names">
-                        <a th:href="@{'/songs/show/' + ${song.id}}"
+                        <a th:href="@{'/songs/' + ${song.id}}"
                            th:text="${song.title}">Song Title</a>
                     </td>
                     <td class="names">
-                        <a th:href="@{'/artists/show/' + ${song.artistId}}"
+                        <a th:href="@{'/artists/' + ${song.artistId}}"
                            th:text="${song.artistName}">Artist Name</a>
                     </td>
                     <td th:text="${song.year}">Year</td>
@@ -38,7 +38,7 @@
     </div>
 
     <div class="text-center">
-        <a href="/playlists/show" class="btn play-button">All Playlists</a>
+        <a href="/playlists" class="btn play-button">All Playlists</a>
         <br>
         <a href="/profile" class="btn play-button">Back to my profile</a>
     </div>

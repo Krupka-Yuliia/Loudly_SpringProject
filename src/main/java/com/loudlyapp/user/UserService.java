@@ -22,10 +22,10 @@ public class UserService {
 
     public UserDTO save(UserDTO userDTO) {
         if (userRepository.existsByUsername(userDTO.getUsername())) {
-            throw new IllegalArgumentException("Username already exists: " + userDTO.getUsername());
+            throw new IllegalArgumentException("Username already exists: %s".formatted(userDTO.getUsername()));
         }
         if (userRepository.existsByEmail(userDTO.getEmail())) {
-            throw new IllegalArgumentException("Email already exists: " + userDTO.getEmail());
+            throw new IllegalArgumentException("Email already exists: %s".formatted(userDTO.getEmail()));
         }
 
         User user = convertToEntity(userDTO);
@@ -110,9 +110,21 @@ public class UserService {
     }
 
 
-    public UserDTO findByUsername(String username) {
-        User user = userRepository.findByUsername(username);
-        return convertToDTO(user);
+    public Optional<UserDTO> findByUsername(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.map(this::convertToDTO);
     }
+
+//    public UserDTO login(UserDTO userDTO){
+//
+//    }
+//
+//    public UserDTO register(UserDTO userDTO) {
+//        User user = convertToEntity(userDTO);
+//
+//    }
+
+
+
 
 }

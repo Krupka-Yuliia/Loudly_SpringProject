@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/playlists")
+@RequestMapping("/api/playlists")
 @AllArgsConstructor
 public class PlaylistController {
 
