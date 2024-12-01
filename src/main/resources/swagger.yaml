@@ -28,6 +28,10 @@ paths:
                     email:
                       type: string
                       example: "testUser@gmail.com"
+        '400':
+          description: Invalid request parameters
+        '500':
+          description: Internal server error
     post:
       summary: Create a new user
       requestBody:
@@ -52,11 +56,17 @@ paths:
       responses:
         '201':
           description: User created successfully
+        '400':
+          description: Invalid user input
+        '500':
+          description: Internal server error
     delete:
       summary: Delete all users
       responses:
         '204':
           description: All users deleted successfully
+        '500':
+          description: Internal server error
 
   /users/{id}:
     get:
@@ -86,6 +96,12 @@ paths:
                   email:
                     type: string
                     example: "testUser@gmail.com"
+        '400':
+          description: Invalid user ID format
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
     put:
       summary: Update a user
       parameters:
@@ -118,6 +134,12 @@ paths:
       responses:
         '200':
           description: User updated successfully
+        '400':
+          description: Invalid input data
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
     delete:
       summary: Delete user by ID
       parameters:
@@ -131,6 +153,12 @@ paths:
       responses:
         '204':
           description: User deleted successfully
+        '400':
+          description: Invalid user ID format
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
 
   /users/searchByRole:
     get:
@@ -162,7 +190,10 @@ paths:
                     role:
                       type: string
                       example: "User"
-
+        '400':
+          description: Invalid role parameter
+        '500':
+          description: Internal server error
   /users/searchByUsername:
     get:
       summary: Find user by username
@@ -191,6 +222,12 @@ paths:
                   email:
                     type: string
                     example: "testUser@gmail.com"
+        '400':
+          description: Invalid username parameter
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
 
   /users/searchByEmail:
     get:
@@ -220,6 +257,12 @@ paths:
                   email:
                     type: string
                     example: "testUser@gmail.com"
+        '400':
+          description: Invalid email parameter
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
 
   /playlists:
     get:
@@ -240,11 +283,15 @@ paths:
                     name:
                       type: string
                       example: "My Playlist"
+        '500':
+          description: Internal server error
     delete:
       summary: Delete all playlists
       responses:
         '204':
           description: All playlists deleted successfully
+        '500':
+          description: Internal server error
 
   /playlists/{id}:
     get:
@@ -271,6 +318,12 @@ paths:
                   name:
                     type: string
                     example: "My Playlist"
+        '400':
+          description: Invalid playlist ID format
+        '404':
+          description: Playlist not found
+        '500':
+          description: Internal server error
     put:
       summary: Update a playlist
       parameters:
@@ -294,6 +347,12 @@ paths:
       responses:
         '200':
           description: Playlist updated successfully
+        '400':
+          description: Invalid input data
+        '404':
+          description: Playlist not found
+        '500':
+          description: Internal server error
     delete:
       summary: Delete playlist by ID
       parameters:
@@ -307,6 +366,12 @@ paths:
       responses:
         '204':
           description: Playlist deleted successfully
+        '400':
+          description: Invalid playlist ID format
+        '404':
+          description: Playlist not found
+        '500':
+          description: Internal server error
 
   /playlists/users/{userId}:
     get:
@@ -335,6 +400,12 @@ paths:
                     name:
                       type: string
                       example: "My Playlist"
+        '400':
+          description: Invalid user ID format
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
     post:
       summary: Create a playlist for a user
       parameters:
@@ -358,7 +429,12 @@ paths:
       responses:
         '201':
           description: Playlist created successfully
-
+        '400':
+          description: Invalid input data
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
   /playlists/{playlistId}/songs/{songId}:
     post:
       summary: Add a song to a playlist
@@ -369,15 +445,23 @@ paths:
             type: integer
             example: 1
           required: true
+          description: Numeric ID of the playlist
         - in: path
           name: songId
           schema:
             type: integer
             example: 1
           required: true
+          description: Numeric ID of the song to add
       responses:
         '200':
           description: Song added to playlist
+        '400':
+          description: Invalid playlist or song ID format
+        '404':
+          description: Playlist or song not found
+        '500':
+          description: Internal server error
     delete:
       summary: Delete song from a playlist
       parameters:
@@ -387,15 +471,23 @@ paths:
             type: integer
             example: 1
           required: true
+          description: Numeric ID of the playlist
         - in: path
           name: songId
           schema:
             type: integer
             example: 1
           required: true
+          description: Numeric ID of the song to remove
       responses:
         '204':
-          description: Song deleted from playlist
+          description: Song deleted from playlist successfully
+        '400':
+          description: Invalid playlist or song ID format
+        '404':
+          description: Playlist or song not found
+        '500':
+          description: Internal server error
 
   /playlists/{id}/songs:
     get:
@@ -410,7 +502,7 @@ paths:
           description: Numeric ID of the playlist
       responses:
         '200':
-          description: Successfully retrieved all
+          description: Successfully retrieved all songs in the playlist
           content:
             application/json:
               schema:
@@ -430,3 +522,154 @@ paths:
                     genre:
                       type: string
                       example: "Rock"
+        '400':
+          description: Invalid playlist ID format
+        '404':
+          description: Playlist not found
+        '500':
+          description: Internal server error
+
+  /songs:
+    get:
+      summary: Get all songs
+      responses:
+        '200':
+          description: Successfully retrieved all songs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    title:
+                      type: string
+                      example: "Song Title"
+                    artist:
+                      type: string
+                      example: "Artist Name"
+                    genre:
+                      type: string
+                      example: "Rock"
+        '500':
+          description: Internal server error
+    post:
+      summary: Create a new song
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "New Song"
+                artistId:
+                  type: integer
+                  example: 2
+                genre:
+                  type: string
+                  example: "Pop"
+      responses:
+        '201':
+          description: Song created successfully
+        '400':
+          description: Invalid input data
+        '500':
+          description: Internal server error
+
+  /songs/{id}:
+    get:
+      summary: Get song by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            example: 1
+          required: true
+          description: Numeric ID of the song to retrieve
+      responses:
+        '200':
+          description: Successfully retrieved song
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  title:
+                    type: string
+                    example: "Song Title"
+                  artist:
+                    type: string
+                    example: "Artist Name"
+                  genre:
+                    type: string
+                    example: "Rock"
+        '400':
+          description: Invalid song ID format
+        '404':
+          description: Song not found
+        '500':
+          description: Internal server error
+    put:
+      summary: Update a song
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            example: 1
+          required: true
+          description: Numeric ID of the song to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "Updated Song Title"
+                artistId:
+                  type: integer
+                  example: 3
+                genre:
+                  type: string
+                  example: "Jazz"
+      responses:
+        '200':
+          description: Song updated successfully
+        '400':
+          description: Invalid input data
+        '404':
+          description: Song not found
+        '500':
+          description: Internal server error
+    delete:
+      summary: Delete song by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            example: 1
+          required: true
+          description: Numeric ID of the song to delete
+      responses:
+        '204':
+          description: Song deleted successfully
+        '400':
+          description: Invalid song ID format
+        '404':
+          description: Song not found
+        '500':
+          description: Internal server error

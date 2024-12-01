@@ -68,7 +68,7 @@ public class ArtistService {
                     return artistRepository.save(existingArtist);
                 })
                 .map(this::convertToDTO)
-                .orElseThrow(() -> new EntityNotFoundException("Artist with id " + id + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Artist with id %d not found".formatted(id)));
     }
 
     public void deleteArtistById(long id) {

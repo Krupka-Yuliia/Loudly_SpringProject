@@ -17,26 +17,26 @@
 
 ## REST API Endpoints:
 
-| Method | Path                                | Description                      |
-|--------|-------------------------------------|----------------------------------|
-| GET    | `/songs`                            | Get all songs                    |
-| GET    | `/artists`                          | Get all artists                  |
-| GET    | `/songs/search`                     | Search for songs                 |
-| POST   | `/songs/{id}/play`                  | Play a song                      |
-| GET    | `/users`                            | Get all users                    |
-| GET    | `/songs/genre`                      | Get songs by genre               |
-| GET    | `/songs/artist/{id}`                | Get songs by artist              |
-| GET    | `/playlists/{id}`                   | Read a playlist                  |
-| POST   | `/playlists`                        | Create a playlist                |
-| PUT    | `/playlists/{id}/songs/{songId}`    | Add song to a playlist           |
-| DELETE | `/playlists/{id}/songs/{songId}`    | Delete song from a playlist      |
-| DELETE | `/playlists/{id}`                   | Delete a playlist                |
-| POST   | `/songs`                            | Add a song (Admin)               |
-| POST   | `/artists`                          | Add an artist (Admin)            |
-| DELETE | `/songs/{id}`                       | Delete a song (Admin)            |
-| DELETE | `/artists/{id}`                     | Delete an artist (Admin)         |
-| POST   | `/auth`                             | Auth                             |
-| POST   | `/logout`                           | Log out                          |
+| Method | Path                                | Description                 |
+|--------|-------------------------------------|-----------------------------|
+| GET    | `/songs`                            | Get all songs               |
+| GET    | `/artists`                          | Get all artists             |
+| GET    | `/songs/search`                     | Search for songs            |
+| POST   | `/songs/{id}/play`                  | Play a song                 |
+| GET    | `/users`                            | Get all users               |
+| GET    | `/songs/genre`                      | Get songs by genre          |
+| GET    | `/songs/artist/{id}`                | Get songs by artist         |
+| GET    | `/playlists/{id}`                   | Read a playlist             |
+| POST   | `/playlists`                        | Create a playlist           |
+| POST   | `/playlists/{id}/songs/{songId}`    | Add song to a playlist      |
+| DELETE | `/playlists/{id}/songs/{songId}`    | Delete song from a playlist |
+| DELETE | `/playlists/{id}`                   | Delete a playlist           |
+| POST   | `/songs`                            | Add a song (Admin)          |
+| POST   | `/artists`                          | Add an artist (Admin)       |
+| DELETE | `/songs/{id}`                       | Delete a song (Admin)       |
+| DELETE | `/artists/{id}`                     | Delete an artist (Admin)    |
+| POST   | `/auth`                             | Auth  #login                |
+| POST   | `/logout`                           | Log out                     |
 
 
 <img width="570" alt="Знімок екрана 2024-10-29 о 13 39 15" src="https://github.com/user-attachments/assets/2352d70d-0e01-4f3b-9515-153435009ae6">

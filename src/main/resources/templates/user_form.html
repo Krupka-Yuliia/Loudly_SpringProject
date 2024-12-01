@@ -12,13 +12,17 @@
     <h5 class="mb-1 title2">Join</h5>
     <h1 class="mb-4 title">LOUDLY</h1>
 
+    <div th:if="errors">
+        <div th:>{error}</div>
+    </div>
+
     <div class="card p-4 shadow-lg border-0">
         <h4 class="text-center mb-3">Create Your Account</h4>
         <form th:action="@{/register}" method="post">
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
                 <input type="text" id="username" name="username" class="form-control"
-                       placeholder="Enter your username" required>
+                       placeholder="Enter your username" required >
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
@@ -35,7 +39,7 @@
                 <input type="text" id="role" name="role" class="form-control"
                        placeholder="Enter your role" required>
             </div>
-            <button type="submit" class="btn btn-warning w-100">Register</button>
+            <button type="submit" class="btn btn-warning w-100" th:disabled="">Register</button>
         </form>
     </div>
 
