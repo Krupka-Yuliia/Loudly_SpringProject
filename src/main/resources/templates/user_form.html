@@ -12,34 +12,37 @@
     <h5 class="mb-1 title2">Join</h5>
     <h1 class="mb-4 title">LOUDLY</h1>
 
-    <div th:if="errors">
-        <div th:>{error}</div>
+    <div th:if="${errors}" class="mb-3">
+        <div th:each="error : ${errors}" th:text="${error}" class="alert alert-danger"></div>
     </div>
 
     <div class="card p-4 shadow-lg border-0">
         <h4 class="text-center mb-3">Create Your Account</h4>
-        <form th:action="@{/register}" method="post">
+        <form th:action="@{/register}" th:object="${userDTO}" method="post">
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
-                <input type="text" id="username" name="username" class="form-control"
-                       placeholder="Enter your username" required >
+                <input type="text" id="username" th:field="*{username}" class="form-control"
+                       placeholder="Enter your username" >
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" id="email" name="email" class="form-control"
-                       placeholder="Enter your email" required>
+                <input type="email" id="email" th:field="*{email}" class="form-control"
+                       placeholder="Enter your email" >
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" id="password" name="password" class="form-control"
-                       placeholder="Enter your password" required>
+                <input type="password" id="password" th:field="*{password}" class="form-control"
+                       placeholder="Enter your password" >
             </div>
             <div class="mb-4">
                 <label for="role" class="form-label">Role</label>
-                <input type="text" id="role" name="role" class="form-control"
-                       placeholder="Enter your role" required>
+                <select id="role" th:field="*{role}" class="form-select">
+                    <option value="" selected disabled>Select a role</option>
+                    <option value="USER">USER</option>
+                    <option value="ADMIN">ADMIN</option>
+                </select>
             </div>
-            <button type="submit" class="btn btn-warning w-100" th:disabled="">Register</button>
+            <button type="submit" class="btn btn-warning w-100">Register</button>
         </form>
     </div>
 
