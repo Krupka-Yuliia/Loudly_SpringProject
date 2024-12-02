@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -56,8 +57,6 @@ public class ArtistWebController {
         }
     }
 
-
-
     @GetMapping("/admin/artists/add")
     public String showArtistForm(Model model) {
         model.addAttribute("artistDTO", new ArtistDTO());
@@ -66,11 +65,25 @@ public class ArtistWebController {
 
     @PostMapping("/admin/artists/add")
     public String addArtist(@ModelAttribute ArtistDTO artistDTO, Model model) {
+        List<String> errors = new ArrayList<>();
+
+        if (artistDTO.getNickname() == null || artistDTO.getNickname().isBlank()) {
+            errors.add("Nickname is required");
+        }
+
+        if (!errors.isEmpty()) {
+            model.addAttribute("errors", errors);
+            model.addAttribute("artist", artistDTO);
+            return "add_artist_form";
+        }
+
         try {
             ArtistDTO artist = artistService.save(artistDTO);
             return "redirect:/artists/" + artist.getId();
-        } catch (Exception e) {
-            throw new InvalidInputException("Failed to add artist: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            errors.add(e.getMessage());
+            model.addAttribute("errors", errors);
+            return "add_artist_form";
         }
     }
 

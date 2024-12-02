@@ -43,32 +43,30 @@ public class UserWebController {
 
     @PostMapping("/register")
     public String registerUser(@ModelAttribute UserDTO userDTO, Model model, HttpSession session) {
+        List<String> errors = new ArrayList<>();
+
+        if (userDTO.getUsername() == null || userDTO.getUsername().isBlank()) {
+            errors.add("Username is required.");
+        }
+        if (userDTO.getPassword() == null || userDTO.getPassword().isBlank()) {
+            errors.add("Password is required.");
+        }
+        if (userDTO.getEmail() == null || userDTO.getEmail().isBlank()) {
+            errors.add("Email is required.");
+        }
+        if (userDTO.getRole() == null || userDTO.getRole().isBlank()) {
+            errors.add("Role is required.");
+        }
+
+        if (!errors.isEmpty()) {
+            model.addAttribute("errors", errors);
+            return "user_form";
+        }
         try {
-            List<String> errors = new ArrayList<>();
-
-            if (userDTO.getUsername() == null || userDTO.getUsername().isEmpty()) {
-                errors.add("Username is required.");
-            }
-            if (userDTO.getPassword() == null || userDTO.getPassword().isEmpty()) {
-                errors.add("Password is required.");
-            }
-            if (userDTO.getEmail() == null || userDTO.getEmail().isEmpty()) {
-                errors.add("Email is required.");
-            }
-            if (userDTO.getRole() == null || userDTO.getRole().isEmpty()) {
-                errors.add("Role is required.");
-            }
-
-            if (!errors.isEmpty()) {
-                model.addAttribute("errors", errors);
-                return "user_form";
-            }
-
             userDTO.setPassword(new BCryptPasswordEncoder().encode(userDTO.getPassword()));
             UserDTO savedUser = userService.save(userDTO);
             session.setAttribute("user", savedUser);
-            return String.format("redirect:/users/%d", savedUser.getId());
-
+            return "redirect:/profile";
         } catch (IllegalArgumentException e) {
             model.addAttribute("errors", List.of(e.getMessage()));
             return "user_form";
@@ -84,13 +82,12 @@ public class UserWebController {
         return "login_form";
     }
 
-    @GetMapping(value = {"/home", "/profile", "/"})
+    @GetMapping(value = {"/profile", "/"})
     public String showProfile(@AuthenticationPrincipal User principal, Model model) {
         Optional<UserDTO> u = userService.findByUsername(principal.getUsername());
 
         if (u.isPresent()) {
             model.addAttribute("user", u.get());
-            model.addAttribute("userName", u.get().getUsername());
 
             List<PlaylistDTO> playlists = playlistService.findPlaylistsByUserId(u.get().getId());
             model.addAttribute("playlists", playlists);

@@ -11,6 +11,12 @@
 <div class="register-container">
 
     <div class="card p-4 shadow-lg border-0">
+        <div th:if="${not #lists.isEmpty(errors)}" class="alert alert-danger">
+            <ul>
+                <li th:each="error : ${errors}" th:text="${error}"></li>
+            </ul>
+        </div>
+
         <h4 class="text-center mb-3">Завантажити пісню</h4>
         <form th:action="@{/admin/songs/upload}" method="post" enctype="multipart/form-data">
             <div class="mb-3">
@@ -19,9 +25,9 @@
                        required>
             </div>
             <div class="mb-3">
-                <label for="artistId" class="form-label">ID виконавця</label>
-                <input type="number" id="artistId" name="artistId" class="form-control"
-                       placeholder="Введіть ID виконавця" required>
+                <label for="artistName" class="form-label">Нікнейм виконавця</label>
+                <input type="text" id="artistName" name="artistName" class="form-control"
+                       placeholder="Введіть виконавця" required>
             </div>
             <div class="mb-3">
                 <label for="genre" class="form-label">Жанр</label>
@@ -29,8 +35,7 @@
             </div>
             <div class="mb-3">
                 <label for="year" class="form-label">Рік випуску</label>
-                <input type="number" id="year" name="year" class="form-control" placeholder="Введіть рік випуску"
-                       required>
+                <input type="number" id="year" name="year" class="form-control" placeholder="Введіть рік випуску" required>
             </div>
             <div class="mb-4">
                 <label for="file" class="form-label">Файл пісні (MP3)</label>
@@ -38,6 +43,9 @@
             </div>
             <button type="submit" class="btn btn-warning w-100">Завантажити пісню</button>
         </form>
+    </div>
+    <div class="text-center mt-3">
+        <a href="/profile" class="btn btn-outline-secondary">Back to My Profile</a>
     </div>
 </div>
 

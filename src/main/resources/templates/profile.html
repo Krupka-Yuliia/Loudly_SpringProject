@@ -6,13 +6,9 @@
 </head>
 <body>
 <div class="container">
-    <div th:if="${error}" class="alert alert-danger mt-4">
-        <p th:text="${error}"></p>
-    </div>
-
     <div class="profile-container mt-4">
         <div class="user-header mb-5">
-            <h1 class="display-5">Welcome, <span th:text="${userName}">User</span>!</h1>
+            <h1 class="display-5">Welcome, <span th:text="${user.getUsername()}">User</span>!</h1>
         </div>
 
         <div class="playlists-section">

@@ -41,19 +41,18 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/css/**", "/register", "/login", "/welcome").permitAll()
-                        .requestMatchers("/artists/**", "/songs/**", "/", "/home").authenticated()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
+                        .defaultSuccessUrl("/profile", true)
                         .permitAll()
                 )
                 .logout(LogoutConfigurer::permitAll);
 
         return http.build();
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {

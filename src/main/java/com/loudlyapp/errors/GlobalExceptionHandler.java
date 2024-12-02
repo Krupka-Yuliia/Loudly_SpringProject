@@ -27,6 +27,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFound.class)
     public ModelAndView handleNotFound(HttpServletRequest req, Exception e) {
         ModelAndView mav = new ModelAndView();
+        mav.addObject("error", e.getMessage());
+        mav.addObject("url", req.getRequestURL());
         mav.setViewName("error");
         return mav;
     }
@@ -37,6 +39,7 @@ public class GlobalExceptionHandler {
         ModelAndView mav = new ModelAndView();
         mav.addObject("error", e.getMessage());
         mav.addObject("title", "Sorry, unexpected error");
+        mav.addObject("url", req.getRequestURL());
         mav.setViewName("error");
         return mav;
     }
@@ -47,6 +50,7 @@ public class GlobalExceptionHandler {
         ModelAndView mav = new ModelAndView();
         mav.addObject("error", e.getMessage());
         mav.addObject("title", "Invalid input");
+        mav.addObject("url", req.getRequestURL());
         mav.setViewName("error");
         return mav;
     }

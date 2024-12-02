@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body class="home_body">
+</body>
+<div th:if="${errors != null}" class="error-messages">
+    <div class="alert alert-danger">
+        <span th:text="${errors}"></span>
+    </div>
+</div>
 <div class="register-container">
     <div class="card p-4 shadow-lg border-0">
         <h4 class="text-center mb-3">Add New Artist</h4>
@@ -15,18 +21,18 @@
             <div class="mb-3">
                 <label for="nickname" class="form-label">Nickname:</label>
                 <input type="text" id="nickname" th:field="*{nickname}" class="form-control"
-                       placeholder="Enter artist's nickname" required>
+                       placeholder="Enter artist's nickname" >
             </div>
 
             <div class="mb-3">
                 <label for="biography" class="form-label">Biography:</label>
                 <textarea id="biography" th:field="*{biography}" class="form-control" rows="4"
-                          placeholder="Enter artist's biography" required></textarea>
+                          placeholder="Enter artist's biography"></textarea>
             </div>
 
             <button type="submit" class="btn btn-warning w-100">Add Artist</button>
             <div class="text-center mt-3">
-                <a href="/home" class="btn btn-outline-secondary">Back to My Profile</a>
+                <a href="/profile" class="btn btn-outline-secondary">Back to My Profile</a>
             </div>
         </form>
     </div>

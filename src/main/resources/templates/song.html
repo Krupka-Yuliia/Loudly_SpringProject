@@ -2,38 +2,30 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: layout(title=~{::title}, content=~{::body})}" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
-    <title th:text="${songName}">Song Page</title>
+    <title th:text="${song.getTitle()}">Song Page</title>
 </head>
 <body>
-<!-- Flash messages -->
-<div th:if="${successMessage}" class="alert alert-success">
-    <span th:text="${successMessage}"></span>
-</div>
-<div th:if="${errorMessage}" class="alert alert-danger">
-    <span th:text="${errorMessage}"></span>
-</div>
-
 
 <div class="container mt-4">
-    <h1 class="mb-4" th:text="${songName}">Song Name</h1>
+    <h1 class="mb-4" th:text="${song.getTitle()}">Song Name</h1>
     <div class="card song-info mb-4">
         <div class="card-body">
             <p class="names">
                 <strong>Artist:</strong>
-                <a th:href="@{'/artists/' + ${artistId}}"
-                   th:text="${artist}">Artist Name</a>
+                <a th:href="@{'/artists/' + ${song.getArtistId()}}"
+                   th:text="${song.getArtistName()}">Artist Name</a>
             </p>
             <p>
                 <strong>Year:</strong>
-                <span th:text="${year}">Year</span>
+                <span th:text="${song.getYear()}">Year</span>
             </p>
             <p class="mb-0">
                 <strong>Genre:</strong>
-                <span th:text="${genre}">Genre</span>
+                <span th:text="${song.getGenre()}">Genre</span>
             </p>
             <div class="audio-player">
                 <audio controls>
-                    <source th:src="@{'/songs/play/' + ${id}}" type="audio/mpeg">
+                    <source th:src="@{'/songs/' + ${id} + '/play'}" type="audio/mpeg">
                     Your browser does not support the audio element.
                 </audio>
             </div>

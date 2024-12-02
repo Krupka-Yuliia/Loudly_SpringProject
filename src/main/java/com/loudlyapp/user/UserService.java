@@ -115,16 +115,4 @@ public class UserService {
         return user.map(this::convertToDTO);
     }
 
-//    public UserDTO login(UserDTO userDTO){
-//
-//    }
-//
-//    public UserDTO register(UserDTO userDTO) {
-//        User user = convertToEntity(userDTO);
-//
-//    }
-
-
-
-
 }

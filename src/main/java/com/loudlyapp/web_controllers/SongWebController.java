@@ -1,5 +1,7 @@
 package com.loudlyapp.web_controllers;
 
+import com.loudlyapp.artist.Artist;
+import com.loudlyapp.artist.ArtistDTO;
 import com.loudlyapp.artist.ArtistService;
 import com.loudlyapp.playlist.PlayListService;
 import com.loudlyapp.playlist.PlaylistDTO;
@@ -7,8 +9,8 @@ import com.loudlyapp.song.SongDTO;
 import com.loudlyapp.song.SongService;
 import com.loudlyapp.user.UserDTO;
 import com.loudlyapp.user.UserService;
-import com.loudlyapp.utils.InvalidInputException;
 import com.loudlyapp.utils.SongNotFoundException;
+import io.micrometer.common.util.StringUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.time.Year;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +38,7 @@ public class SongWebController {
     private final SongService songService;
     private final UserService userService;
     private final PlayListService playlistService;
+    private final ArtistService artistService;
 
     @GetMapping("/songs/{id}")
     public String getSongPage(@AuthenticationPrincipal User principal, @PathVariable Long id, Model model) {
@@ -42,12 +47,7 @@ public class SongWebController {
 
         if (songOptional.isPresent()) {
             SongDTO song = songOptional.get();
-            model.addAttribute("songName", song.getTitle());
-            model.addAttribute("artist", song.getArtistName());
-            model.addAttribute("artistId", song.getArtistId());
-            model.addAttribute("year", song.getYear());
-            model.addAttribute("genre", song.getGenre());
-            model.addAttribute("id", song.getId());
+            model.addAttribute("song", song);
 
             if (userOptional.isPresent()) {
                 List<PlaylistDTO> playlists = playlistService.findPlaylistsByUserId(userOptional.get().getId());
@@ -76,29 +76,57 @@ public class SongWebController {
     @PostMapping("/admin/songs/upload")
     public String uploadSong(@RequestParam("file") MultipartFile file,
                              @RequestParam("title") String title,
-                             @RequestParam("artistId") int artistId,
+                             @RequestParam("artistName") String artistName,
                              @RequestParam("genre") String genre,
-                             @RequestParam("year") int year) throws IOException {
+                             @RequestParam("year") Integer year,
+                             Model model) throws IOException {
 
-        if (file.isEmpty() || title.isEmpty() || genre.isEmpty() || artistId == 0 || year == 0) {
-            throw new InvalidInputException("All fields are required for uploading a song.");
+
+        Optional<ArtistDTO> artistOptional = artistService.findByName(artistName);
+        List<String> errors = new ArrayList<>();
+        if (file.isEmpty()) {
+            errors.add("Audio file is required.");
         }
 
-        byte[] fileBytes = file.getBytes();
+        if (StringUtils.isBlank(title) || title.length() > 100) {
+            errors.add("Invalid song title. It must be non-empty and no more than 100 characters.");
+        }
+
+        if (StringUtils.isBlank(artistName) || artistOptional.isEmpty()) {
+            errors.add("Invalid artist name. ");
+        }
+
+        if (StringUtils.isBlank(genre)) {
+            errors.add("Genre is required.");
+        }
+
+        int currentYear = Year.now().getValue();
+        if (year == null || year < 1900 || year > currentYear) {
+            errors.add("Invalid year. The year must be between 1900 and the current year.");
+        }
+
+
+        if (!errors.isEmpty()) {
+            model.addAttribute("errors", errors);
+            return "add_song_form";
+        }
 
         SongDTO songDTO = new SongDTO();
-        songDTO.setTitle(title);
-        songDTO.setArtistId(artistId);
-        songDTO.setGenre(genre);
+        songDTO.setTitle(title.trim());
+        songDTO.setArtistName(artistName);
+        songDTO.setArtistId(artistOptional.get().getId());
+        songDTO.setGenre(genre.trim());
         songDTO.setYear(year);
-        songDTO.setFile(fileBytes);
+        songDTO.setFile(file.getBytes());
 
         SongDTO savedSong = songService.save(songDTO);
         return "redirect:/songs/" + savedSong.getId();
     }
 
 
-    @GetMapping("/songs/play/{id}")
+
+
+    @GetMapping("/songs/{id}/play")
     public ResponseEntity<InputStreamResource> getSongAudio(@PathVariable Long id) throws IOException {
         Optional<SongDTO> songOptional = songService.findById(id);
         if (songOptional.isPresent()) {
