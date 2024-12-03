@@ -50,7 +50,7 @@ public class SongWebController {
             model.addAttribute("song", song);
 
             if (userOptional.isPresent()) {
-                List<PlaylistDTO> playlists = playlistService.findPlaylistsByUserId(userOptional.get().getId());
+                List<PlaylistDTO> playlists = playlistService.getPlaylists(userOptional.get().getId());
                 model.addAttribute("playlists", playlists);
             }
         } else {

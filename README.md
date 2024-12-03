@@ -1,44 +1,44 @@
 # Loudly Spring Project
 
 ## Functional Requirements:
+
 - **As a User**... I want to be able to:
-  - Search for a song
-  - Play a song
-  - Create a playlist
-  - Read a playlist
-  - Update a playlist
-  - Delete a playlist
-  - Seek songs by genre
-  - Seek songs by artist
+    - Search for a song
+    - Play a song
+    - Create a playlist
+    - Read a playlist
+    - Update a playlist
+    - Delete a playlist
+    - Seek songs by genre
+    - Seek songs by artist
 
 - **As an Admin** I want to be able to:
-  - Add songs/artists
-  - Delete songs/artists
+    - Add songs/artists
+    - Delete songs/artists
 
 ## REST API Endpoints:
 
-| Method | Path                             | Description                 |
-|--------|----------------------------------|-----------------------------|
-| GET    | `/songs`                         | Get all songs               |
-| GET    | `/artists`                       | Get all artists             |
-| GET    | `/songs/search`                  | Search for songs            |
-| POST   | `/songs/{id}/play`               | Play a song                 |
-| GET    | `/users`                         | Get all users               |
-| GET    | `/songs/genre`                   | Get songs by genre          |
-| GET    | `/songs/artist/{id}`             | Get songs by artist         |
-| GET    | `/playlists/{id}`                | Read a playlist             |
-| POST   | `/playlists`                     | Create a playlist           |
-| POST   | `/playlists/{id}/songs/{songId}` | Add song to a playlist      |
-| DELETE | `/playlists/{id}/songs/{songId}` | Delete song from a playlist |
-| DELETE | `/playlists/{id}`                | Delete a playlist           |
-| POST   | `/songs`                         | Add a song (Admin)          |
-| POST   | `/artists`                       | Add an artist (Admin)       |
-| DELETE | `/songs/{id}`                    | Delete a song (Admin)       |
-| DELETE | `/artists/{id}`                  | Delete an artist (Admin)    |
-| POST   | `/login`                         | Login                       |
-| POST   | `/logout`                        | Log out                     |
-| GET    | `/profile`                       | Show user profile           |
-
+| Method | Path                             | Description                |
+|--------|----------------------------------|----------------------------|
+| GET    | `/songs`                         | Get all songs              |
+| GET    | `/artists`                       | Get all artists            |
+| GET    | `/songs/search`                  | Search for songs           |
+| POST   | `/songs/{id}/play`               | Play a song                |
+| GET    | `/users`                         | Get all users              |
+| GET    | `/songs/genre`                   | Get songs by genre         |
+| GET    | `/songs/artist/{id}`             | Get songs by artist        |
+| GET    | `/playlists/{id}`                | Read a playlist            |
+| POST   | `/playlists`                     | Create a playlist for user |
+| GET    | `/playlists`                     | Get playlists of user      |
+| POST   | `/playlists/{id}/songs/{songId}` | Add song to a playlist     |
+| DELETE | `/playlists/{id}`                | Delete a playlist          |
+| POST   | `/songs`                         | Add a song (Admin)         |
+| POST   | `/artists`                       | Add an artist (Admin)      |
+| DELETE | `/songs/{id}`                    | Delete a song (Admin)      |
+| DELETE | `/artists/{id}`                  | Delete an artist (Admin)   |
+| POST   | `/login`                         | Login                      |
+| POST   | `/logout`                        | Log out                    |
+| GET    | `/profile`                       | Show user profile          |
 
 <img width="570" alt="Знімок екрана 2024-10-29 о 13 39 15" src="https://github.com/user-attachments/assets/2352d70d-0e01-4f3b-9515-153435009ae6">
 <img width="676" alt="Знімок екрана 2024-10-29 о 13 41 03" src="https://github.com/user-attachments/assets/453792e8-dee7-4f2d-8159-348cf696df93">

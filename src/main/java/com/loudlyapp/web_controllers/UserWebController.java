@@ -89,7 +89,7 @@ public class UserWebController {
         if (u.isPresent()) {
             model.addAttribute("user", u.get());
 
-            List<PlaylistDTO> playlists = playlistService.findPlaylistsByUserId(u.get().getId());
+            List<PlaylistDTO> playlists = playlistService.getPlaylists(u.get().getId());
             model.addAttribute("playlists", playlists);
 
             String dailyRecommendation = songRecommendationService.getDailyRecommendation();

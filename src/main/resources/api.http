@@ -43,19 +43,18 @@ DELETE http://localhost:8080/api/users/319
 
 #-----------PLAYLISTS-------------------------
 
-### GET all playlists
-
+### GET ALL PLAYLISTS OF USER
 GET http://localhost:8080/api/playlists
 #Authorization: Basic user:password
 
-### POST playlist by userId
-
-POST http://localhost:8080/api/playlists/users/153
+### POST playlist
+POST http://localhost:8080/api/playlists
 Content-Type: application/json
 
 {
   "name": "Mix Fall 24"
 }
+
 
 ### DELETE playlist by id
 

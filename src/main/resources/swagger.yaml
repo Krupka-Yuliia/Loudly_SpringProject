@@ -1,561 +1,363 @@
 openapi: 3.0.0
 info:
-  title: Music Application API
-  description: Application for managing users, playlists, songs, and artists.
+  title: Loudly App API
+  description: API for managing artists, playlists, songs, and users
   version: 1.0.0
+
 servers:
-  - url: http://localhost:8080
+  - url: http://localhost:8080/api
+    description: Base API path
+
+components:
+  schemas:
+    ArtistDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        nickname:
+          type: string
+
+    PlaylistDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        userId:
+          type: integer
+          format: int64
+
+    SongDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identifier for the song
+        title:
+          type: string
+          description: Title of the song
+        format:
+          type: string
+          description: Audio format of the song file (e.g., MP3, WAV)
+        file:
+          type: string
+          format: byte
+          description: Binary content of the song file
+        artistId:
+          type: integer
+          format: int32
+          description: ID of the artist who created the song
+        artistName:
+          type: string
+          description: Name of the artist
+        genre:
+          type: string
+          description: Musical genre of the song
+        year:
+          type: integer
+          format: int32
+          description: Release year of the song
+      required:
+        - title
+        - artistId
+
+    UserDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+
 paths:
-  /users:
+  /artists:
     get:
-      summary: Get all users
+      summary: Get all artists
       responses:
         '200':
-          description: Successfully retrieved all users
+          description: List of artists
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      example: 1
-                    username:
-                      type: string
-                      example: "testUser"
-                    email:
-                      type: string
-                      example: "testUser@gmail.com"
-        '400':
-          description: Invalid request parameters
-        '500':
-          description: Internal server error
+                  $ref: '#/components/schemas/ArtistDTO'
+
     post:
-      summary: Create a new user
+      summary: Create a new artist
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  example: "test12"
-                email:
-                  type: string
-                  example: "test12@gmail.com"
-                password:
-                  type: string
-                  example: "test12456"
-                role:
-                  type: string
-                  example: "User"
-      responses:
-        '201':
-          description: User created successfully
-        '400':
-          description: Invalid user input
-        '500':
-          description: Internal server error
-    delete:
-      summary: Delete all users
-      responses:
-        '204':
-          description: All users deleted successfully
-        '500':
-          description: Internal server error
-
-  /users/{id}:
-    get:
-      summary: Get user by ID
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-            example: 1
-          required: true
-          description: Numeric ID of the user to retrieve
+              $ref: '#/components/schemas/ArtistDTO'
       responses:
         '200':
-          description: Successfully retrieved user
+          description: Created artist
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    example: 1
-                  username:
-                    type: string
-                    example: "testUser"
-                  email:
-                    type: string
-                    example: "testUser@gmail.com"
-        '400':
-          description: Invalid user ID format
-        '404':
-          description: User not found
-        '500':
-          description: Internal server error
+                $ref: '#/components/schemas/ArtistDTO'
+
+    delete:
+      summary: Delete all artists
+      responses:
+        '200':
+          description: All artists deleted
+
+  /artists/{artistId}:
+    get:
+      summary: Get artist by ID
+      parameters:
+        - name: artistId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Artist found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtistDTO'
+
     put:
-      summary: Update a user
+      summary: Update artist
       parameters:
-        - in: path
-          name: id
+        - name: artistId
+          in: path
+          required: true
           schema:
             type: integer
-            example: 1
-          required: true
-          description: Numeric ID of the user to update
+            format: int64
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  example: "updatedUser"
-                email:
-                  type: string
-                  example: "updatedUser@gmail.com"
-                password:
-                  type: string
-                  example: "newPassword123"
-                role:
-                  type: string
-                  example: "Admin"
+              $ref: '#/components/schemas/ArtistDTO'
       responses:
         '200':
-          description: User updated successfully
-        '400':
-          description: Invalid input data
-        '404':
-          description: User not found
-        '500':
-          description: Internal server error
+          description: Updated artist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtistDTO'
+
     delete:
-      summary: Delete user by ID
+      summary: Delete artist by ID
       parameters:
-        - in: path
-          name: id
+        - name: artistId
+          in: path
+          required: true
           schema:
             type: integer
-            example: 1
-          required: true
-          description: Numeric ID of the user to delete
+            format: int64
       responses:
-        '204':
-          description: User deleted successfully
-        '400':
-          description: Invalid user ID format
-        '404':
-          description: User not found
-        '500':
-          description: Internal server error
+        '200':
+          description: Artist deleted
 
-  /users/searchByRole:
+  /artists/search:
     get:
-      summary: Find users by role
+      summary: Search artist by nickname
       parameters:
-        - in: query
-          name: userRole
+        - name: nickname
+          in: query
+          required: true
           schema:
             type: string
-            example: "User"
-          required: true
-          description: Role of the user
       responses:
         '200':
-          description: Successfully found users by role
+          description: Artist found
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      example: 1
-                    username:
-                      type: string
-                      example: "testUser"
-                    role:
-                      type: string
-                      example: "User"
-        '400':
-          description: Invalid role parameter
-        '500':
-          description: Internal server error
-  /users/searchByUsername:
-    get:
-      summary: Find user by username
-      parameters:
-        - in: query
-          name: username
-          schema:
-            type: string
-            example: "testUser"
-          required: true
-          description: Username of the user
-      responses:
-        '200':
-          description: Successfully found user by username
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    example: 1
-                  username:
-                    type: string
-                    example: "testUser"
-                  email:
-                    type: string
-                    example: "testUser@gmail.com"
-        '400':
-          description: Invalid username parameter
-        '404':
-          description: User not found
-        '500':
-          description: Internal server error
-
-  /users/searchByEmail:
-    get:
-      summary: Find user by email
-      parameters:
-        - in: query
-          name: email
-          schema:
-            type: string
-            example: "testUser@gmail.com"
-          required: true
-          description: Email of the user
-      responses:
-        '200':
-          description: Successfully found user by email
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    example: 1
-                  username:
-                    type: string
-                    example: "testUser"
-                  email:
-                    type: string
-                    example: "testUser@gmail.com"
-        '400':
-          description: Invalid email parameter
-        '404':
-          description: User not found
-        '500':
-          description: Internal server error
+                $ref: '#/components/schemas/ArtistDTO'
 
   /playlists:
     get:
-      summary: Get all playlists
+      summary: Get playlists for authenticated user
       responses:
         '200':
-          description: Successfully retrieved all playlists
+          description: List of playlists
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      example: 1
-                    name:
-                      type: string
-                      example: "My Playlist"
-        '500':
-          description: Internal server error
+                  $ref: '#/components/schemas/PlaylistDTO'
+
+    post:
+      summary: Create a new playlist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaylistDTO'
+      responses:
+        '200':
+          description: Created playlist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaylistDTO'
+
     delete:
       summary: Delete all playlists
       responses:
-        '204':
-          description: All playlists deleted successfully
-        '500':
-          description: Internal server error
+        '200':
+          description: All playlists deleted
 
-  /playlists/{id}:
+  /playlists/{playlistId}:
     get:
       summary: Get playlist by ID
       parameters:
-        - in: path
-          name: id
+        - name: playlistId
+          in: path
+          required: true
           schema:
             type: integer
-            example: 1
-          required: true
-          description: Numeric ID of the playlist to retrieve
+            format: int64
       responses:
         '200':
-          description: Successfully retrieved playlist
+          description: Playlist found
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    example: 1
-                  name:
-                    type: string
-                    example: "My Playlist"
-        '400':
-          description: Invalid playlist ID format
-        '404':
-          description: Playlist not found
-        '500':
-          description: Internal server error
+                $ref: '#/components/schemas/PlaylistDTO'
+
     put:
-      summary: Update a playlist
+      summary: Update playlist
       parameters:
-        - in: path
-          name: id
+        - name: playlistId
+          in: path
+          required: true
           schema:
             type: integer
-            example: 1
-          required: true
-          description: Numeric ID of the playlist to update
+            format: int64
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  example: "Updated Playlist"
+              $ref: '#/components/schemas/PlaylistDTO'
       responses:
         '200':
-          description: Playlist updated successfully
-        '400':
-          description: Invalid input data
-        '404':
-          description: Playlist not found
-        '500':
-          description: Internal server error
+          description: Updated playlist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaylistDTO'
+
     delete:
       summary: Delete playlist by ID
       parameters:
-        - in: path
-          name: id
+        - name: playlistId
+          in: path
+          required: true
           schema:
             type: integer
-            example: 1
-          required: true
-          description: Numeric ID of the playlist to delete
-      responses:
-        '204':
-          description: Playlist deleted successfully
-        '400':
-          description: Invalid playlist ID format
-        '404':
-          description: Playlist not found
-        '500':
-          description: Internal server error
-
-  /playlists/users/{userId}:
-    get:
-      summary: Get all playlists by user
-      parameters:
-        - in: path
-          name: userId
-          schema:
-            type: integer
-            example: 1
-          required: true
-          description: Numeric ID of the user
+            format: int64
       responses:
         '200':
-          description: Successfully retrieved playlists for user
+          description: Playlist deleted
+
+  /playlists/{playlistId}/songs:
+    get:
+      summary: Get songs in playlist
+      parameters:
+        - name: playlistId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: List of songs
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      example: 1
-                    name:
-                      type: string
-                      example: "My Playlist"
-        '400':
-          description: Invalid user ID format
-        '404':
-          description: User not found
-        '500':
-          description: Internal server error
-    post:
-      summary: Create a playlist for a user
+                  $ref: '#/components/schemas/SongDTO'
+
+    delete:
+      summary: Delete all songs from playlist
       parameters:
-        - in: path
-          name: userId
+        - name: playlistId
+          in: path
+          required: true
           schema:
             type: integer
-            example: 1
-          required: true
-          description: Numeric ID of the user to create a playlist for
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  example: "My New Playlist"
+            format: int64
       responses:
-        '201':
-          description: Playlist created successfully
-        '400':
-          description: Invalid input data
-        '404':
-          description: User not found
-        '500':
-          description: Internal server error
+        '200':
+          description: All songs removed from playlist
+
   /playlists/{playlistId}/songs/{songId}:
     post:
-      summary: Add a song to a playlist
+      summary: Add song to playlist
       parameters:
-        - in: path
-          name: playlistId
+        - name: playlistId
+          in: path
+          required: true
           schema:
             type: integer
-            example: 1
+            format: int64
+        - name: songId
+          in: path
           required: true
-          description: Numeric ID of the playlist
-        - in: path
-          name: songId
           schema:
             type: integer
-            example: 1
-          required: true
-          description: Numeric ID of the song to add
+            format: int64
       responses:
         '200':
           description: Song added to playlist
-        '400':
-          description: Invalid playlist or song ID format
-        '404':
-          description: Playlist or song not found
-        '500':
-          description: Internal server error
-    delete:
-      summary: Delete song from a playlist
-      parameters:
-        - in: path
-          name: playlistId
-          schema:
-            type: integer
-            example: 1
-          required: true
-          description: Numeric ID of the playlist
-        - in: path
-          name: songId
-          schema:
-            type: integer
-            example: 1
-          required: true
-          description: Numeric ID of the song to remove
-      responses:
-        '204':
-          description: Song deleted from playlist successfully
-        '400':
-          description: Invalid playlist or song ID format
-        '404':
-          description: Playlist or song not found
-        '500':
-          description: Internal server error
-
-  /playlists/{id}/songs:
-    get:
-      summary: Get all songs from playlist
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-            example: 1
-          required: true
-          description: Numeric ID of the playlist
-      responses:
-        '200':
-          description: Successfully retrieved all songs in the playlist
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      example: 1
-                    title:
-                      type: string
-                      example: "Song Title"
-                    artist:
-                      type: string
-                      example: "Artist Name"
-                    genre:
-                      type: string
-                      example: "Rock"
-        '400':
-          description: Invalid playlist ID format
-        '404':
-          description: Playlist not found
-        '500':
-          description: Internal server error
+                $ref: '#/components/schemas/PlaylistDTO'
+
+    delete:
+      summary: Remove song from playlist
+      parameters:
+        - name: playlistId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: songId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Song removed from playlist
 
   /songs:
     get:
       summary: Get all songs
       responses:
         '200':
-          description: Successfully retrieved all songs
+          description: List of songs
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      example: 1
-                    title:
-                      type: string
-                      example: "Song Title"
-                    artist:
-                      type: string
-                      example: "Artist Name"
-                    genre:
-                      type: string
-                      example: "Rock"
-        '500':
-          description: Internal server error
+                  $ref: '#/components/schemas/SongDTO'
+
     post:
       summary: Create a new song
       requestBody:
@@ -563,113 +365,217 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                title:
-                  type: string
-                  example: "New Song"
-                artistId:
-                  type: integer
-                  example: 2
-                genre:
-                  type: string
-                  example: "Pop"
-      responses:
-        '201':
-          description: Song created successfully
-        '400':
-          description: Invalid input data
-        '500':
-          description: Internal server error
-
-  /songs/{id}:
-    get:
-      summary: Get song by ID
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-            example: 1
-          required: true
-          description: Numeric ID of the song to retrieve
+              $ref: '#/components/schemas/SongDTO'
       responses:
         '200':
-          description: Successfully retrieved song
+          description: Created song
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    example: 1
-                  title:
-                    type: string
-                    example: "Song Title"
-                  artist:
-                    type: string
-                    example: "Artist Name"
-                  genre:
-                    type: string
-                    example: "Rock"
-        '400':
-          description: Invalid song ID format
-        '404':
-          description: Song not found
-        '500':
-          description: Internal server error
-    put:
-      summary: Update a song
+                $ref: '#/components/schemas/SongDTO'
+
+    delete:
+      summary: Delete all songs
+      responses:
+        '200':
+          description: All songs deleted
+
+  /songs/{songId}:
+    get:
+      summary: Get song by ID
       parameters:
-        - in: path
-          name: id
+        - name: songId
+          in: path
+          required: true
           schema:
             type: integer
-            example: 1
+            format: int64
+      responses:
+        '200':
+          description: Song found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SongDTO'
+
+    put:
+      summary: Update song
+      parameters:
+        - name: songId
+          in: path
           required: true
-          description: Numeric ID of the song to update
+          schema:
+            type: integer
+            format: int64
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                title:
-                  type: string
-                  example: "Updated Song Title"
-                artistId:
-                  type: integer
-                  example: 3
-                genre:
-                  type: string
-                  example: "Jazz"
+              $ref: '#/components/schemas/SongDTO'
       responses:
         '200':
-          description: Song updated successfully
-        '400':
-          description: Invalid input data
-        '404':
-          description: Song not found
-        '500':
-          description: Internal server error
+          description: Updated song
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SongDTO'
+
     delete:
       summary: Delete song by ID
       parameters:
-        - in: path
-          name: id
+        - name: songId
+          in: path
+          required: true
           schema:
             type: integer
-            example: 1
-          required: true
-          description: Numeric ID of the song to delete
+            format: int64
       responses:
-        '204':
-          description: Song deleted successfully
-        '400':
-          description: Invalid song ID format
-        '404':
-          description: Song not found
-        '500':
-          description: Internal server error
+        '200':
+          description: Song deleted
+
+  /songs/search:
+    get:
+      summary: Search songs by title
+      parameters:
+        - name: title
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of matching songs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SongDTO'
+
+  /songs/searchByGenre:
+    get:
+      summary: Search songs by genre
+      parameters:
+        - name: genre
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of matching songs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SongDTO'
+
+  /songs/searchByArtistId:
+    get:
+      summary: Search songs by artist ID
+      parameters:
+        - name: artistId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of matching songs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SongDTO'
+
+  /users:
+    get:
+      summary: Get all users
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDTO'
+
+    post:
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDTO'
+      responses:
+        '200':
+          description: Created user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+
+    delete:
+      summary: Delete all users
+      responses:
+        '200':
+          description: All users deleted
+
+  /users/{userId}:
+    get:
+      summary: Get user by ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+
+    put:
+      summary: Update user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDTO'
+      responses:
+        '200':
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+
+    delete:
+      summary: Delete user by ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: User deleted

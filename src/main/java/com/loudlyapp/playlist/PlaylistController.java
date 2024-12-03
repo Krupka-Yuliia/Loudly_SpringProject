@@ -1,7 +1,11 @@
 package com.loudlyapp.playlist;
 
 import com.loudlyapp.song.SongDTO;
+import com.loudlyapp.user.User;
+import com.loudlyapp.user.UserDTO;
+import com.loudlyapp.user.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,10 +17,12 @@ import java.util.Optional;
 public class PlaylistController {
 
     private final PlayListService playlistService;
+    private final UserService userService;
 
-    @PostMapping("/users/{userId}")
-    public PlaylistDTO createPlaylist(@PathVariable int userId, @RequestBody PlaylistDTO playlistDTO) {
-        playlistDTO.setUserId(userId);
+    @PostMapping
+    public PlaylistDTO createPlaylist(@AuthenticationPrincipal User user, @RequestBody PlaylistDTO playlistDTO) {
+        Optional<UserDTO> u = userService.findByUsername(user.getUsername());
+        playlistDTO.setUserId(u.get().getId());
         return playlistService.save(playlistDTO);
     }
 
@@ -25,14 +31,10 @@ public class PlaylistController {
         return playlistService.findById(playlistId);
     }
 
-    @GetMapping
-    public List<PlaylistDTO> getPlaylists() {
-        return playlistService.findAll();
-    }
-
-    @GetMapping("/users/{userId}")
-    public List<PlaylistDTO> getPlaylistsByUserId(@PathVariable Long userId) {
-        return playlistService.findPlaylistsByUserId(userId);
+    @GetMapping()
+    public List<PlaylistDTO> getPlaylistsByUserId(@AuthenticationPrincipal User user) {
+        Optional<UserDTO> u = userService.findByUsername(user.getUsername());
+        return playlistService.getPlaylists(u.get().getId());
     }
 
     @PostMapping("/{playlistId}/songs/{songId}")

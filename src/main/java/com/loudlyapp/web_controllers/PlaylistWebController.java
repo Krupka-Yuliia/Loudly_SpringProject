@@ -26,7 +26,7 @@ public class PlaylistWebController {
     @GetMapping("/playlists")
     public String getAllPlaylists(@AuthenticationPrincipal User principal, Model model) {
         Optional<UserDTO> user = userService.findByUsername(principal.getUsername());
-        List<PlaylistDTO> playlists = playListService.findPlaylistsByUserId(user.get().getId());
+        List<PlaylistDTO> playlists = playListService.getPlaylists(user.get().getId());
         model.addAttribute("playlists", playlists);
         return "playlists";
     }
@@ -70,10 +70,10 @@ public class PlaylistWebController {
         boolean songExists = playListService.isSongInPlaylist(playlistId, songId);
 
         if (songExists) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Song is already in this playlist");
+            redirectAttributes.addFlashAttribute("error", "Song is already in this playlist");
         } else {
             playListService.addSongToPlaylist(playlistId, songId);
-            redirectAttributes.addFlashAttribute("successMessage", "Song added to playlist successfully");
+            redirectAttributes.addFlashAttribute("success", "Song added to playlist successfully");
         }
 
         return "redirect:/songs/" + songId;

@@ -6,6 +6,16 @@
 </head>
 <body>
 
+<div class="alert-container">
+    <div th:if="${error}" class="alert alert-danger" role="alert">
+        <span th:text="${error}">Error message here</span>
+    </div>
+    <div th:if="${success}" class="alert alert-success" role="alert">
+        <span th:text="${success}">Success message here</span>
+    </div>
+</div>
+
+
 <div class="container mt-4">
     <h1 class="mb-4" th:text="${song.getTitle()}">Song Name</h1>
     <div class="card song-info mb-4">

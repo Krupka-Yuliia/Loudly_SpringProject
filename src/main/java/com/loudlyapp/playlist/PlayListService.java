@@ -20,8 +20,14 @@ public class PlayListService {
     private final SongRepository songRepository;
     private final ArtistService artistService;
 
-    public List<PlaylistDTO> findAll() {
-        return playlistRepository.findAll().stream()
+//    public List<PlaylistDTO> findAll() {
+//        return playlistRepository.findAll().stream()
+//                .map(this::convertToDTO)
+//                .collect(Collectors.toList());
+//    }
+
+    public List<PlaylistDTO> getPlaylists(long userId) {
+        return playlistRepository.findByUserId(userId).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
@@ -69,11 +75,7 @@ public class PlayListService {
         playlistRepository.deleteAll();
     }
 
-    public List<PlaylistDTO> findPlaylistsByUserId(long userId) {
-        return playlistRepository.findByUserId(userId).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
+
 
     public PlaylistDTO addSongToPlaylist(Long playlistId, Long songId) {
         Playlist playlist = playlistRepository.findById(playlistId)

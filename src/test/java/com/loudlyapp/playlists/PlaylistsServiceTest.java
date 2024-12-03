@@ -62,21 +62,6 @@ public class PlaylistsServiceTest {
     }
 
     @Test
-    public void findAllPlaylists() {
-        UserDTO userDTO = createUserDTO(UUID.randomUUID().toString());
-        userDTO.setEmail(DEFAULT_EMAIL + UUID.randomUUID());
-        UserDTO savedUserDTO = userService.save(userDTO);
-
-        createAndSavePlaylistDTO(savedUserDTO.getId());
-        createAndSavePlaylistDTO(savedUserDTO.getId());
-
-        List<PlaylistDTO> playlists = playListService.findAll();
-
-        assertNotNull(playlists, "Playlists collection should not be null");
-        assertEquals(2, playlists.size(), "There should be two playlists in the collection");
-    }
-
-    @Test
     public void findPlaylistByUserId() {
         UserDTO userDTO = createUserDTO(UUID.randomUUID().toString());
         userDTO.setEmail(DEFAULT_EMAIL + UUID.randomUUID());
@@ -84,7 +69,7 @@ public class PlaylistsServiceTest {
 
         createAndSavePlaylistDTO(savedUserDTO.getId());
 
-        List<PlaylistDTO> playlistsByUser = playListService.findPlaylistsByUserId(savedUserDTO.getId());
+        List<PlaylistDTO> playlistsByUser = playListService.getPlaylists(savedUserDTO.getId());
 
         assertNotNull(playlistsByUser, "Playlists collection should not be null");
     }
@@ -114,7 +99,7 @@ public class PlaylistsServiceTest {
 
         playListService.deleteAll();
 
-        List<PlaylistDTO> playlists = playListService.findAll();
+        List<PlaylistDTO> playlists = playListService.getPlaylists(savedUserDTO.getId());
         assertEquals(0, playlists.size());
     }
 
