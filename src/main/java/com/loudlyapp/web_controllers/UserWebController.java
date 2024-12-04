@@ -75,10 +75,11 @@ public class UserWebController {
 
 
     @GetMapping("/login")
-    public String showLoginForm(Model model) {
-        if (!model.containsAttribute("userDTO")) {
-            model.addAttribute("userDTO", new UserDTO());
+    public String showLoginForm(Model model, String error) {
+        if (error != null) {
+            model.addAttribute("error", "ERROR: Invalid name or password.");
         }
+        model.addAttribute("userDTO", new UserDTO());
         return "login_form";
     }
 

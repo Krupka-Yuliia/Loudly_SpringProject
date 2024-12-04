@@ -130,7 +130,7 @@ GET http://localhost:8080/api/songs/123
 
 ### DELETE song by id
 
-DELETE http://localhost:8080/api/songs/123
+DELETE http://localhost:8080/api/songs/127
 
 ### GET search songs by title
 
@@ -209,7 +209,7 @@ Content-Type: application/json
 
 ### DELETE artist by id
 
-DELETE http://localhost:8080/api/artists/106
+DELETE http://localhost:8080/api/artists/250
 
 ### GET artist by name
 
