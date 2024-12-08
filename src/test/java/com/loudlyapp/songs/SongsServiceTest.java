@@ -1,13 +1,19 @@
 package com.loudlyapp.songs;
 
+import com.loudlyapp.AbstractMySQLContainerBaseTest;
 import com.loudlyapp.artist.ArtistDTO;
 import com.loudlyapp.artist.ArtistService;
 import com.loudlyapp.song.SongDTO;
 import com.loudlyapp.song.SongService;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MySQLContainer;
 
 import java.util.Collection;
 import java.util.List;
@@ -17,7 +23,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class SongsServiceTest {
+public class SongsServiceTest extends AbstractMySQLContainerBaseTest {
 
     @Autowired
     private SongService songService;

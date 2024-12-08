@@ -1,5 +1,6 @@
 package com.loudlyapp.playlists;
 
+import com.loudlyapp.AbstractMySQLContainerBaseTest;
 import com.loudlyapp.artist.ArtistDTO;
 import com.loudlyapp.artist.ArtistService;
 import com.loudlyapp.playlist.PlayListService;
@@ -8,10 +9,15 @@ import com.loudlyapp.song.SongDTO;
 import com.loudlyapp.song.SongService;
 import com.loudlyapp.user.UserDTO;
 import com.loudlyapp.user.UserService;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MySQLContainer;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +26,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class PlaylistsServiceTest {
+public class PlaylistsServiceTest extends AbstractMySQLContainerBaseTest {
 
     private static final String DEFAULT_EMAIL = "test@test.com";
     private static final String DEFAULT_PASSWORD = "password";
@@ -37,6 +43,7 @@ public class PlaylistsServiceTest {
 
     @Autowired
     UserService userService;
+
 
     @AfterEach
     void tearDown() {

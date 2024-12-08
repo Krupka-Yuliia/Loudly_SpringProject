@@ -1,10 +1,12 @@
 package com.loudlyapp.user;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import com.loudlyapp.AbstractMySQLContainerBaseTest;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MySQLContainer;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -14,7 +16,7 @@ import java.util.stream.IntStream;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class UserServiceTest {
+public class UserServiceTest extends AbstractMySQLContainerBaseTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -29,6 +31,7 @@ public class UserServiceTest {
     void tearDown() {
         this.userService.deleteAll();
     }
+
 
     private UserDTO createUserDTO(String username) {
         UserDTO userDTO = new UserDTO();
@@ -118,7 +121,7 @@ public class UserServiceTest {
         updatedUserDTO.setPassword(savedUserDTO.getPassword());
         updatedUserDTO.setRole(savedUserDTO.getRole());
 
-         userService.updateUserDTO((long) savedUserDTO.getId(), updatedUserDTO);
+        userService.updateUserDTO((long) savedUserDTO.getId(), updatedUserDTO);
 
         Optional<UserDTO> getUpdatedUser = userService.findById(savedUserDTO.getId());
         assertTrue(getUpdatedUser.isPresent(), "Updated user not found");
